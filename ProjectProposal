@@ -1,0 +1,36 @@
+1. Singleplayer
+  - Modelling the tanks
+    - Allow for user to customize color/shape?
+  - Some predesigned levels
+  - Procedural level generator/infinite mode
+  - Currency which follows from performance. User can then choose to upgrade:
+    - Movement speed
+    - Bullet speed
+    - Number of bullets in play simultaneously
+    - Multiple bullets per shot (spew)
+    - Increase ricochet count for bullet (default 1 ricochet)
+    - Allow placement of mines?
+    - Lives
+    - Shield? Set where you want a shield to be around the tank (i.e. behind)
+    - Shield size
+    
+    - ** Implementation of AI **
+      - Different AI difficulty with different gameplay styles and perks
+      - Would like to attempt evolutionary neural networks
+      
+2. Multiplayer (if time)
+  - Allow users to play as a team against AI or to enter player vs player.
+  - Allow users to bet currency for winning
+  - Possibly create mobile version? Doubt there will be time.
+  
+  
+  SUBTASKS for project:
+    Gameplay
+    - Physics, collision detection, movement of tanks, bullet shooting (user input), 
+    Design
+    - Creating models for tanks (including the various AI (should try to be minimalistic with the least amount of vertices as possible
+      to save on performace))
+    - Game environment models (level generation)
+    - GUI for user to purchase upgrades in a shop - or to customize the tank
+    AI
+    - Again try to create multiple difficulty levels
