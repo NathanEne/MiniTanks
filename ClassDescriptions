@@ -1,0 +1,12 @@
+class Camera:
+    orthographic, not perspective
+    position
+    angle
+
+class State:
+    subclasses:
+        Play
+        Menu
+        Pause
+        
+    
