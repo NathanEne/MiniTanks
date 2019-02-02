@@ -2,11 +2,24 @@ class Camera:
     orthographic, not perspective
     position
     angle
-
+    Follow path on infinite mode
+    
 class State:
     subclasses:
         Play
         Menu
         Pause
         
+class Input:
+    MousePosition
+    
+class Wall
+    enum Cement (cannot break ever), Wood (can break on bullet hit), 
+    Type
+    position
+    width (1 by x)
+  
+      
+class Tile
+    enum divot (cannot move across), 
     
