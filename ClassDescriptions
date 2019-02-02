@@ -15,18 +15,18 @@ class Input:
     Mouseclick
     MousePosition
     
-class Wall
+class Wall:
     enum Cement (cannot break ever), Wood (can break on bullet hit), 
     Type
     position
     width (1 by x)
   
       
-class Tile
-    enum divot (cannot move across), Flat, Tar or Water (slows down tank)
+class Tile:
+    enum divot (cannot move across), Flat, Tar or Water (slows down tank speed by 30%)
     position
 
-class Tank
+class Tank:
     Vector3 position
     float Speed
     int Number of bullets
@@ -37,11 +37,12 @@ class Tank
     
     int currency (score)
     
-    class Turret
+    class Turret:
         3D turret 
         color
         rotation based on mouse
-    class base
+
+    class Base:
         3D base
         color
         rotation based on movement
