@@ -1,0 +1,56 @@
+class Camera:
+    orthographic, not perspective
+    position
+    angle
+    Follow path on infinite mode
+    
+class State:
+    subclasses:
+        Play
+        Menu
+        Pause
+        
+class Input:
+    Keys
+    Mouseclick
+    MousePosition
+    
+class Wall:
+    enum Cement (cannot break ever), Wood (can break on bullet hit), 
+    Type
+    position
+    width (1 by x)
+  
+      
+class Tile:
+    enum divot (cannot move across), Flat, Tar or Water (slows down tank speed by 30%)
+    position
+
+class Tank:
+    Vector3 position
+    float Speed
+    int Number of bullets
+    int Number of richochets
+    float Speed of bullet
+    bool Shield
+    bool Explosive bullets
+    
+    int currency (score)
+    
+    class Turret:
+        3D turret 
+        color
+        rotation based on mouse
+
+    class Base:
+        3D base
+        color
+        rotation based on movement
+        
+    Shoot()
+    Move()
+    
+        
+    
+    
+    

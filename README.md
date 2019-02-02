@@ -1,1 +1,1 @@
-# WiiTanks
+# MiniTanks (WiiTanks)
