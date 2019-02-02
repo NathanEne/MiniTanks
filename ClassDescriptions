@@ -11,6 +11,8 @@ class State:
         Pause
         
 class Input:
+    Keys
+    Mouseclick
     MousePosition
     
 class Wall
@@ -21,5 +23,33 @@ class Wall
   
       
 class Tile
-    enum divot (cannot move across), 
+    enum divot (cannot move across), Flat, Tar or Water (slows down tank)
+    position
+
+class Tank
+    Vector3 position
+    float Speed
+    int Number of bullets
+    int Number of richochets
+    float Speed of bullet
+    bool Shield
+    bool Explosive bullets
+    
+    int currency (score)
+    
+    class Turret
+        3D turret 
+        color
+        rotation based on mouse
+    class base
+        3D base
+        color
+        rotation based on movement
+        
+    Shoot()
+    Move()
+    
+        
+    
+    
     
