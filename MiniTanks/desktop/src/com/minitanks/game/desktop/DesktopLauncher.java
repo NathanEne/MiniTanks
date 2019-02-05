@@ -14,7 +14,6 @@ public class DesktopLauncher implements ApplicationListener {
 	@Override
     public void create(){
         cam = new PerspectiveCamera(true);
-        cam.position.set();
     }
 
     @Override

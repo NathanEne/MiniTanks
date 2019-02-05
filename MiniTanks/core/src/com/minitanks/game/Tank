@@ -1,17 +1,30 @@
 package com.minitanks.game;
 
-import com.badlogic.gdx.math.vector;
+import com.badlogic.gdx.math.Vector3;
 
 public class Tank{
 
+    private boolean isAI;
     private Vector3 position;
     private float movementSpeed;
     private int numOfBullets = 5;
     private int numOfRicochets;
 
+
+    private Turret turret;
+
     public Tank(){
 
     }
+
+    /**
+     * @ Param: Mouse position
+     * Instantiate a bullet in the tanks barrel and add the respective force on bullet
+     */
+    public void Shoot(){
+
+    }
+
 
 
 
