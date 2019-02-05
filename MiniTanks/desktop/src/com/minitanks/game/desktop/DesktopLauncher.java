@@ -1,10 +1,7 @@
 package com.minitanks.game.desktop;
 
 import com.badlogic.gdx.ApplicationListener;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
-import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import com.minitanks.game.MiniTanksGame;
+
 import javafx.scene.PerspectiveCamera;
 
 public class DesktopLauncher implements ApplicationListener {
