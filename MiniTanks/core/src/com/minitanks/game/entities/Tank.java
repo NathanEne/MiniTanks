@@ -1,5 +1,6 @@
 package com.minitanks.game.entities;
 
+import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.math.Vector3;
 
 public class Tank extends Entity {
@@ -12,6 +13,16 @@ public class Tank extends Entity {
     private Turret turret;
 
     public Tank(){
+
+    }
+
+    @Override
+    public void render(ModelBatch batch) {
+
+    }
+
+    @Override
+    public void move() {
 
     }
 

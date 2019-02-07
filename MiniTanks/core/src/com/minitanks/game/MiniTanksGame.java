@@ -23,7 +23,7 @@ public class MiniTanksGame extends ApplicationAdapter {
 	@Override
 	public void create() {
 		batch = new ModelBatch();
-		Gdx.gl.glClearColor(51f / 255f, 80f / 255f, 102f / 255f, 1);
+		Gdx.gl.glClearColor(174/255f, 174/255f, 174/255f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		gsm = new GameStateManager();
 		gsm.push(new PlayState(gsm));
