@@ -1,6 +1,7 @@
 package com.minitanks.game.entities;
 
 import com.badlogic.gdx.graphics.g3d.Model;
+import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.math.Vector3;
 
 public abstract class Entity {
@@ -30,11 +31,11 @@ public abstract class Entity {
 
     }
 
-    public abstract void render();
+    public abstract void render(ModelBatch batch);
 
     public abstract void move();
 
-    public void update(){
+    public void update(float delta){
 
     }
 
