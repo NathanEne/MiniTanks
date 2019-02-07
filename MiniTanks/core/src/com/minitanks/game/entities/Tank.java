@@ -1,11 +1,9 @@
-package com.minitanks.game;
+package com.minitanks.game.entities;
 
 import com.badlogic.gdx.math.Vector3;
 
-public class Tank{
-
+public class Tank extends Entity {
     private boolean isAI;
-    private Vector3 position;
     private float movementSpeed;
     private int numOfBullets = 5;
     private int numOfRicochets;
@@ -24,8 +22,4 @@ public class Tank{
     public void Shoot(){
 
     }
-
-
-
-
 }

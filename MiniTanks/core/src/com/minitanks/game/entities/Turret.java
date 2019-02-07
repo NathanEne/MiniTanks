@@ -1,7 +1,8 @@
-package com.minitanks.game;
+package com.minitanks.game.entities;
 import com.badlogic.gdx.math.Vector3;
+import com.minitanks.game.entities.Tank ;
 
-public class Turret {
+public class Turret extends Tank {
 
 
     public Turret(){
