@@ -38,9 +38,6 @@ public abstract class GameMap {
 
     public abstract void dispose();
 
-    public abstract TileType getTileTypeByCoord(int layer, int x, int y);
-
-
 
     public ArrayList<Entity> getEntityList() {
         return this.getEntities();

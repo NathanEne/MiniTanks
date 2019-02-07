@@ -15,7 +15,7 @@ public class TiledGameMap extends GameMap {
 
 
     public TiledGameMap(){
-        tiledMap = new TmxMapLoader().load("Map1.tmx");
+        tiledMap = new TmxMapLoader().load("Map2.tmx");
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
     }
 
@@ -23,7 +23,6 @@ public class TiledGameMap extends GameMap {
     public void render(OrthographicCamera camera, ModelBatch batch) {
         tiledMapRenderer.setView(camera);
         tiledMapRenderer.render();
-        batch.setCamera(camera);
         batch.begin(camera);
         super.render(camera, batch);
         batch.end();
@@ -41,10 +40,6 @@ public class TiledGameMap extends GameMap {
 
     }
 
-    @Override
-    public TileType getTileTypeByCoord(int layer, int x, int y) {
-        return null;
-    }
 
     @Override
     public int getWidth() {
