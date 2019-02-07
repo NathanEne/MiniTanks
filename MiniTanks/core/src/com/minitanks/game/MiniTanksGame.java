@@ -12,59 +12,35 @@ import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.sun.prism.image.ViewPort;
+import com.minitanks.game.states.GameStateManager;
+import com.minitanks.game.states.PlayState;
+
 
 public class MiniTanksGame extends ApplicationAdapter {
-	public OrthographicCamera cam = new OrthographicCamera();
-	public Model model;
-	public ModelInstance instance;
-	public ModelBatch modelBatch;
-	private Viewport vp = new FitViewport(800, 500, cam);
-
+	ModelBatch batch;
+	private GameStateManager gsm;
 
 	@Override
-	public void create(){
-		cam.position.set(10f, 10f, 10f);
-		cam.lookAt(0,0,0);
-		cam.near = 1f;
-		cam.far = 300f;
-		cam.update();
+	public void create() {
+		batch = new ModelBatch();
+		Gdx.gl.glClearColor(51f / 255f, 80f / 255f, 102f / 255f, 1);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		gsm = new GameStateManager();
+		gsm.push(new PlayState(gsm));
 
-		ModelBuilder modelBuilder = new ModelBuilder();
-		model = modelBuilder.createBox(5f, 5f, 5f,
-				new Material(ColorAttribute.createDiffuse(Color.GREEN)),
-				VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
-		instance = new ModelInstance(model);
 	}
 
 	@Override
-	public void render(){
-		Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+	public void render() {
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-		modelBatch.begin(cam);
-		modelBatch.render(instance);
-		modelBatch.end();
+		gsm.update(Gdx.graphics.getDeltaTime());
+		gsm.render(batch);
+
 	}
 
 	@Override
 	public void dispose() {
-		modelBatch.dispose();
-		model.dispose();
-	}
-
-	@Override
-	public void resize(int w, int h){
-
-	}
-
-	@Override
-	public void pause(){
-
-	}
-
-	@Override
-	public void resume(){
-
+		batch.dispose();
 	}
 }
