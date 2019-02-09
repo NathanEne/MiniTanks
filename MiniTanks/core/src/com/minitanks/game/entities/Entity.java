@@ -2,18 +2,19 @@ package com.minitanks.game.entities;
 
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
+import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.math.Vector3;
 
 public abstract class Entity {
 
     private Vector3 position;
-    private Model model;
+    private ModelInstance model;
 
-    public Model getModel() {
+    public ModelInstance getModelInstance() {
         return model;
     }
 
-    public void setModel(Model model) {
+    public void setModel(ModelInstance model) {
         this.model = model;
     }
 
@@ -27,11 +28,10 @@ public abstract class Entity {
 
 
 
-    public Entity(){
-
+    public Entity(ModelInstance modelInstance){
+        this.model = modelInstance;
     }
 
-    public abstract void render(ModelBatch batch);
 
     public abstract void move();
 

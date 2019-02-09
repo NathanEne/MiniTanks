@@ -5,6 +5,8 @@ import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import java.util.Stack;
 
 public class GameStateManager {
+
+
     private Stack<State> states;
 
     public GameStateManager() {
@@ -32,8 +34,13 @@ public class GameStateManager {
 
     public void render(ModelBatch mb) {
         states.peek().render(mb);
+
+
     }
-    public State getInstaceOfState(){
-        return states.lastElement();
+
+    public State currentState(){
+        return states.peek();
+
     }
+
 }
