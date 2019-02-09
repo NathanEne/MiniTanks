@@ -1,5 +1,8 @@
 package com.minitanks.world;
 
+import com.badlogic.gdx.math.Vector2;
+import java.util.ArrayList;
+
 public class MapGenerator {
     /*
      *   3 Random modes of map generation:
@@ -24,4 +27,12 @@ public class MapGenerator {
      *   4. Rotate if symmetry was required
      *
      */
+
+
+    public static ArrayList<Vector2> generateMap(int width, int height){
+        ArrayList<Vector2> walls = new ArrayList<Vector2>();
+
+
+        return walls;
+    }
 }
