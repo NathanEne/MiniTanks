@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="1d140287-09cb-4ec8-a7de-9903f88f3643" name="Default Changelist" comment="" />
+    <list default="true" id="828afa9b-d583-484c-951a-220f37bfb371" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MiniTanks/core/src/com/minitanks/game/states/GameStateManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/MiniTanks/core/src/com/minitanks/game/states/GameStateManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MiniTanks/core/src/com/minitanks/game/states/State.java" beforeDir="false" afterPath="$PROJECT_DIR$/MiniTanks/core/src/com/minitanks/game/states/State.java" afterDir="false" />
+    </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -10,7 +14,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FUSProjectUsageTrigger">
-    <session id="-1860951620">
+    <session id="879050768">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
           <entry key="project.closed" value="1" />
@@ -26,7 +30,7 @@
   <component name="GradleLocalSettings">
     <option name="projectSyncType">
       <map>
-        <entry key="$PROJECT_DIR$/MiniTanks" value="PREVIEW" />
+        <entry key="$PROJECT_DIR$/../WiiTanks/MiniTanks" value="PREVIEW" />
       </map>
     </option>
   </component>
@@ -47,8 +51,8 @@
         <subPane>
           <expand>
             <path>
-              <item name="WiiTanks" type="b2602c69:ProjectViewProjectNode" />
-              <item name="desktop" type="462c0819:PsiDirectoryNode" />
+              <item name="MiniTanks" type="b2602c69:ProjectViewProjectNode" />
+              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
             </path>
           </expand>
           <select />
@@ -75,11 +79,11 @@
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="1d140287-09cb-4ec8-a7de-9903f88f3643" name="Default Changelist" comment="" />
-      <created>1549575980098</created>
+      <changelist id="828afa9b-d583-484c-951a-220f37bfb371" name="Default Changelist" comment="" />
+      <created>1549737095960</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1549575980098</updated>
+      <updated>1549737095960</updated>
     </task>
     <servers />
   </component>

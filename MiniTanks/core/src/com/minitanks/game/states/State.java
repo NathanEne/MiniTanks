@@ -1,14 +1,17 @@
 package com.minitanks.game.states;
 
-import com.badlogic.gdx.graphics.OrthographicCamera;
+
+import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
+import com.minitanks.game.Managers.AssetManager;
 
 public abstract class State {
 
-    public static OrthographicCamera cam=new OrthographicCamera();
+    public PerspectiveCamera cam;
     public GameStateManager gsm;
-
+    public AssetManager assets;
     protected State(GameStateManager gsm) {
+        this.assets = new AssetManager();
         this.gsm = gsm;
     }
 

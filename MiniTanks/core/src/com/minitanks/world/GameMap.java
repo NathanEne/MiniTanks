@@ -18,12 +18,12 @@ public abstract class GameMap {
 
     }
 
-    public void render(OrthographicCamera camera, ModelBatch batch) {
-
-        for (Entity entity : getEntities()) {
-            entity.render(batch);
-        }
-    }
+//    public void render(OrthographicCamera camera, ModelBatch batch) {
+//
+//        for (Entity entity : getEntities()) {
+//            entity.render(batch);
+//        }
+//    }
 
     public void update(float delta) {
 
@@ -37,11 +37,6 @@ public abstract class GameMap {
     }
 
     public abstract void dispose();
-
-
-    public ArrayList<Entity> getEntityList() {
-        return this.getEntities();
-    }
 
     public abstract int getWidth();
 
