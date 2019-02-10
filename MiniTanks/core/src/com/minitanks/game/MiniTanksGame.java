@@ -17,12 +17,12 @@ import com.minitanks.game.states.PlayState;
 
 
 public class MiniTanksGame extends ApplicationAdapter {
-	ModelBatch batch;
+
 	private GameStateManager gsm;
 
 	@Override
 	public void create() {
-		batch = new ModelBatch();
+
 		Gdx.gl.glClearColor(174/255f, 174/255f, 174/255f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		gsm = new GameStateManager();
@@ -35,12 +35,15 @@ public class MiniTanksGame extends ApplicationAdapter {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		gsm.update(Gdx.graphics.getDeltaTime());
-		gsm.render(batch);
+		if(gsm.currentState() instanceof PlayState){
+			gsm.render(((PlayState) gsm.currentState()).getBatch());
+
+		}
 
 	}
 
 	@Override
 	public void dispose() {
-		batch.dispose();
+
 	}
 }

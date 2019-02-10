@@ -19,15 +19,15 @@ public class TiledGameMap extends GameMap {
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
     }
 
-    @Override
-    public void render(OrthographicCamera camera, ModelBatch batch) {
-        tiledMapRenderer.setView(camera);
-        tiledMapRenderer.render();
-        batch.begin(camera);
-        super.render(camera, batch);
-        batch.end();
-
-    }
+//    @Override
+//    public void render(OrthographicCamera camera, ModelBatch batch) {
+//        tiledMapRenderer.setView(camera);
+//        tiledMapRenderer.render();
+//        batch.begin(camera);
+//        super.render(camera, batch);
+//        batch.end();
+//
+//    }
 
     @Override
     public void update(float delta) {
