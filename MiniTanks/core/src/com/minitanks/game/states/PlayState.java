@@ -26,12 +26,14 @@ public class PlayState extends State {
     public PlayState(GameStateManager gsm) {
         super(gsm);
         this.map = new TiledGameMap();
-        this.cam = new PerspectiveCamera(90f, 1, 1);
-        this.cam.position.set(50f,50f,50f);
+        this.cam = new PerspectiveCamera(-165f, 1, 1);
+        this.cam.position.set(50f,1600f,-77f);
+        this.cam.lookAt(new Vector3(0, 0, 0));
         this.cam.near = 0.1f;
         this.cam.far = 3000.0f;
         this.map.addEntities(new TankBase(this.assets.initializeModel("wiiTankBody.g3db")));
         this.map.addEntities(new Turret(this.assets.initializeModel("wiiTankTurret.g3db")));
+        this.map.addEntities(new Wall(this.assets.initializeModel("wiiTankWall.g3db")));
         //this.map.addEntities(new Floor(this.assets.initializeModel("wiiTankFloor.g3db")));
 
         this.environment = new Environment();
