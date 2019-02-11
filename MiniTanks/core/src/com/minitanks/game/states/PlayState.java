@@ -9,10 +9,7 @@ import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.math.Vector3;
-import com.minitanks.game.entities.Entity;
-import com.minitanks.game.entities.Tank;
-import com.minitanks.game.entities.TankBase;
-import com.minitanks.game.entities.Turret;
+import com.minitanks.game.entities.*;
 import com.minitanks.world.GameMap;
 import com.minitanks.world.TiledGameMap;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
@@ -30,11 +27,13 @@ public class PlayState extends State {
         super(gsm);
         this.map = new TiledGameMap();
         this.cam = new PerspectiveCamera(90f, 1, 1);
-        this.cam.position.set(10f,10f,10f);
+        this.cam.position.set(50f,50f,50f);
         this.cam.near = 0.1f;
         this.cam.far = 3000.0f;
         this.map.addEntities(new TankBase(this.assets.initializeModel("wiiTankBody.g3db")));
         this.map.addEntities(new Turret(this.assets.initializeModel("wiiTankTurret.g3db")));
+        //this.map.addEntities(new Floor(this.assets.initializeModel("wiiTankFloor.g3db")));
+
         this.environment = new Environment();
         this.environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.8f, 0.8f, 0.8f, 1.0f));
 

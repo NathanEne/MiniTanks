@@ -5,7 +5,18 @@ public class ShapeGeneration {
      *  Implement static methods to generator the various shapes on the map
      */
 
-    public static float varianceThres = 0f;
+    // The amount the length of shapes can vary, zero means no variance
+    private static float variance = 0f;
+
+    public static float getVariance() {
+        return variance;
+    }
+
+    public static void setVariance(float variance) {
+        ShapeGeneration.variance = variance;
+    }
+
+
 
 
     public static float[] rightAngle(float r){

@@ -1,5 +1,7 @@
 package com.minitanks.world;
 
+import com.badlogic.gdx.math.Vector2;
+
 import java.util.ArrayList;
 import java.util.Random;
 import java.lang.Math;
@@ -48,19 +50,18 @@ public class MapGenerator {
      * @param height
      * @return an int of the number of wall starting points to generated on map
      */
-
     public static int generateNumberOfPoints(int width, int height) {
-        Random rn = new Random();
         int numberOfPoints;
         if (width * height <= 900) {
-            numberOfPoints = rn.nextInt((8 - 5) + 1) + 5;
+            numberOfPoints = (int)randomNumber(3, 5);
         } else {
-            numberOfPoints = rn.nextInt((10 - 8) + 1) + 8;
+            numberOfPoints = (int)randomNumber(5, 8);
         }
         return numberOfPoints;
     }
 
     /**
+     * Function generates wall points with various radii that are NOT overlapping
      * @param width
      * @param height
      * @param numberOfPoints Return an array of wall points with their coordinates and their radii size
@@ -68,9 +69,11 @@ public class MapGenerator {
     public static ArrayList<float[]> generateWallPoints(int width, int height, int numberOfPoints) {
         ArrayList<float[]> WallStartingPoints = new ArrayList<float[]>();
 
-        // Wall Point will be float array of length 3 containing:
-        // x-coordinate, y-coordinate and radii
+        // Wallpoints will be float array of length 3 containing:
+        // x-coordinate, y-coordinate, and radii
 
+        // The distance away from wall radii cannot overlap
+        float borderGap = 3f;
 
         for (int i = 0; i < numberOfPoints; i++) {
             float[] WallPoint = new float[]{};
@@ -79,18 +82,17 @@ public class MapGenerator {
                 float radii = randomNumber(1, 4);
                 float xcoord = randomNumber(0, width);
                 float ycoord = randomNumber(0, height);
-                WallPoint = new float[]
-                {xcoord, ycoord, radii};
+                WallPoint = new float[] {xcoord, ycoord, radii};
 
-                if (WallPoint[0] + radii > width - 2 || WallPoint[0] - radii <= 2
-                        || WallPoint[1] + radii > height - 2 || WallPoint[1] - radii <= 2){
+                if (WallPoint[0] + radii > width - borderGap || WallPoint[0] - radii <= borderGap
+                        || WallPoint[1] + radii > height - borderGap || WallPoint[1] - radii <= borderGap){
                     continue;
                 }
 
                 if (WallStartingPoints.size() > 1){
                     boolean isPastAllPoints = true;
                     for (float[] p : WallStartingPoints){
-                        float distance =  (float)Math.sqrt(Math.pow(p[0] - xcoord, 2.0) + Math.pow(p[1] - ycoord, 2.0));
+                        float distance = Vector2.dst(p[0], p[1], WallPoint[0], WallPoint[1]);
                         if (distance < radii + p[2]){
                             isPastAllPoints = false;
                             break;
