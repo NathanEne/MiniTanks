@@ -64,9 +64,9 @@ public class MapGenerator {
      * Function generates wall points with various radii that are NOT overlapping
      * @param width
      * @param height
-     * @param numberOfPoints Return an array of wall points with their coordinates and their radii size
      */
-    public static ArrayList<float[]> generateWallPoints(int width, int height, int numberOfPoints) {
+    public static ArrayList<float[]> generateWallPoints(int width, int height) {
+        int numberOfPoints = generateNumberOfPoints(width, height);
         ArrayList<float[]> WallStartingPoints = new ArrayList<float[]>();
 
         // Wallpoints will be float array of length 3 containing:
@@ -110,17 +110,5 @@ public class MapGenerator {
             WallStartingPoints.add(WallPoint);
         }
         return WallStartingPoints;
-    }
-
-
-    public static void main(String[] args) {
-        int numberOfPoints = generateNumberOfPoints( 30, 30);
-        ArrayList<float[]> WallStartingPoints = generateWallPoints(30, 30, 6);
-        for (float[] p : WallStartingPoints){
-            System.out.println(p[0]);
-            System.out.println(p[1]);
-            System.out.println(p[2]);
-
-        }
     }
 }
