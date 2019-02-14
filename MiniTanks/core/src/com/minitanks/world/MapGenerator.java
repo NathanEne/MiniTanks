@@ -2,6 +2,10 @@ package com.minitanks.world;
 
 import com.badlogic.gdx.math.Vector2;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Random;
 import java.lang.Math;
@@ -30,7 +34,12 @@ public class MapGenerator {
      *   4. Rotate if symmetry was required
      *
      */
-
+    public static int Width = 30;
+    public static int Height = 30;
+    public static boolean isSymmetric = true;
+    public static boolean isHorizSym = true;
+    // Float to describe how much the shapes should vary from their default state. 0 is no variance, 1 is max variance
+    public static float Variance = 0;
 
     /**
      * @param min
@@ -53,9 +62,9 @@ public class MapGenerator {
     public static int generateNumberOfPoints(int width, int height) {
         int numberOfPoints;
         if (width * height <= 900) {
-            numberOfPoints = (int)randomNumber(3, 5);
-        } else {
             numberOfPoints = (int)randomNumber(5, 8);
+        } else {
+            numberOfPoints = (int)randomNumber(8, 12);
         }
         return numberOfPoints;
     }
@@ -79,7 +88,7 @@ public class MapGenerator {
             float[] WallPoint = new float[]{};
             boolean isValidp = false;
             while(!isValidp){
-                float radii = randomNumber(1, 4);
+                float radii = randomNumber(2, 6);
                 float xcoord = randomNumber(0, width);
                 float ycoord = randomNumber(0, height);
                 WallPoint = new float[] {xcoord, ycoord, radii};
@@ -93,7 +102,7 @@ public class MapGenerator {
                     boolean isPastAllPoints = true;
                     for (float[] p : WallStartingPoints){
                         float distance = Vector2.dst(p[0], p[1], WallPoint[0], WallPoint[1]);
-                        if (distance < radii + p[2]){
+                        if (distance < radii + p[2] + 1){
                             isPastAllPoints = false;
                             break;
                         }

@@ -13,7 +13,7 @@ import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.minitanks.game.states.GameStateManager;
-import com.minitanks.game.states.MapDebugging;
+
 import com.minitanks.game.states.PlayState;
 
 
@@ -28,7 +28,6 @@ public class MiniTanksGame extends ApplicationAdapter {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		gsm = new GameStateManager();
 		gsm.push(new PlayState(gsm));
-		//gsm.push(new MapDebugging(gsm));
 	}
 
 	@Override
@@ -38,10 +37,6 @@ public class MiniTanksGame extends ApplicationAdapter {
 		gsm.update(Gdx.graphics.getDeltaTime());
 		if(gsm.currentState() instanceof PlayState){
 			gsm.render(((PlayState) gsm.currentState()).getBatch());
-
-		}
-		if(gsm.currentState() instanceof MapDebugging){
-			gsm.render(((MapDebugging) gsm.currentState()).getBatch());
 
 		}
 
