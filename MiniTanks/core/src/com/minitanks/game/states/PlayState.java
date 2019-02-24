@@ -50,9 +50,11 @@ public class PlayState extends State {
     protected void handleInput() {
         if (Gdx.input.isKeyPressed(Input.Keys.W)) {
            this.player.getTankBase().getModelInstance().transform.trn((float)Math.cos(this.angle)*10,0,(float)Math.sin(this.angle)*10);
-
+            this.player.getTurret().getModelInstance().transform.trn((float)Math.cos(this.angle)*10,0,(float)Math.sin(this.angle)*10);
         }
         if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+            this.player.getTurret().getModelInstance().transform.trn((float)Math.cos(this.angle)*-10,0,(float)Math.sin(this.angle)*-10);
+
             this.player.getTankBase().getModelInstance().transform.trn((float)Math.cos(this.angle)*-10,0,(float)Math.sin(this.angle)*-10);
         }
         if (Gdx.input.isKeyPressed(Input.Keys.A)) {
