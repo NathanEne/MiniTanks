@@ -31,7 +31,7 @@ public class Tank extends Entity {
     @Override
     public void move() {
 
-        this.turret.getModelInstance().transform.trn(this.getTankBase().getModelInstance().transform.getTranslation(new Vector3()));
+     //   this.turret.getModelInstance().transform.trn(this.getTankBase().getModelInstance().transform.getTranslation(new Vector3()));
 
 
     }
