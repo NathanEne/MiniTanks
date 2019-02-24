@@ -3,11 +3,16 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.math.Vector3;
 import com.minitanks.game.entities.Tank ;
 
-public class Turret extends Tank {
+public class Turret extends Entity {
 
     public Turret(ModelInstance modelInstance) {
         super(modelInstance);
         this.getModelInstance().transform.trn(0,220,50);
+    }
+
+    @Override
+    public void move() {
+        //point to mouse calle here
     }
 
 

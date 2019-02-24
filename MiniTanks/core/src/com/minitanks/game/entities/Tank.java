@@ -10,16 +10,29 @@ public class Tank extends Entity {
     private int numOfBullets = 5;
     private int numOfRicochets;
 
+    public TankBase getTankBase() {
+        return tankBase;
+    }
+
+    public Turret getTurret() {
+        return turret;
+    }
+
+    private TankBase tankBase;
 
     private Turret turret;
 
 
-    public Tank(ModelInstance modelInstance) {
-        super(modelInstance);
+    public Tank(Turret t, TankBase tb) {
+        this.turret = t;
+        this.tankBase = tb;
     }
 
     @Override
     public void move() {
+
+        this.turret.getModelInstance().transform.trn(this.getTankBase().getModelInstance().transform.getTranslation(new Vector3()));
+
 
     }
 

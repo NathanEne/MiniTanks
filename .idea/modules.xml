@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/MiniTanks.iml" filepath="$PROJECT_DIR$/.idea/MiniTanks.iml" />
       <module fileurl="file://$PROJECT_DIR$/MiniTanks/core/core.iml" filepath="$PROJECT_DIR$/MiniTanks/core/core.iml" />
       <module fileurl="file://$PROJECT_DIR$/MiniTanks/desktop/desktop.iml" filepath="$PROJECT_DIR$/MiniTanks/desktop/desktop.iml" />
     </modules>

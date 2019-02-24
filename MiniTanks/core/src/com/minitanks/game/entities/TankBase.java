@@ -4,9 +4,14 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.minitanks.game.entities.Tank;
 //import javafx.scene.paint.Color;
 
-public class TankBase extends Tank {
+public class TankBase extends Entity {
     public TankBase(ModelInstance modelInstance) {
         super(modelInstance);
+    }
+
+    @Override
+    public void move() {
+
     }
 
 

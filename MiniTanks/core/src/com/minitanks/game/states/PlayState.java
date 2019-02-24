@@ -23,17 +23,22 @@ public class PlayState extends State {
     private ModelBatch batch;
     private ModelInstance modelInstance;
     private boolean screenShot = false;
+    private Tank player;
+    private double angle=0;
+    private double tempAngle;
+
     public PlayState(GameStateManager gsm) {
         super(gsm);
         this.map = new TiledGameMap();
-        this.cam = new PerspectiveCamera(-165f, 1, 1);
-        this.cam.position.set(50f,1600f,-77f);
+        this.cam = new PerspectiveCamera(90f, 1, 1);
+        this.cam.position.set(-1000,1000,0);
         this.cam.lookAt(new Vector3(0, 0, 0));
         this.cam.near = 0.1f;
         this.cam.far = 3000.0f;
-        this.map.addEntities(new TankBase(this.assets.initializeModel("wiiTankBody.g3db")));
-        this.map.addEntities(new Turret(this.assets.initializeModel("wiiTankTurret.g3db")));
-        this.map.addEntities(new Wall(this.assets.initializeModel("wiiTankWall.g3db")));
+        this.player = new Tank(new Turret(this.assets.initializeModel("wiiTankTurret.g3db")), new TankBase(this.assets.initializeModel("wiiTankBody.g3db")));
+        this.map.addEntities(player.getTankBase());
+        this.map.addEntities(player.getTurret());
+        //this.map.addEntities(new Wall(this.assets.initializeModel("wiiTankWall.g3db")));
         //this.map.addEntities(new Floor(this.assets.initializeModel("wiiTankFloor.g3db")));
 
         this.environment = new Environment();
@@ -44,47 +49,21 @@ public class PlayState extends State {
     @Override
     protected void handleInput() {
         if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-            this.cam.position.set(this.cam.position.x,this.cam.position.y+5,this.cam.position.z);
+           this.player.getTankBase().getModelInstance().transform.trn((float)Math.cos(this.angle)*10,0,(float)Math.sin(this.angle)*10);
+
         }
         if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-            this.cam.position.set(this.cam.position.x,this.cam.position.y-5,this.cam.position.z);
+            this.player.getTankBase().getModelInstance().transform.trn((float)Math.cos(this.angle)*-10,0,(float)Math.sin(this.angle)*-10);
         }
         if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-            this.cam.position.set(this.cam.position.x-5,this.cam.position.y,this.cam.position.z);
+            this.player.getTankBase().getModelInstance().transform.rotateRad(new Vector3(0,1,0),0.1f);
+            this.angle -=0.1;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-            this.cam.position.set(this.cam.position.x+5,this.cam.position.y,this.cam.position.z);
-        }
-        if(Gdx.input.isKeyPressed(Input.Keys.Q)){
-            cam.rotateAround(Vector3.Zero, new Vector3(0,1,0),1f);
-
-        }
-        if(Gdx.input.isKeyPressed(Input.Keys.E)){
-            cam.rotateAround(Vector3.Zero, new Vector3(0,1,0),-1f);
-
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-            this.cam.position.set(this.cam.position.x,this.cam.position.y,this.cam.position.z+5);
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)) {
-            this.cam.position.set(this.cam.position.x,this.cam.position.y,this.cam.position.z-5);
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-            this.cam.lookAt(5f,5f,5f);
+            this.angle+=0.1;
+            this.player.getTankBase().getModelInstance().transform.rotateRad(new Vector3(0,1,0),-0.1f);
         }
 
-        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-            this.cam.lookAt(0f,0f,0f);
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
-            System.out.println(this.cam.position);
-            if(this.auto){
-                this.auto = false;
-
-            }else{
-                this.auto = true;
-            }
-        }
 
     }
 
@@ -98,14 +77,16 @@ public class PlayState extends State {
         Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         Gdx.gl.glClearColor(0.5f, 0.5f, 0.5f, 1);
         Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT | GL30.GL_DEPTH_BUFFER_BIT);
+        Vector3 tankPosition = this.player.getTankBase().getModelInstance().transform.getTranslation(new Vector3());
+        System.out.println("Tank angle " + this.angle);
+        Vector3 cameraPosition = tankPosition.cpy().add(-1000*(float)Math.cos(angle),1000,-1000*(float)Math.sin(angle));
+        this.cam.up.set(0,1,0);
+        this.cam.position.set(cameraPosition);
 
+        this.cam.lookAt(tankPosition);
         this.cam.update();
 
-        if(auto){
-        cam.rotateAround(Vector3.Zero, new Vector3(0,1,0),1f);
-
-        }
-
+        this.angle %= 2*Math.PI;
         this.assets.render(cam,environment,map.getEntities());
         //this.getTiledMap().update(Gdx.graphics.getDeltaTime());
         //this.getTiledMap().render(this.cam, sb);

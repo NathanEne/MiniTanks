@@ -1,4 +1,4 @@
-package com.minitanks.game.Managers;
+package com.minitanks.game.managers;
 
 import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Gdx;
@@ -10,7 +10,6 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.loader.G3dModelLoader;
 import com.badlogic.gdx.utils.UBJsonReader;
 import com.minitanks.game.entities.Entity;
-import com.minitanks.world.GameMap;
 
 import java.util.ArrayList;
 

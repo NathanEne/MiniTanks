@@ -32,6 +32,7 @@ public abstract class Entity {
         this.model = modelInstance;
     }
 
+    public Entity(){}
 
     public abstract void move();
 
