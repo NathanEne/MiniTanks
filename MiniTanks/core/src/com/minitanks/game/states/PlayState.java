@@ -16,7 +16,7 @@ import com.badlogic.gdx.graphics.PerspectiveCamera;
 
 public class PlayState extends State {
 
-
+    private boolean dynamicCam=true;
     private boolean auto = false;
     private GameMap map;
     private Environment environment;
@@ -65,6 +65,9 @@ public class PlayState extends State {
             this.angle+=0.1;
             this.player.getTankBase().getModelInstance().transform.rotateRad(new Vector3(0,1,0),-0.1f);
         }
+        if (Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
+            this.dynamicCam = !this.dynamicCam;
+        }
 
 
     }
@@ -79,13 +82,19 @@ public class PlayState extends State {
         Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         Gdx.gl.glClearColor(0.5f, 0.5f, 0.5f, 1);
         Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT | GL30.GL_DEPTH_BUFFER_BIT);
-        Vector3 tankPosition = this.player.getTankBase().getModelInstance().transform.getTranslation(new Vector3());
-        System.out.println("Tank angle " + this.angle);
-        Vector3 cameraPosition = tankPosition.cpy().add(-1000*(float)Math.cos(angle),1000,-1000*(float)Math.sin(angle));
-        this.cam.up.set(0,1,0);
-        this.cam.position.set(cameraPosition);
 
-        this.cam.lookAt(tankPosition);
+
+        if(dynamicCam) {
+           Vector3 tankPosition = this.player.getTankBase().getModelInstance().transform.getTranslation(new Vector3());
+           Vector3 cameraPosition = tankPosition.cpy().add(-1000 * (float) Math.cos(angle), 1000, -1000 * (float) Math.sin(angle));
+           this.cam.up.set(0, 1, 0);
+           this.cam.position.set(cameraPosition);
+
+           this.cam.lookAt(tankPosition);
+       }else{
+           this.cam.position.set(new Vector3(-1300,2500,0));
+           this.cam.lookAt(new Vector3(0,0,0));
+       }
         this.cam.update();
 
         this.angle %= 2*Math.PI;
