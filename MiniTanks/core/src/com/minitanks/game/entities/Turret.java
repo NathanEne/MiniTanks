@@ -7,12 +7,6 @@ public class Turret extends Entity {
 
     public Turret(ModelInstance modelInstance) {
         super(modelInstance);
-        this.getModelInstance().transform.trn(0,220,50);
-    }
-
-    @Override
-    public void move() {
-        //point to mouse calle here
     }
 
 

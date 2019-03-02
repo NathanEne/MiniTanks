@@ -34,7 +34,6 @@ public abstract class Entity {
 
     public Entity(){}
 
-    public abstract void move();
 
     public void update(float delta){
 

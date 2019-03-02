@@ -16,16 +16,16 @@ import com.badlogic.gdx.graphics.PerspectiveCamera;
 
 public class PlayState extends State {
 
-    private boolean dynamicCam=true;
-    private boolean auto = false;
+    private boolean dynamicCam=false;
     private GameMap map;
     private Environment environment;
     private ModelBatch batch;
     private ModelInstance modelInstance;
-    private boolean screenShot = false;
     private Tank player;
     private double angle=0;
     private double tempAngle;
+    private Vector3 keyInputVector = new Vector3();
+    private Vector3 mouseInputVector = new Vector3();
 
     public PlayState(GameStateManager gsm) {
         super(gsm);
@@ -34,7 +34,7 @@ public class PlayState extends State {
         this.cam.position.set(-1000,1000,0);
         this.cam.lookAt(new Vector3(0, 0, 0));
         this.cam.near = 0.1f;
-        this.cam.far = 3000.0f;
+        this.cam.far = 9000.0f;
         this.player = new Tank(new Turret(this.assets.initializeModel("wiiTankTurret.g3db")), new TankBase(this.assets.initializeModel("wiiTankBody.g3db")));
         this.map.addEntities(player.getTankBase());
         this.map.addEntities(player.getTurret());
@@ -48,27 +48,30 @@ public class PlayState extends State {
 
     @Override
     protected void handleInput() {
+
+        // Player movement
         if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-           this.player.getTankBase().getModelInstance().transform.trn((float)Math.cos(this.angle)*10,0,(float)Math.sin(this.angle)*10);
-            this.player.getTurret().getModelInstance().transform.trn((float)Math.cos(this.angle)*10,0,(float)Math.sin(this.angle)*10);
+            this.keyInputVector.x += 1;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-            this.player.getTurret().getModelInstance().transform.trn((float)Math.cos(this.angle)*-10,0,(float)Math.sin(this.angle)*-10);
-
-            this.player.getTankBase().getModelInstance().transform.trn((float)Math.cos(this.angle)*-10,0,(float)Math.sin(this.angle)*-10);
+            this.keyInputVector.x -= 1;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-            this.player.getTankBase().getModelInstance().transform.rotateRad(new Vector3(0,1,0),0.1f);
-            this.angle -=0.1;
+            this.keyInputVector.z -= 1;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-            this.angle+=0.1;
-            this.player.getTankBase().getModelInstance().transform.rotateRad(new Vector3(0,1,0),-0.1f);
+            this.keyInputVector.z += 1;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
             this.dynamicCam = !this.dynamicCam;
         }
+        if (this.keyInputVector != Vector3.Zero)
+            this.player.move(this.keyInputVector.nor(), this.mouseInputVector);
+        this.keyInputVector = new Vector3(0, 0, 0);
 
+        // Player Shooting
+        if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT))
+            this.player.Shoot();
 
     }
 
@@ -98,7 +101,7 @@ public class PlayState extends State {
         this.cam.update();
 
         this.angle %= 2*Math.PI;
-        this.assets.render(cam,environment,map.getEntities());
+        this.assets.render(cam, environment, map.getEntities());
         //this.getTiledMap().update(Gdx.graphics.getDeltaTime());
         //this.getTiledMap().render(this.cam, sb);
 
@@ -108,7 +111,7 @@ public class PlayState extends State {
 
     @Override
     public void dispose() {
-    batch.dispose();
+        batch.dispose();
     }
     public ModelBatch getBatch() {
         return batch;
