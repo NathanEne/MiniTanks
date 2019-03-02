@@ -51,6 +51,11 @@ public class MapGenerator {
         float number = min + rn.nextFloat() * (max - min);
         return number;
     }
+    public static int negativepositivezero() {
+        Random rn = new Random();
+        int number = -1 + rn.nextInt(3);
+        return number;
+    }
 
     /**
      * Number of wall points generated on map is dependent on map size
@@ -120,4 +125,28 @@ public class MapGenerator {
         }
         return WallStartingPoints;
     }
+     /**
+     * @param coordx
+     * @param coordy
+     * @param radius Takes in wall starting coordinates with their selective radius
+     * @return float[]
+     * Returns new coordinates for wall endpoints to create a wall structure within a circumference
+     */
+    public static float[] generateVcoordinates(float coordx, float coordy, float radius) {
+        float delta_x1 = randomNumber(-radius, radius);
+        float delta_x2 = randomNumber(-radius, radius);
+        float x1 = coordx + delta_x1;
+        float x2 = coordx + delta_x2;
+        float delta_y1 = negativepositivezero() * ((radius) * (radius) - (delta_x1) * (delta_x1));
+        float delta_y2 = negativepositivezero() * ((radius) * (radius) - (delta_x2) * (delta_x2));
+        float y1 = coordy + delta_y1;
+        float y2 = coordy + delta_y2;
+        float[] float_array = new float[4];
+        float_array[0] = x1;
+        float_array[1] = y1;
+        float_array[2] = x2;
+        float_array[3] = y2;
+        return float_array;
+    }
+
 }
