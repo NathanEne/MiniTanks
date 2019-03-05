@@ -2,6 +2,7 @@ package com.minitanks.game.managers;
 
 import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.Model;
@@ -29,7 +30,7 @@ public class AssetManager {
         return new ModelInstance(m);
 
     }
-    public void render(PerspectiveCamera cam, Environment environment, ArrayList<Entity> a){
+    public void render(OrthographicCamera cam, Environment environment, ArrayList<Entity> a){
         this.batch.begin(cam);
         for(int i = 0; i<a.size(); i++)
             this.batch.render(a.get(i).getModelInstance(), environment);

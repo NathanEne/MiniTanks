@@ -4,6 +4,7 @@ package com.minitanks.game.states;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL30;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
@@ -30,16 +31,20 @@ public class PlayState extends State {
     public PlayState(GameStateManager gsm) {
         super(gsm);
         this.map = new TiledGameMap();
-        this.cam = new PerspectiveCamera(90f, 1, 1);
-        this.cam.position.set(-1000,1000,0);
-        this.cam.lookAt(new Vector3(0, 0, 0));
-        this.cam.near = 0.1f;
-        this.cam.far = 9000.0f;
+        //this.cam = new PerspectiveCamera(90f, 1, 1);
+        //this.cam.position.set(-1000,1000,0);
+        //this.cam.lookAt(new Vector3(0, 0, 0));
+        //this.cam.near = 0.1f;
+        //this.cam.far = 9000.0f;
         this.player = new Tank(new Turret(this.assets.initializeModel("wiiTankTurret.g3db")), new TankBase(this.assets.initializeModel("wiiTankBody.g3db")));
         this.map.addEntities(player.getTankBase());
         this.map.addEntities(player.getTurret());
         //this.map.addEntities(new Wall(this.assets.initializeModel("wiiTankWall.g3db")));
-        //this.map.addEntities(new Floor(this.assets.initializeModel("wiiTankFloor.g3db")));
+        this.camOrth = new OrthographicCamera(5000, 5000);
+        this.camOrth.position.set(-1500,3500,0);
+        this.camOrth.lookAt(new Vector3(0, 0, 0));
+
+        this.camOrth.far = 10000f;
 
         this.environment = new Environment();
         this.environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.8f, 0.8f, 0.8f, 1.0f));
@@ -95,13 +100,13 @@ public class PlayState extends State {
 
            this.cam.lookAt(tankPosition);
        }else{
-           this.cam.position.set(new Vector3(-1300,2500,0));
-           this.cam.lookAt(new Vector3(0,0,0));
+           this.camOrth.position.set(new Vector3(-1300,2500,0));
+           this.camOrth.lookAt(new Vector3(0,0,0));
        }
-        this.cam.update();
+        this.camOrth.update();
 
         this.angle %= 2*Math.PI;
-        this.assets.render(cam, environment, map.getEntities());
+        this.assets.render(camOrth, environment, map.getEntities());
         //this.getTiledMap().update(Gdx.graphics.getDeltaTime());
         //this.getTiledMap().render(this.cam, sb);
 
