@@ -5,15 +5,19 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.Quaternion;
+import com.minitanks.game.states.PlayState;
 
 public class TankBase extends Entity {
 
     private float lerpRate = 3.141592654f / 36f; // Radians per frame
+    private boolean lerping = false;
     // The rotation of the tank in radians
     private float currRotation = 0;
+    private PlayState playState;
 
-    public TankBase(ModelInstance modelInstance) {
+    public TankBase(ModelInstance modelInstance, PlayState playst) {
         super(modelInstance);
+        this.playState = playst;
     }
     public float getCurrRot(){return currRotation;}
 
@@ -24,36 +28,37 @@ public class TankBase extends Entity {
      * @param endRad the desired rotation to move to
      */
     public void rotateTowards(float endRad){
-        float modRot = currRotation % 2*(float)Math.PI;
-        float ep = 0.01f;
-
-        endRad += Math.PI / 2;
-
-        System.out.println("End radian");
-        System.out.println(endRad);
-        System.out.println("Curr Rotation");
-        System.out.println(modRot);
-
-        if (currRotation > 4*(float)Math.PI)
-            currRotation -= 2*(float)Math.PI;
-
-        if (endRad - ep < modRot && endRad + ep > modRot)
-            return;
-
-        if (modRot - endRad <= Math.PI && modRot > endRad){
-            getModelInstance().transform.rotateRad(Vector3.Y, -lerpRate);
-            currRotation = getModelInstance().transform.getRotation(new Quaternion()).getAngleAroundRad(Vector3.Y);
-
+        if (playState.getMouseInputVector() != Vector3.Zero){
+            //Lerp(endRad);
+            getModelInstance().transform.rotateRad(Vector3.Y, endRad - currRotation);
+            currRotation = endRad;
         }
 
+    }
+
+    private void Lerp(float endRad){
+        if (((currRotation + Math.PI) % (2*Math.PI) > endRad) && (currRotation % (Math.PI*2)) < endRad){
+            if (currRotation + lerpRate > endRad){
+                getModelInstance().transform.rotateRad(Vector3.Y, endRad - currRotation);
+                currRotation = endRad;
+            }
+            else{
+                getModelInstance().transform.rotateRad(Vector3.Y, lerpRate);
+                currRotation += lerpRate;
+            }
+        }
         else{
-            getModelInstance().transform.rotateRad(Vector3.Y, lerpRate);
-            currRotation = getModelInstance().transform.getRotation(new Quaternion()).getAngleAroundRad(Vector3.Y);
+            if (currRotation - lerpRate < endRad){
+                getModelInstance().transform.rotateRad(Vector3.Y, currRotation - endRad);
+                currRotation = endRad;
+            }
+            else{
+                getModelInstance().transform.rotateRad(Vector3.Y, -lerpRate);
+                currRotation -= lerpRate;
+            }
         }
 
-        if (Gdx.input.isButtonPressed(Input.Keys.P)){
-            System.out.println(endRad);
-            System.out.println(modRot);
-        }
+
+
     }
 }

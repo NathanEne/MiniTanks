@@ -11,9 +11,9 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.math.Vector3;
 import com.minitanks.game.entities.*;
+import com.minitanks.game.managers.InputManager;
 import com.minitanks.world.GameMap;
 import com.minitanks.world.TiledGameMap;
-import com.badlogic.gdx.graphics.PerspectiveCamera;
 
 public class PlayState extends State {
 
@@ -23,25 +23,36 @@ public class PlayState extends State {
     private ModelBatch batch;
     private ModelInstance modelInstance;
     private Tank player;
-    private double angle=0;
-    private double tempAngle;
     private Vector3 keyInputVector = new Vector3();
     private Vector3 mouseInputVector = new Vector3();
+    private InputManager iptMan;
+
+    public Tank getPlayer(){
+        return this.player;
+    }
+
+    public Vector3 getKeyInputVector() {
+        return keyInputVector;
+    }
+
+    public Vector3 getMouseInputVector() {
+        return mouseInputVector;
+    }
 
     public PlayState(GameStateManager gsm) {
         super(gsm);
+        this.iptMan = new InputManager(this);
+        setInputProcessor();
+
         this.map = new TiledGameMap();
-        //this.cam = new PerspectiveCamera(90f, 1, 1);
-        //this.cam.position.set(-1000,1000,0);
-        //this.cam.lookAt(new Vector3(0, 0, 0));
-        //this.cam.near = 0.1f;
-        //this.cam.far = 9000.0f;
-        this.player = new Tank(new Turret(this.assets.initializeModel("wiiTankTurret.g3db")), new TankBase(this.assets.initializeModel("wiiTankBody.g3db")));
+        this.player = new Tank(new Turret(this.assets.initializeModel("wiiTankTurret.g3db"), this), new TankBase(this.assets.initializeModel("wiiTankBody.g3db"), this), this);
         this.map.addEntities(player.getTankBase());
         this.map.addEntities(player.getTurret());
+        this.map.addEntities(new Bullet(assets.initializeModel("wiiTankBullet.g3db"), Vector3.X, 5f));
         //this.map.addEntities(new Wall(this.assets.initializeModel("wiiTankWall.g3db")));
         this.camOrth = new OrthographicCamera(5000, 5000);
-        this.camOrth.position.set(-1500,3500,0);
+        //this.camOrth.position.set(-1500,3500,0);
+        this.camOrth.position.set(0,0,-2000);
         this.camOrth.lookAt(new Vector3(0, 0, 0));
 
         this.camOrth.far = 10000f;
@@ -74,15 +85,12 @@ public class PlayState extends State {
             this.player.move(this.keyInputVector.nor(), this.mouseInputVector);
         this.keyInputVector = new Vector3(0, 0, 0);
 
-        // Player Shooting
-        if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT))
-            this.player.Shoot();
-
     }
 
     @Override
     public void update(float dt) {
         handleInput();
+        updateBullets();
     }
 
     @Override
@@ -91,27 +99,12 @@ public class PlayState extends State {
         Gdx.gl.glClearColor(0.5f, 0.5f, 0.5f, 1);
         Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT | GL30.GL_DEPTH_BUFFER_BIT);
 
+        this.camOrth.position.set(new Vector3(-1300,2500,0));
+        this.camOrth.lookAt(new Vector3(0,0,0));
 
-        if(dynamicCam) {
-           Vector3 tankPosition = this.player.getTankBase().getModelInstance().transform.getTranslation(new Vector3());
-           Vector3 cameraPosition = tankPosition.cpy().add(-1000 * (float) Math.cos(angle), 1000, -1000 * (float) Math.sin(angle));
-           this.cam.up.set(0, 1, 0);
-           this.cam.position.set(cameraPosition);
-
-           this.cam.lookAt(tankPosition);
-       }else{
-           this.camOrth.position.set(new Vector3(-1300,2500,0));
-           this.camOrth.lookAt(new Vector3(0,0,0));
-       }
         this.camOrth.update();
 
-        this.angle %= 2*Math.PI;
         this.assets.render(camOrth, environment, map.getEntities());
-        //this.getTiledMap().update(Gdx.graphics.getDeltaTime());
-        //this.getTiledMap().render(this.cam, sb);
-
-
-
     }
 
     @Override
@@ -125,4 +118,19 @@ public class PlayState extends State {
         return map;
     }
 
+    public void setInputProcessor(){
+        Gdx.input.setInputProcessor(this.iptMan);
+    }
+
+    public void addEntity(Entity e){
+        this.map.addEntities(e);
+    }
+
+    public void updateBullets(){
+        for (Entity e : this.map.getEntities()){
+            if (e instanceof Bullet){
+                e.getModelInstance().transform.trn(((Bullet) e).getDirection().scl(((Bullet) e).getSpeed()) );
+            }
+        }
+    }
 }

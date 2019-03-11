@@ -2,11 +2,15 @@ package com.minitanks.game.entities;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.math.Vector3;
 import com.minitanks.game.entities.Tank ;
+import com.minitanks.game.states.PlayState;
 
 public class Turret extends Entity {
 
-    public Turret(ModelInstance modelInstance) {
+    private PlayState playState;
+
+    public Turret(ModelInstance modelInstance, PlayState playst) {
         super(modelInstance);
+        this.playState = playst;
     }
 
 

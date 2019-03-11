@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
+import com.minitanks.game.states.PlayState;
+
 import java.lang.Math.*;
 
 public class Tank extends Entity {
@@ -14,7 +16,7 @@ public class Tank extends Entity {
     private float rotationSpeed = 5;
     private int numOfBullets = 5;
     private int numOfRicochets;
-
+    private PlayState playState;
 
     public TankBase getTankBase() {
         return tankBase;
@@ -31,9 +33,14 @@ public class Tank extends Entity {
     // The vector to add to the tank base position for the turret position
     private Vector3 turretOffset = new Vector3(7,180,10);
 
-    public Tank(Turret t, TankBase tb) {
+    public PlayState getPlayState() {
+        return playState;
+    }
+
+    public Tank(Turret t, TankBase tb, PlayState plst) {
         this.turret = t;
         this.tankBase = tb;
+        this.playState = plst;
         getTankBase().getModelInstance().transform.scl(0.5f);
         getTurret().getModelInstance().transform.scl(0.5f);
     }
@@ -80,7 +87,7 @@ public class Tank extends Entity {
         if (input.z == 0){
             if (input.x < 0)
                 return (float)Math.PI;
-            return 0;
+            return (float)Math.PI * 2;
         }
         if (input.x == 0){
             if (input.z < 0)
@@ -107,8 +114,12 @@ public class Tank extends Entity {
      * @ Param: Mouse position
      * Instantiate a bullet in the tanks barrel and add the respective force on bullet
      */
-    public void Shoot(){
-
+    public void Shoot(int screenX, int screenY){
+        // Instantiate a bullet at tip of turret
+        Vector3 turretPos = getTurret().getModelInstance().transform.getTranslation(new Vector3());
+        //Vector3 turretDir = getTurret().getModelInstance().transform.getRotation(new Quaternion());
+        playState.addEntity(new Bullet(playState.assets.initializeModel("wiiTankBullet.g3db"), Vector3.X, 1f));
+        System.out.println("SHOOT!");
     }
 
 }
