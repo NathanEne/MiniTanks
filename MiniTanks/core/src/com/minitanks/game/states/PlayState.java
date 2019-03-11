@@ -43,24 +43,13 @@ public class PlayState extends State {
         super(gsm);
         this.iptMan = new InputManager(this);
         setInputProcessor();
-
-        this.map = new TiledGameMap();
-        this.player = new Tank(new Turret(this.assets.initializeModel("wiiTankTurret.g3db"), this), new TankBase(this.assets.initializeModel("wiiTankBody.g3db"), this), this);
-        this.map.addEntities(player.getTankBase());
-        this.map.addEntities(player.getTurret());
-        this.map.addEntities(new Bullet(assets.initializeModel("wiiTankBullet.g3db"), Vector3.X, 5f));
-        //this.map.addEntities(new Wall(this.assets.initializeModel("wiiTankWall.g3db")));
-        this.camOrth = new OrthographicCamera(5000, 5000);
-        //this.camOrth.position.set(-1500,3500,0);
-        this.camOrth.position.set(0,0,-2000);
-        this.camOrth.lookAt(new Vector3(0, 0, 0));
-
-        this.camOrth.far = 10000f;
+        generateMap();
 
         this.environment = new Environment();
         this.environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.8f, 0.8f, 0.8f, 1.0f));
-
     }
+
+
 
     @Override
     protected void handleInput() {
@@ -87,11 +76,15 @@ public class PlayState extends State {
 
     }
 
+
+
     @Override
     public void update(float dt) {
         handleInput();
         updateBullets();
     }
+
+
 
     @Override
     public void render(ModelBatch sb) {
@@ -106,6 +99,8 @@ public class PlayState extends State {
 
         this.assets.render(camOrth, environment, map.getEntities());
     }
+
+
 
     @Override
     public void dispose() {
@@ -132,5 +127,38 @@ public class PlayState extends State {
                 e.getModelInstance().transform.trn(((Bullet) e).getDirection().scl(((Bullet) e).getSpeed()) );
             }
         }
+    }
+
+
+
+    /**
+     * Place all objects in the scene, get data from map generator.
+     * FUTURE: add level option and organization
+     */
+    public void generateMap(){
+        initializeCamera();
+        this.map = new TiledGameMap();
+
+        // Initializing player
+        this.player = new Tank(new Turret(this.assets.initializeModel("wiiTankTurret.g3db"), this),
+                new TankBase(this.assets.initializeModel("wiiTankBody.g3db"), this), this);
+
+        this.map.addEntities(new Wall(this.assets.initializeModel("wiiTankWall.g3db"), 1200, 1200, 2.5f, 0.2f));
+        this.map.addEntities(player.getTankBase());
+        this.map.addEntities(player.getTurret());
+    }
+
+
+
+    /**
+     * orient the camera properly depending on the size of the map
+     */
+    public void initializeCamera(){
+        this.camOrth = new OrthographicCamera(5000, 5000);
+        //this.camOrth.position.set(-1500,3500,0);
+        this.camOrth.position.set(0,0,-2000);
+        this.camOrth.lookAt(new Vector3(0, 0, 0));
+
+        this.camOrth.far = 10000f;
     }
 }
