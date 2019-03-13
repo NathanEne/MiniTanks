@@ -14,6 +14,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.minitanks.game.states.GameStateManager;
 
+import com.minitanks.game.states.MenuState;
 import com.minitanks.game.states.PlayState;
 
 
@@ -27,7 +28,7 @@ public class MiniTanksGame extends ApplicationAdapter {
 		Gdx.gl.glClearColor(174/255f, 174/255f, 174/255f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		gsm = new GameStateManager();
-		gsm.push(new PlayState(gsm));
+		gsm.push(new MenuState(gsm));
 	}
 
 	@Override
@@ -35,8 +36,8 @@ public class MiniTanksGame extends ApplicationAdapter {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		gsm.update(Gdx.graphics.getDeltaTime());
-		if(gsm.currentState() instanceof PlayState){
-			gsm.render(((PlayState) gsm.currentState()).getBatch());
+		if(gsm.currentState() instanceof MenuState){
+			gsm.render(((MenuState) gsm.currentState()).getBatch());
 
 		}
 
