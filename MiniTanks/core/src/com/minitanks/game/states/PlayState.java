@@ -5,10 +5,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
+import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
 import com.minitanks.game.entities.*;
 import com.minitanks.game.managers.InputManager;
@@ -17,7 +19,7 @@ import com.minitanks.world.TiledGameMap;
 
 public class PlayState extends State {
 
-    private boolean dynamicCam=false;
+    private boolean isPerspectiveCam = true;
     private GameMap map;
     private Environment environment;
     private ModelBatch batch;
@@ -51,6 +53,21 @@ public class PlayState extends State {
 
 
 
+    /**
+     * Get the vector3 world position of the corresponding mouse position
+     */
+    public void setMouseInputVect(int mouseX, int mouseY){
+        System.out.println("" + mouseX + " "+ mouseY);
+        Vector3 screenInput = new Vector3(mouseX, mouseY, 1);
+        Vector3 worldPos = this.camera.unProject(screenInput);
+        System.out.println(worldPos);
+        System.out.println("InitialTANK POS");
+        System.out.println(this.getPlayer().getTankBase().getModelInstance().transform.getTranslation(new Vector3()));
+        this.getPlayer().getTankBase().getModelInstance().transform.set(worldPos, this.getPlayer().getTankBase().getModelInstance().transform.getRotation(new Quaternion()));
+    }
+
+
+
     @Override
     protected void handleInput() {
 
@@ -67,12 +84,10 @@ public class PlayState extends State {
         if (Gdx.input.isKeyPressed(Input.Keys.D)) {
             this.keyInputVector.z += 1;
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
-            this.dynamicCam = !this.dynamicCam;
-        }
         if (this.keyInputVector != Vector3.Zero)
             this.player.move(this.keyInputVector.nor(), this.mouseInputVector);
         this.keyInputVector = new Vector3(0, 0, 0);
+
 
     }
 
@@ -92,12 +107,12 @@ public class PlayState extends State {
         Gdx.gl.glClearColor(0.5f, 0.5f, 0.5f, 1);
         Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT | GL30.GL_DEPTH_BUFFER_BIT);
 
-        this.camOrth.position.set(new Vector3(-1300,2500,0));
-        this.camOrth.lookAt(new Vector3(0,0,0));
+        this.camera.updateCam();
 
-        this.camOrth.update();
-
-        this.assets.render(camOrth, environment, map.getEntities());
+        if (this.camera.isPerspective())
+            this.assets.render(this.camera.getPersCam(), environment, map.getEntities());
+        else
+            this.assets.render(this.camera.getOrthoCam(), environment, map.getEntities());
     }
 
 
@@ -154,11 +169,9 @@ public class PlayState extends State {
      * orient the camera properly depending on the size of the map
      */
     public void initializeCamera(){
-        this.camOrth = new OrthographicCamera(5000, 5000);
-        //this.camOrth.position.set(-1500,3500,0);
-        this.camOrth.position.set(0,0,-2000);
-        this.camOrth.lookAt(new Vector3(0, 0, 0));
-
-        this.camOrth.far = 10000f;
+        this.camera = new Camera(false);
+        this.camera.setPosition(new Vector3(0, 2500, 800));
+        this.camera.lookAt(new Vector3(0, 0, 0));
+        this.camera.rotateOnY(-90f);
     }
 }

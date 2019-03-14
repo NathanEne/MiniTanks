@@ -46,7 +46,6 @@ public class Tank extends Entity {
     }
 
 
-
     /**
      * Apply the movement for the tank
      *

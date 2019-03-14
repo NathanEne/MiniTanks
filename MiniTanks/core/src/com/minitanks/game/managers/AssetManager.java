@@ -18,6 +18,8 @@ public class AssetManager {
     private ModelBatch batch;
     private UBJsonReader jsonReader;
     private G3dModelLoader modelLoader;
+
+
     public AssetManager(){
         this.jsonReader = new UBJsonReader();
         this.modelLoader = new G3dModelLoader(jsonReader);
@@ -30,6 +32,16 @@ public class AssetManager {
         return new ModelInstance(m);
 
     }
+
+
+    public void render(PerspectiveCamera cam, Environment environment, ArrayList<Entity> a){
+        this.batch.begin(cam);
+        for(int i = 0; i<a.size(); i++)
+            this.batch.render(a.get(i).getModelInstance(), environment);
+        this.batch.end();
+    }
+
+
     public void render(OrthographicCamera cam, Environment environment, ArrayList<Entity> a){
         this.batch.begin(cam);
         for(int i = 0; i<a.size(); i++)

@@ -37,7 +37,8 @@ public class InputManager implements InputProcessor {
         return false;
     }
 
-    public boolean mouseMoved(int k, int k2){
+    public boolean mouseMoved(int screenX, int screenY){
+        curr_playState.setMouseInputVect(screenX, screenY);
         return false;
     }
 
