@@ -26,7 +26,7 @@ public class MenuState extends State {
     private SpriteBatch sbatch;
     private ModelBatch batch;
     private InputManager iptMan;
-    private Texture img;
+    private Texture wallpaper, cogwheel;
     private Texture settings;
 
     private TextButton button;
@@ -43,7 +43,7 @@ public class MenuState extends State {
         Gdx.input.setInputProcessor(stage);
 
         sbatch = new SpriteBatch();
-        img = new Texture("MenuScreen.jpg");
+        wallpaper = new Texture("MenuScreen.jpg");
 
         // Lobby Music
         lobby_music = Gdx.audio.newMusic(Gdx.files.internal("wiiGaming.mp3"));
@@ -51,7 +51,7 @@ public class MenuState extends State {
         lobby_music.play();
 
         // Settings button
-        settings = new Texture("Settings.png");
+        settings = new Texture("cogWheels.png");
         Drawable drawable = new TextureRegionDrawable(new TextureRegion(settings));
         imgButton = new ImageButton(drawable);
         imgButton.setSize(100, 100);
@@ -74,14 +74,16 @@ public class MenuState extends State {
     @Override
     protected void handleInput() {
         if (Gdx.input.isKeyPressed(Input.Keys.P)) {
-            Gdx.gl.glClearColor(174/255f, 174/255f, 174/255f, 1);
-            Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-            gsm.set(new PlayState(gsm));
+            lobby_music.stop();
+            gsm.push(new PlayState(gsm));
             gsm.update(Gdx.graphics.getDeltaTime());
-            if(gsm.currentState() instanceof MenuState) {
-                gsm.render(((PlayState) gsm.currentState()).getBatch());
+            gsm.render(((PlayState) gsm.currentState()).getBatch());
 
-            }
+        }
+        if(imgButton.isChecked()) {
+            gsm.push(new SettingsState(gsm));
+            gsm.update(Gdx.graphics.getDeltaTime());
+            gsm.render(((SettingsState) gsm.currentState()).getBatch());
         }
 
     }
@@ -93,11 +95,11 @@ public class MenuState extends State {
 
     @Override
     public void render(ModelBatch sb) {
-        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClearColor(174/255f, 174/255f, 174/255f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         sbatch.begin();
-        sbatch.draw(img, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        sbatch.draw(wallpaper, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         sbatch.end();
 
         stage.draw();
@@ -107,7 +109,7 @@ public class MenuState extends State {
     @Override
     public void dispose() {
         batch.dispose();
-        img.dispose();
+        wallpaper.dispose();
         stage.dispose();
         lobby_music.dispose();
         sbatch.dispose();
