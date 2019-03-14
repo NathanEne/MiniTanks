@@ -3,16 +3,22 @@ package com.minitanks.game.states;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.Environment;
+import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
+import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
+import com.badlogic.gdx.graphics.g3d.environment.PointLight;
 import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
 import com.minitanks.game.entities.*;
+import com.minitanks.game.managers.AssetManager;
 import com.minitanks.game.managers.InputManager;
 import com.minitanks.world.GameMap;
 import com.minitanks.world.TiledGameMap;
@@ -48,7 +54,14 @@ public class PlayState extends State {
         generateMap();
 
         this.environment = new Environment();
-        this.environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.8f, 0.8f, 0.8f, 1.0f));
+       this.environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.8f, 0.8f, 0.8f, 1.0f));
+       // environment.add(new PointLight().set(0.8f, 0.8f, 0.8f, 1000f, 200f, 1000f, 1000f));
+        environment.add(new DirectionalLight().set(Color.SLATE,1,0.1f,1));
+
+        Music music = Gdx.audio.newMusic(Gdx.files.internal("wiiGaming.mp3"));
+        music.play();
+        music.setLooping(true);
+        music.setVolume(0.5f);
     }
 
 
@@ -159,8 +172,10 @@ public class PlayState extends State {
                 new TankBase(this.assets.initializeModel("wiiTankBody.g3db"), this), this);
 
         this.map.addEntities(new Wall(this.assets.initializeModel("wiiTankWall.g3db"), 1200, 1200, 2.5f, 0.2f));
+
         this.map.addEntities(player.getTankBase());
         this.map.addEntities(player.getTurret());
+        this.map.addEntities(new Floor(this.assets.createFloorModel(1000,1000, new Material())));
     }
 
 
