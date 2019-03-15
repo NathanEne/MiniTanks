@@ -23,16 +23,13 @@ public class Bullet extends Entity {
     }
 
     public Vector3 getDirection() {
-        return direction;
+        return new Vector3(direction);
     }
 
-    /**
-     *
-     * @param direction
-     *
+
     public void setDirection(Vector3 direction) {
-        this.direction = direction;
+        this.direction = direction.nor();
     }
-    */
+
 
 }

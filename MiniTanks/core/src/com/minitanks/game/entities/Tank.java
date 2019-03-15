@@ -13,10 +13,23 @@ import java.lang.Math.*;
 public class Tank extends Entity {
     private boolean isAI;
     private float movementSpeed = 10;
-    private float rotationSpeed = 5;
+    private float bulletSpeed = 15f;
     private int numOfBullets = 5;
     private int numOfRicochets;
     private PlayState playState;
+
+    // The vector to add to the tank base position for the turret position
+    private Vector3 turretOffset = new Vector3(7,240,10);
+
+    private TankBase tankBase;
+
+    private Turret turret;
+
+    private Vector3 turretDirection;
+
+    public Vector3 getTurretDirection() { return turretDirection;    }
+
+    public void setTurretDirection(Vector3 turretDirection) { this.turretDirection = turretDirection;    }
 
     public TankBase getTankBase() {
         return tankBase;
@@ -25,13 +38,6 @@ public class Tank extends Entity {
     public Turret getTurret() {
         return turret;
     }
-
-    private TankBase tankBase;
-
-    private Turret turret;
-
-    // The vector to add to the tank base position for the turret position
-    private Vector3 turretOffset = new Vector3(7,240,10);
 
     public PlayState getPlayState() {
         return playState;
@@ -68,10 +74,6 @@ public class Tank extends Entity {
         getTankBase().getModelInstance().transform.trn(keyInputVector.scl(movementSpeed));
         Vector3 tankPos = getTankBase().getModelInstance().transform.getTranslation(new Vector3());
         getTurret().getModelInstance().transform.set(tankPos.add(turretOffset), getTurret().getModelInstance().transform.getRotation(new Quaternion()));
-
-
-
-
 
     }
 
@@ -118,9 +120,12 @@ public class Tank extends Entity {
     public void Shoot(int screenX, int screenY){
         // Instantiate a bullet at tip of turret
         Vector3 turretPos = getTurret().getModelInstance().transform.getTranslation(new Vector3());
-        //Vector3 turretDir = getTurret().getModelInstance().transform.getRotation(new Quaternion());
-        playState.addEntity(new Bullet(playState.assets.initializeModel("wiiTankBullet.g3db"), Vector3.X, 1f));
-        System.out.println("SHOOT!");
+        Vector3 bulletStart = turretPos.add(new Vector3(this.turretDirection).scl(800));
+        Bullet newBullet = new Bullet(playState.assets.initializeModel("wiiTankBullet.g3db"), turretDirection, bulletSpeed);
+        newBullet.getModelInstance().transform.set(bulletStart, getTurret().getModelInstance().transform.getRotation(new Quaternion()));
+
+        playState.addEntity(newBullet);
+
     }
 
 }
