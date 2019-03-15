@@ -16,6 +16,7 @@ import com.minitanks.game.states.GameStateManager;
 
 import com.minitanks.game.states.MenuState;
 import com.minitanks.game.states.PlayState;
+import com.minitanks.game.states.SettingsState;
 
 
 public class MiniTanksGame extends ApplicationAdapter {
@@ -42,6 +43,9 @@ public class MiniTanksGame extends ApplicationAdapter {
 		}
 		if(gsm.currentState() instanceof PlayState) {
 			gsm.render(((PlayState) gsm.currentState()).getBatch());
+		}
+		if(gsm.currentState() instanceof SettingsState) {
+			gsm.render(((SettingsState) gsm.currentState()).getBatch());
 		}
 
 	}
