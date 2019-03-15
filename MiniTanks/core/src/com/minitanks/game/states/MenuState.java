@@ -4,21 +4,17 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
 import com.minitanks.game.managers.InputManager;
+
 
 public class MenuState extends State {
     private Stage stage;
@@ -38,17 +34,10 @@ public class MenuState extends State {
         Gdx.input.setInputProcessor(stage);
 
 
-        //Wallpaper and HUD overlay
+        // Wallpaper and HUD overlay
         Drawable wallpaper1 = new TextureRegionDrawable(new TextureRegion(new Texture("MenuScreen.jpg")));
         Image wallpaper = new Image(wallpaper1, Scaling.fillX, Align.center);
         stage.addActor(wallpaper);
-
-        /**
-        Drawable menuOverlayTemp = new TextureRegionDrawable(new TextureRegion(new Texture("menuOverlay.png")));
-        Image menuOverlay = new Image(menuOverlayTemp, Scaling.fillX, Align.bottom);
-        menuOverlay.setWidth(Gdx.graphics.getWidth());
-        stage.addActor(menuOverlay);
-         */
 
 
         // Lobby Music
@@ -76,14 +65,15 @@ public class MenuState extends State {
 
     @Override
     protected void handleInput() {
-        if (playButton.isChecked()) {
-            lobby_music.stop();
+        if (playButton.isPressed()) {
+            settingsButton.toggle();
             gsm.push(new PlayState(gsm));
             gsm.update(Gdx.graphics.getDeltaTime());
             gsm.render(((PlayState) gsm.currentState()).getBatch());
 
         }
-        if(settingsButton.isChecked()) {
+        if(settingsButton.isPressed()) {
+            settingsButton.toggle();
             gsm.push(new SettingsState(gsm));
             gsm.update(Gdx.graphics.getDeltaTime());
             gsm.render(((SettingsState) gsm.currentState()).getBatch());
@@ -107,7 +97,6 @@ public class MenuState extends State {
 
     @Override
     public void dispose() {
-        batch.dispose();
         stage.dispose();
         lobby_music.dispose();
 

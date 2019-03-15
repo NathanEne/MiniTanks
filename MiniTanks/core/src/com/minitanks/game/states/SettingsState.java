@@ -2,7 +2,6 @@ package com.minitanks.game.states;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -10,7 +9,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -56,8 +54,6 @@ public class SettingsState extends State {
     protected void handleInput() {
         if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
             gsm.pop();
-            gsm.update(Gdx.graphics.getDeltaTime());
-            gsm.render(((PlayState) gsm.currentState()).getBatch());
         }
     }
 
@@ -76,7 +72,6 @@ public class SettingsState extends State {
 
     @Override
     public void dispose() {
-        batch.dispose();
         stage.dispose();
 
     }

@@ -58,10 +58,6 @@ public class PlayState extends State {
         // environment.add(new PointLight().set(0.8f, 0.8f, 0.8f, 1000f, 200f, 1000f, 1000f));
         environment.add(new DirectionalLight().set(Color.SLATE,1,0.1f,1));
 
-        Music music = Gdx.audio.newMusic(Gdx.files.internal("wiiGaming.mp3"));
-        music.play();
-        music.setLooping(true);
-        music.setVolume(0.5f);
     }
 
 
@@ -97,10 +93,15 @@ public class PlayState extends State {
         if (Gdx.input.isKeyPressed(Input.Keys.D)) {
             this.keyInputVector.z += 1;
         }
+        if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
+            gsm.push(new SettingsState(gsm));
+            gsm.update(Gdx.graphics.getDeltaTime());
+            gsm.render(((SettingsState) gsm.currentState()).getBatch());
+        }
+
         if (this.keyInputVector.len2() != 0 || mouseInputVector.len2() != 0){
             this.player.move(this.keyInputVector.nor(), this.mouseInputVector);
         }
-
         this.keyInputVector = new Vector3(0, 0, 0);
 
 
