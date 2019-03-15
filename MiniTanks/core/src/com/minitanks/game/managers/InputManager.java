@@ -28,10 +28,7 @@ public class InputManager implements InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button){
-        //curr_playState.getPlayer().Shoot(screenX, screenY);
-        Bullet createNew = new Bullet(curr_playState.assets.initializeModel("wiiTankBullet.g3db"), Vector3.X, 1f);
-        createNew.getModelInstance().transform.set(curr_playState.getMouseInputVector(), createNew.getModelInstance().transform.getRotation(new Quaternion()));
-        curr_playState.addEntity(createNew);
+        curr_playState.getPlayer().Shoot(screenX, screenY);
         return false;
     }
 

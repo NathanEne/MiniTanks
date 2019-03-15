@@ -31,8 +31,10 @@ public class Turret extends Entity {
         //
         spot = spot.add(new Vector2(-getModelInstance().transform.getTranslation(new Vector3()).x, -getModelInstance().transform.getTranslation(new Vector3()).z)).nor();
         currDirection = currDirection.nor();
+        Vector3 spot3 = new Vector3(-spot.x, 0, spot.y);
+        playState.getPlayer().setTurretDirection(new Vector3(spot.x, 0, spot.y));
 
-        getModelInstance().transform.setToRotation(new Vector3(-spot.x, 0, spot.y), new Vector3(-1, 0, 0));
+        getModelInstance().transform.setToRotation(spot3, new Vector3(-1, 0, 0));
         currDirection = spot;
 
         //float theda = (float)Math.acos(Vector2.dot(currDirection.x, currDirection.y, spot.x, spot.y) / (spot.len()*currDirection.len()));
