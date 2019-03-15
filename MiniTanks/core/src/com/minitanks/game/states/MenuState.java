@@ -73,7 +73,7 @@ public class MenuState extends State {
 
     @Override
     protected void handleInput() {
-        if (Gdx.input.isKeyPressed(Input.Keys.P)) {
+        if (button.isChecked()) {
             lobby_music.stop();
             gsm.push(new PlayState(gsm));
             gsm.update(Gdx.graphics.getDeltaTime());
