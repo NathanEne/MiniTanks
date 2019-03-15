@@ -31,7 +31,7 @@ public class Tank extends Entity {
     private Turret turret;
 
     // The vector to add to the tank base position for the turret position
-    private Vector3 turretOffset = new Vector3(7,180,10);
+    private Vector3 turretOffset = new Vector3(7,240,10);
 
     public PlayState getPlayState() {
         return playState;
@@ -41,7 +41,6 @@ public class Tank extends Entity {
         this.turret = t;
         this.tankBase = tb;
         this.playState = plst;
-        getTankBase().getModelInstance().transform.scl(0.5f);
         getTurret().getModelInstance().transform.scl(0.5f);
     }
 
@@ -55,6 +54,10 @@ public class Tank extends Entity {
         if (turret == null || tankBase == null)
             return;
 
+        // Make the turret face mouse position
+        turret.rotateToMouse(mouseInput);
+
+
         if (!keyInputVector.isZero()){
             // Linearly interpolate the rotation of the base
             float endRad = getEndRad(keyInputVector);
@@ -65,10 +68,9 @@ public class Tank extends Entity {
         getTankBase().getModelInstance().transform.trn(keyInputVector.scl(movementSpeed));
         Vector3 tankPos = getTankBase().getModelInstance().transform.getTranslation(new Vector3());
         getTurret().getModelInstance().transform.set(tankPos.add(turretOffset), getTurret().getModelInstance().transform.getRotation(new Quaternion()));
-        getTurret().getModelInstance().transform.scl(0.5f);
 
-        // Make the turret face mouse position
-        turret.rotateToMouse(mouseInput);
+
+
 
 
     }

@@ -54,8 +54,8 @@ public class PlayState extends State {
         generateMap();
 
         this.environment = new Environment();
-       this.environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.8f, 0.8f, 0.8f, 1.0f));
-       // environment.add(new PointLight().set(0.8f, 0.8f, 0.8f, 1000f, 200f, 1000f, 1000f));
+        this.environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.8f, 0.8f, 0.8f, 1.0f));
+        // environment.add(new PointLight().set(0.8f, 0.8f, 0.8f, 1000f, 200f, 1000f, 1000f));
         environment.add(new DirectionalLight().set(Color.SLATE,1,0.1f,1));
 
         Music music = Gdx.audio.newMusic(Gdx.files.internal("wiiGaming.mp3"));
@@ -70,13 +70,13 @@ public class PlayState extends State {
      * Get the vector3 world position of the corresponding mouse position
      */
     public void setMouseInputVect(int mouseX, int mouseY){
-        System.out.println("" + mouseX + " "+ mouseY);
         Vector3 screenInput = new Vector3(mouseX, mouseY, 1);
         Vector3 worldPos = this.camera.unProject(screenInput);
-        System.out.println(worldPos);
-        System.out.println("InitialTANK POS");
-        System.out.println(this.getPlayer().getTankBase().getModelInstance().transform.getTranslation(new Vector3()));
-        this.getPlayer().getTankBase().getModelInstance().transform.set(worldPos, this.getPlayer().getTankBase().getModelInstance().transform.getRotation(new Quaternion()));
+        worldPos.y = 0;
+        this.mouseInputVector = worldPos;
+
+        // Move tank to mouse for debugging purposes
+        //this.getPlayer().getTankBase().getModelInstance().transform.set(worldPos, this.getPlayer().getTankBase().getModelInstance().transform.getRotation(new Quaternion()));
     }
 
 
@@ -97,8 +97,10 @@ public class PlayState extends State {
         if (Gdx.input.isKeyPressed(Input.Keys.D)) {
             this.keyInputVector.z += 1;
         }
-        if (this.keyInputVector != Vector3.Zero)
+        if (this.keyInputVector.len2() != 0 || mouseInputVector.len2() != 0){
             this.player.move(this.keyInputVector.nor(), this.mouseInputVector);
+        }
+
         this.keyInputVector = new Vector3(0, 0, 0);
 
 
@@ -185,7 +187,7 @@ public class PlayState extends State {
      */
     public void initializeCamera(){
         this.camera = new Camera(false);
-        this.camera.setPosition(new Vector3(0, 2500, 800));
+        this.camera.setPosition(new Vector3(0, 2500, 0));
         this.camera.lookAt(new Vector3(0, 0, 0));
         this.camera.rotateOnY(-90f);
     }

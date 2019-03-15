@@ -21,6 +21,7 @@ public class TankBase extends Entity {
     }
     public float getCurrRot(){return currRotation;}
 
+
     /**
      * Called every single frame for the base to rotate towards
      *
@@ -57,8 +58,5 @@ public class TankBase extends Entity {
                 currRotation -= lerpRate;
             }
         }
-
-
-
     }
 }

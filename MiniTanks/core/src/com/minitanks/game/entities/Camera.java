@@ -19,7 +19,7 @@ public class Camera extends Entity {
             this.perspectiveCamera.far = 8500;
         }
         else{
-            this.orthographicCamera = new OrthographicCamera(6000, 6000);
+            this.orthographicCamera = new OrthographicCamera(8000, 8000);
             this.orthographicCamera.far = 8500;
         }
     }
