@@ -17,6 +17,14 @@ public class Tank extends Entity {
     private int numOfBullets = 5;
     private int numOfRicochets;
     private PlayState playState;
+    private boolean canShoot = true;
+
+
+    // Number of frames past since last shot
+    private int timeSinceLastShot = 0;
+
+    // Number of frames allowed between successive shots
+    private int shootThreshold = 20;
 
     // The vector to add to the tank base position for the turret position
     private Vector3 turretOffset = new Vector3(7,240,10);
@@ -24,12 +32,6 @@ public class Tank extends Entity {
     private TankBase tankBase;
 
     private Turret turret;
-
-    private Vector3 turretDirection;
-
-    public Vector3 getTurretDirection() { return turretDirection;    }
-
-    public void setTurretDirection(Vector3 turretDirection) { this.turretDirection = turretDirection;    }
 
     public TankBase getTankBase() {
         return tankBase;
@@ -43,11 +45,22 @@ public class Tank extends Entity {
         return playState;
     }
 
-    public Tank(Turret t, TankBase tb, PlayState plst) {
+    public Tank(Turret t, TankBase tb, PlayState plst, Vector3 startingPos, boolean isAI) {
         this.turret = t;
         this.tankBase = tb;
         this.playState = plst;
+        this.isAI = isAI;
+        // Set the position
+        getTankBase().getModelInstance().transform.set(startingPos, new Quaternion());
+        getTurret().getModelInstance().transform.set(startingPos.add(turretOffset), new Quaternion());
         getTurret().getModelInstance().transform.scl(0.5f);
+    }
+
+    public void increaseBulletTime(){
+        if (this.timeSinceLastShot > this.shootThreshold)
+            this.canShoot = true;
+        else
+            this.timeSinceLastShot++;
     }
 
 
@@ -118,13 +131,22 @@ public class Tank extends Entity {
      * Instantiate a bullet in the tanks barrel and add the respective force on bullet
      */
     public void Shoot(int screenX, int screenY){
+        // Ensure that you can shoot
+        if (!canShoot)
+            return;
+
+        this.numOfBullets++;
+        this.timeSinceLastShot = 0;
+        this.canShoot = false;
+
         // Instantiate a bullet at tip of turret
         Vector3 turretPos = getTurret().getModelInstance().transform.getTranslation(new Vector3());
-        Vector3 bulletStart = turretPos.add(new Vector3(this.turretDirection).scl(800));
-        Bullet newBullet = new Bullet(playState.assets.initializeModel("wiiTankBullet.g3db"), turretDirection, bulletSpeed);
+        Vector3 bulletStart = turretPos.add(new Vector3(getTurret().getCurrDirection()).scl(630));
+        Bullet newBullet = new Bullet(playState.assets.initializeModel("wiiTankBullet.g3db"), getTurret().getCurrDirection(), bulletSpeed);
         newBullet.getModelInstance().transform.set(bulletStart, getTurret().getModelInstance().transform.getRotation(new Quaternion()));
-
+        newBullet.getModelInstance().transform.rotateRad(Vector3.Y, (float)Math.PI/2);
         playState.addEntity(newBullet);
+
 
     }
 
