@@ -23,6 +23,8 @@ import com.minitanks.game.managers.InputManager;
 import com.minitanks.world.GameMap;
 import com.minitanks.world.TiledGameMap;
 
+import java.util.ArrayList;
+
 public class PlayState extends State {
 
     private boolean isPerspectiveCam = true;
@@ -34,6 +36,7 @@ public class PlayState extends State {
     private Vector3 keyInputVector = new Vector3();
     private Vector3 mouseInputVector = new Vector3();
     private InputManager iptMan;
+    private ArrayList<Bot> aiTanks = new ArrayList<Bot>();
 
     public Tank getPlayer(){
         return this.player;
@@ -113,6 +116,12 @@ public class PlayState extends State {
     public void update(float dt) {
         handleInput();
         updateBullets();
+        updateAI();
+
+        this.getPlayer().increaseBulletTime();
+        for (Tank ai : this.aiTanks){
+            ai.increaseBulletTime();
+        }
     }
 
 
@@ -172,13 +181,24 @@ public class PlayState extends State {
 
         // Initializing player
         this.player = new Tank(new Turret(this.assets.initializeModel("wiiTankTurret.g3db"), this),
-                new TankBase(this.assets.initializeModel("wiiTankBody.g3db"), this), this);
+                new TankBase(this.assets.initializeModel("wiiTankBody.g3db"), this), this, Vector3.Zero, false);
+
+        // Add AI Tanks to the Arraylist instance
+        aiTanks.add(new Bot(new Turret(this.assets.initializeModel("wiiTankTurret.g3db"), this),
+                new TankBase(this.assets.initializeModel("wiiTankBody.g3db"), this),
+                this, new Vector3(360, 0, 120), true, 1));
+
+        for (Tank ai : aiTanks){
+            this.map.addEntities(ai.getTankBase());
+            this.map.addEntities(ai.getTurret());
+        }
 
         this.map.addEntities(new Wall(this.assets.initializeModel("wiiTankWall.g3db"), 1200, 1200, 2.5f, 0.2f));
 
         this.map.addEntities(player.getTankBase());
         this.map.addEntities(player.getTurret());
         this.map.addEntities(new Floor(this.assets.createFloorModel(1000,1000, new Material())));
+
     }
 
 
@@ -191,5 +211,16 @@ public class PlayState extends State {
         this.camera.setPosition(new Vector3(0, 2500, 0));
         this.camera.lookAt(new Vector3(0, 0, 0));
         this.camera.rotateOnY(-90f);
+    }
+
+
+    /*
+    For each ai Tank, update their movement and shooting
+     */
+    public void updateAI(){
+        for (Bot ai : aiTanks){
+            ai.playBehaviour();
+        }
+
     }
 }
