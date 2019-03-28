@@ -186,14 +186,20 @@ public class PlayState extends State {
         // Add AI Tanks to the Arraylist instance
         aiTanks.add(new Bot(new Turret(this.assets.initializeModel("wiiTankTurret.g3db"), this),
                 new TankBase(this.assets.initializeModel("wiiTankBody.g3db"), this),
-                this, new Vector3(360, 0, 120), true, 1));
+                this, new Vector3(2360, 0, 1120), true, 1, this.player));
+
+        // Add AI Tanks to the Arraylist instance
+        aiTanks.add(new Bot(new Turret(this.assets.initializeModel("wiiTankTurret.g3db"), this),
+                new TankBase(this.assets.initializeModel("wiiTankBody.g3db"), this),
+                this, new Vector3(2360, 0, -1120), true, 2, this.player));
 
         for (Tank ai : aiTanks){
             this.map.addEntities(ai.getTankBase());
             this.map.addEntities(ai.getTurret());
         }
 
-        this.map.addEntities(new Wall(this.assets.initializeModel("wiiTankWall.g3db"), 1200, 1200, 2.5f, 0.2f));
+        this.map.addEntities(new Wall(this.assets.initializeModel("wiiTankWall.g3db"), 1000, 4200, 9.5f, 0.2f));
+        this.map.addEntities(new Wall(this.assets.initializeModel("wiiTankWall.g3db"), 1000, -3000, 9.5f, 0.2f));
 
         this.map.addEntities(player.getTankBase());
         this.map.addEntities(player.getTurret());
@@ -208,9 +214,10 @@ public class PlayState extends State {
      */
     public void initializeCamera(){
         this.camera = new Camera(false);
-        this.camera.setPosition(new Vector3(0, 2500, 0));
+        this.camera.setPosition(new Vector3(0, 2500, 1000));
         this.camera.lookAt(new Vector3(0, 0, 0));
         this.camera.rotateOnY(-90f);
+        System.out.println(this.camera.getDirection());
     }
 
 
@@ -221,6 +228,5 @@ public class PlayState extends State {
         for (Bot ai : aiTanks){
             ai.playBehaviour();
         }
-
     }
 }

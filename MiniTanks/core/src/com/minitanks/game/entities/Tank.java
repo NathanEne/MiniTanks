@@ -12,8 +12,8 @@ import java.lang.Math.*;
 
 public class Tank extends Entity {
     private boolean isAI;
-    private float movementSpeed = 10;
-    private float bulletSpeed = 15f;
+    private float movementSpeed = 15f;
+    private float bulletSpeed = 31f;
     private int numOfBullets = 5;
     private int numOfRicochets;
     private PlayState playState;
@@ -73,6 +73,7 @@ public class Tank extends Entity {
         if (turret == null || tankBase == null)
             return;
 
+
         // Make the turret face mouse position
         turret.rotateToMouse(mouseInput);
 
@@ -82,12 +83,9 @@ public class Tank extends Entity {
             float endRad = getEndRad(keyInputVector);
             getTankBase().rotateTowards(getEndRad(keyInputVector));
         }
-
-
         getTankBase().getModelInstance().transform.trn(keyInputVector.scl(movementSpeed));
         Vector3 tankPos = getTankBase().getModelInstance().transform.getTranslation(new Vector3());
         getTurret().getModelInstance().transform.set(tankPos.add(turretOffset), getTurret().getModelInstance().transform.getRotation(new Quaternion()));
-
     }
 
 
@@ -130,7 +128,7 @@ public class Tank extends Entity {
      * @ Param: Mouse position
      * Instantiate a bullet in the tanks barrel and add the respective force on bullet
      */
-    public void Shoot(int screenX, int screenY){
+    public void Shoot(){
         // Ensure that you can shoot
         if (!canShoot)
             return;

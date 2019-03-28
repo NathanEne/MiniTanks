@@ -28,7 +28,7 @@ public class InputManager implements InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button){
-        curr_playState.getPlayer().Shoot(screenX, screenY);
+        curr_playState.getPlayer().Shoot();
         return false;
     }
 
