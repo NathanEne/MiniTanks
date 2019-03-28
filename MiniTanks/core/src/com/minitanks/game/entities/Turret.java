@@ -1,9 +1,7 @@
 package com.minitanks.game.entities;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
-import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.minitanks.game.entities.Tank ;
 import com.minitanks.game.states.PlayState;
 
 public class Turret extends Entity {

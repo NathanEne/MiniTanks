@@ -3,15 +3,16 @@ package com.minitanks.game.entities;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.math.Vector3;
 
-public class Bullet extends Entity {
+public class Bullets extends Entity {
 
     private float speed;
     private Vector3 direction;
 
-    public Bullet(ModelInstance modelInstance, Vector3 dir, float speed){
+    public Bullets(ModelInstance modelInstance, Vector3 dir, float speed){
         super(modelInstance);
         this.speed = speed;
         this.direction = dir;
+
     }
 
     public float getSpeed() {

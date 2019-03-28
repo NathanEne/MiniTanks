@@ -3,30 +3,31 @@ package com.minitanks.game.states;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL30;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
-import com.badlogic.gdx.graphics.g3d.environment.PointLight;
-import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.physics.bullet.Bullet;
+import com.badlogic.gdx.physics.bullet.collision.*;
 import com.minitanks.game.entities.*;
-import com.minitanks.game.managers.AssetManager;
 import com.minitanks.game.managers.InputManager;
 import com.minitanks.world.GameMap;
+import com.minitanks.world.MyContactListener;
 import com.minitanks.world.TiledGameMap;
 
 import java.util.ArrayList;
 
 public class PlayState extends State {
-
+    private btCollisionConfiguration collisionConfig;
+    private btDispatcher dispatcher;
+    private MyContactListener contactListener;
+    private btBroadphaseInterface broadphase;
+    private btCollisionWorld collisionWorld;
     private boolean isPerspectiveCam = true;
     private GameMap map;
     private Environment environment;
@@ -37,6 +38,10 @@ public class PlayState extends State {
     private Vector3 mouseInputVector = new Vector3();
     private InputManager iptMan;
     private ArrayList<Bot> aiTanks = new ArrayList<Bot>();
+    final static short WALL_FLAG = 1 << 8;
+    final static short TANK_FLAG = 1 << 9;
+    final static short BULLET_FLAG = 1 << 7;
+    final static short ALL_FLAG = -1;
 
     public Tank getPlayer(){
         return this.player;
@@ -52,19 +57,20 @@ public class PlayState extends State {
 
     public PlayState(GameStateManager gsm) {
         super(gsm);
+        Bullet.init();
         this.iptMan = new InputManager(this);
         setInputProcessor();
         generateMap();
-
-        this.environment = new Environment();
-        this.environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.8f, 0.8f, 0.8f, 1.0f));
-        // environment.add(new PointLight().set(0.8f, 0.8f, 0.8f, 1000f, 200f, 1000f, 1000f));
-        environment.add(new DirectionalLight().set(Color.SLATE,1,0.1f,1));
+        initializeLighting();
 
     }
 
 
-
+    public void initializeLighting(){
+        this.environment = new Environment();
+        this.environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.8f, 0.8f, 0.8f, 1.0f));
+        environment.add(new DirectionalLight().set(Color.SLATE,1,0.1f,1));
+    }
     /**
      * Get the vector3 world position of the corresponding mouse position
      */
@@ -118,10 +124,15 @@ public class PlayState extends State {
         updateBullets();
         updateAI();
 
+        collisionWorld.performDiscreteCollisionDetection();
+
         this.getPlayer().increaseBulletTime();
         for (Tank ai : this.aiTanks){
             ai.increaseBulletTime();
         }
+
+
+
     }
 
 
@@ -163,8 +174,8 @@ public class PlayState extends State {
 
     public void updateBullets(){
         for (Entity e : this.map.getEntities()){
-            if (e instanceof Bullet){
-                e.getModelInstance().transform.trn(((Bullet) e).getDirection().scl(((Bullet) e).getSpeed()) );
+            if (e instanceof Bullets){
+                e.getModelInstance().transform.trn(((Bullets) e).getDirection().scl(((Bullets) e).getSpeed()) );
             }
         }
     }
@@ -177,6 +188,7 @@ public class PlayState extends State {
      */
     public void generateMap(){
         initializeCamera();
+        initializeCollisionEngine();
         this.map = new TiledGameMap();
 
         // Initializing player
@@ -189,15 +201,37 @@ public class PlayState extends State {
                 this, new Vector3(360, 0, 120), true, 1));
 
         for (Tank ai : aiTanks){
-            this.map.addEntities(ai.getTankBase());
-            this.map.addEntities(ai.getTurret());
+            this.addEntityToCollisionAndMap(ai.getTankBase());
+            this.addEntity(ai.getTurret());
         }
 
-        this.map.addEntities(new Wall(this.assets.initializeModel("wiiTankWall.g3db"), 1200, 1200, 2.5f, 0.2f));
+        this.addEntityToCollisionAndMap(new Wall(this.assets.initializeModel("wiiTankWall.g3db"), 1200, 1200, 2.5f, 0.2f));
 
-        this.map.addEntities(player.getTankBase());
+        this.addEntityToCollisionAndMap(player.getTankBase());
         this.map.addEntities(player.getTurret());
         this.map.addEntities(new Floor(this.assets.createFloorModel(1000,1000, new Material())));
+
+    }
+
+
+    /**
+     * Sets up all required objects for later use in collision detection
+     */
+    public void initializeCollisionEngine(){
+        collisionConfig = new btDefaultCollisionConfiguration();
+        dispatcher = new btCollisionDispatcher(collisionConfig);
+        broadphase = new btDbvtBroadphase();
+        collisionWorld = new btCollisionWorld(dispatcher, broadphase, collisionConfig);
+        contactListener = new MyContactListener();
+    }
+
+    public void addEntityToCollisionAndMap(Entity obj){
+        obj.getBody().setWorldTransform(obj.getModelInstance().transform);
+        obj.getBody().setUserValue(map.getEntities().size());
+        obj.getBody().setCollisionFlags(obj.getBody().getCollisionFlags() | btCollisionObject.CollisionFlags.CF_CUSTOM_MATERIAL_CALLBACK);
+        map.addEntities(obj);
+        collisionWorld.addCollisionObject(obj.getBody());
+
 
     }
 
