@@ -1,7 +1,5 @@
 package com.minitanks.world;
 
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.minitanks.game.entities.Entity;
 
 import java.util.ArrayList;
@@ -29,6 +27,7 @@ public abstract class GameMap {
 
         for (Entity entity : getEntities()) {
             entity.update(delta);
+            entity.getBody().setWorldTransform(entity.getModelInstance().transform);
         }
         this.entities.removeAll(entitiesToRemove);
         this.entitiesToRemove.clear();

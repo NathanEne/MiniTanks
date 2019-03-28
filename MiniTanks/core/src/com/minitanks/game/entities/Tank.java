@@ -1,14 +1,8 @@
 package com.minitanks.game.entities;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.g3d.ModelBatch;
-import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
 import com.minitanks.game.states.PlayState;
-
-import java.lang.Math.*;
 
 public class Tank extends Entity {
     private boolean isAI;
@@ -140,7 +134,7 @@ public class Tank extends Entity {
         // Instantiate a bullet at tip of turret
         Vector3 turretPos = getTurret().getModelInstance().transform.getTranslation(new Vector3());
         Vector3 bulletStart = turretPos.add(new Vector3(getTurret().getCurrDirection()).scl(630));
-        Bullet newBullet = new Bullet(playState.assets.initializeModel("wiiTankBullet.g3db"), getTurret().getCurrDirection(), bulletSpeed);
+        Bullets newBullet = new Bullets(playState.assets.initializeModel("wiiTankBullet.g3db"), getTurret().getCurrDirection(), bulletSpeed);
         newBullet.getModelInstance().transform.set(bulletStart, getTurret().getModelInstance().transform.getRotation(new Quaternion()));
         newBullet.getModelInstance().transform.rotateRad(Vector3.Y, (float)Math.PI/2);
         playState.addEntity(newBullet);
