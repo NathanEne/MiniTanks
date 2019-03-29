@@ -6,7 +6,7 @@ ASSETS VERSION
 --------------
 
 USE GRADLE 4.6
-we are using methods from grale 4.6 that are depreciated in 5.0 so it is necissary to use gradle 4.6
+we are using methods from gradle 4.6 that are depreciated in 5.0 so it is necissary to use gradle 4.6
 
 To get the Assets run the buld.gradle found in MiniTanks/build.gradle
 
