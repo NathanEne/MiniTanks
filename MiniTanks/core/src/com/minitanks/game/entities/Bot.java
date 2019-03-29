@@ -58,8 +58,6 @@ public class Bot extends Tank {
            (Increased probability of shooting as time without shooting continues).
          */
         Vector3 thisPos = super.getTankBase().getModelInstance().transform.getTranslation(new Vector3());
-        System.out.println(thisPos);
-
 
 
         if (!pendingTarget){
@@ -86,7 +84,4 @@ public class Bot extends Tank {
             counter = 0;
         }
     }
-
-
-
 }

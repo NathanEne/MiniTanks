@@ -22,11 +22,19 @@ import com.minitanks.game.managers.AssetManager;
 import com.minitanks.game.managers.InputManager;
 import com.minitanks.world.GameMap;
 import com.minitanks.world.TiledGameMap;
+import com.badlogic.gdx.physics.bullet.Bullet;
+import com.badlogic.gdx.physics.bullet.collision.*;
+import com.minitanks.world.MyContactListener;
 
 import java.util.ArrayList;
 
 public class PlayState extends State {
 
+    private btCollisionConfiguration collisionConfig;
+    private btDispatcher dispatcher;
+    private MyContactListener contactListener;
+    private btBroadphaseInterface broadphase;
+    private btCollisionWorld collisionWorld;
     private boolean isPerspectiveCam = true;
     private GameMap map;
     private Environment environment;
@@ -37,6 +45,10 @@ public class PlayState extends State {
     private Vector3 mouseInputVector = new Vector3();
     private InputManager iptMan;
     private ArrayList<Bot> aiTanks = new ArrayList<Bot>();
+    final static short WALL_FLAG = 1 << 8;
+    final static short TANK_FLAG = 1 << 9;
+    final static short BULLET_FLAG = 1 << 7;
+    final static short ALL_FLAG = -1;
 
     public Tank getPlayer(){
         return this.player;
@@ -52,17 +64,21 @@ public class PlayState extends State {
 
     public PlayState(GameStateManager gsm) {
         super(gsm);
+        Bullet.init();
         this.iptMan = new InputManager(this);
         setInputProcessor();
         generateMap();
+        initializeLighting();
+    }
 
+
+    public void initializeLighting(){
         this.environment = new Environment();
         this.environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.8f, 0.8f, 0.8f, 1.0f));
         // environment.add(new PointLight().set(0.8f, 0.8f, 0.8f, 1000f, 200f, 1000f, 1000f));
         environment.add(new DirectionalLight().set(Color.SLATE,1,0.1f,1));
 
     }
-
 
 
     /**
@@ -118,6 +134,7 @@ public class PlayState extends State {
         updateBullets();
         updateAI();
 
+        collisionWorld.performDiscreteCollisionDetection();
         this.getPlayer().increaseBulletTime();
         for (Tank ai : this.aiTanks){
             ai.increaseBulletTime();
@@ -177,6 +194,7 @@ public class PlayState extends State {
      */
     public void generateMap(){
         initializeCamera();
+        initializeCollisionEngine();
         this.map = new TiledGameMap();
 
         // Initializing player
@@ -198,8 +216,8 @@ public class PlayState extends State {
             this.addEntity(ai.getTurret());
         }
 
-        this.map.addEntities(new Wall(this.assets.initializeModel("wiiTankWall.g3db"), 1000, 4200, 9.5f, 0.2f));
-        this.map.addEntities(new Wall(this.assets.initializeModel("wiiTankWall.g3db"), 1000, -3000, 9.5f, 0.2f));
+        //this.map.addEntityToCollisionAndMap(new Wall(this.assets.initializeModel("wiiTankWall.g3db"), 1000, 4200, 9.5f, 0.2f));
+        //this.map.addEntityToCollisionAndMap(new Wall(this.assets.initializeModel("wiiTankWall.g3db"), 1000, -3000, 9.5f, 0.2f));
 
         this.addEntityToCollisionAndMap(player.getTankBase());
         this.map.addEntities(player.getTurret());
@@ -228,5 +246,24 @@ public class PlayState extends State {
             ai.playBehaviour();
         }
 
+    }
+
+    /**
+     * Sets up all required objects for later use in collision detection
+     */
+    public void initializeCollisionEngine(){
+        collisionConfig = new btDefaultCollisionConfiguration();
+        dispatcher = new btCollisionDispatcher(collisionConfig);
+        broadphase = new btDbvtBroadphase();
+        collisionWorld = new btCollisionWorld(dispatcher, broadphase, collisionConfig);
+        contactListener = new MyContactListener();
+    }
+
+    public void addEntityToCollisionAndMap(Entity obj){
+        obj.getBody().setWorldTransform(obj.getModelInstance().transform);
+        obj.getBody().setUserValue(map.getEntities().size());
+        obj.getBody().setCollisionFlags(obj.getBody().getCollisionFlags() | btCollisionObject.CollisionFlags.CF_CUSTOM_MATERIAL_CALLBACK);
+        map.addEntities(obj);
+        collisionWorld.addCollisionObject(obj.getBody());
     }
 }
