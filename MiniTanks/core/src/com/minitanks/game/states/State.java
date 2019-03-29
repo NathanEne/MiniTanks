@@ -1,15 +1,9 @@
 package com.minitanks.game.states;
 
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.PerspectiveCamera;
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.minitanks.game.entities.Camera;
 import com.minitanks.game.managers.AssetManager;
-import com.minitanks.game.managers.InputManager;
 
 public abstract class State {
 

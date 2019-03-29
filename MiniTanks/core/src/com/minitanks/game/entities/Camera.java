@@ -2,7 +2,6 @@ package com.minitanks.game.entities;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
-import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.math.Vector3;
 
 public class Camera extends Entity {
@@ -17,9 +16,10 @@ public class Camera extends Entity {
         if (isPerspective){
             this.perspectiveCamera = new PerspectiveCamera(60, 5000, 5000);
             this.perspectiveCamera.far = 8500;
+
         }
         else{
-            this.orthographicCamera = new OrthographicCamera(8000, 8000);
+            this.orthographicCamera = new OrthographicCamera(8500, 8500);
             this.orthographicCamera.far = 8500;
         }
     }

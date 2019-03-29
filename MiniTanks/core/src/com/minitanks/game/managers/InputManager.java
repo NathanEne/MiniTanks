@@ -1,12 +1,8 @@
 package com.minitanks.game.managers;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.math.Quaternion;
-import com.badlogic.gdx.math.Vector3;
-import com.minitanks.game.entities.Bullet;
 import com.minitanks.game.states.PlayState;
-import javafx.print.PageLayout;
+
 
 public class InputManager implements InputProcessor {
 
@@ -28,7 +24,7 @@ public class InputManager implements InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button){
-        curr_playState.getPlayer().Shoot(screenX, screenY);
+        curr_playState.getPlayer().Shoot();
         return false;
     }
 

@@ -1,10 +1,7 @@
 package com.minitanks.game.entities;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.math.Quaternion;
 import com.minitanks.game.states.PlayState;
 
 public class TankBase extends Entity {
@@ -18,6 +15,7 @@ public class TankBase extends Entity {
     public TankBase(ModelInstance modelInstance, PlayState playst) {
         super(modelInstance);
         this.playState = playst;
+        this.id =1;
     }
     public float getCurrRot(){return currRotation;}
 
