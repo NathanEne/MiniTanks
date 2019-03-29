@@ -61,12 +61,14 @@ public class MyContactListener extends ContactListener {
             aabb1.mul(one.getModelInstance().transform);
             aabb2.mul(two.getModelInstance().transform);
 
+
+            //todo add restrictions on this condition to remove bugs
             if(aabb2.min.x<=aabb1.min.x && Gdx.input.isKeyPressed(Input.Keys.W)){
                 //bottom
                 float delta = aabb2.max.x - aabb1.min.x;
                 two.getModelInstance().transform.trn(-delta,0,0);
                 aabb1.mul(two.getModelInstance().transform);
-
+                //todo add restrictions on this condition
             }else if(aabb2.max.x>=aabb1.max.x&&Gdx.input.isKeyPressed(Input.Keys.S)){
                 //top
                 float delta = aabb2.min.x - aabb1.max.x;
