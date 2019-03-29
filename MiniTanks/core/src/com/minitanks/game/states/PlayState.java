@@ -116,7 +116,12 @@ public class PlayState extends State {
             //gsm.push(new SettingsState(gsm));
             //gsm.update(Gdx.graphics.getDeltaTime());
             //gsm.render(((SettingsState) gsm.currentState()).getBatch());
-            
+            try {
+                SavingManager.writeTankPosition(player);
+            }
+            catch(IOException e) {
+
+            }
         }
 
         if (this.keyInputVector.len2() != 0 || mouseInputVector.len2() != 0){
