@@ -9,5 +9,6 @@ public class Wall extends Entity{
         super(modelInstance);
         getModelInstance().transform.set(new Vector3(posX, 0, posZ), getModelInstance().transform.getRotation(new Quaternion()));
         getModelInstance().transform.scl(sclW, 1, sclH);
+        this.id=5;
     }
 }

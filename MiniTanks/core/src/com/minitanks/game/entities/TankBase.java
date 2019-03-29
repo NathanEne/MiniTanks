@@ -15,6 +15,7 @@ public class TankBase extends Entity {
     public TankBase(ModelInstance modelInstance, PlayState playst) {
         super(modelInstance);
         this.playState = playst;
+        this.id =1;
     }
     public float getCurrRot(){return currRotation;}
 

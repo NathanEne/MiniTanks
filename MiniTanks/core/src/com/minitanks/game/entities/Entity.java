@@ -6,7 +6,11 @@ import com.badlogic.gdx.physics.bullet.collision.btCollisionObject;
 
 
 public abstract class Entity {
+    public int getId() {
+        return id;
+    }
 
+    protected int id;
     private btCollisionObject body;
     private Vector3 position;
     private ModelInstance model;
