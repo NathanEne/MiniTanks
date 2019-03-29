@@ -1,19 +1,20 @@
 package com.minitanks.world;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.physics.bullet.collision.ContactListener;
 import com.minitanks.game.entities.Bullets;
 import com.minitanks.game.entities.Entity;
-import com.minitanks.game.managers.CollisionManager;
 
 
 public class MyContactListener extends ContactListener {
     private GameMap map;
-    private CollisionManager manager;
+    //private CollisionManager manager;
     public MyContactListener(GameMap map){
         this.map = map;
-        manager = new CollisionManager(map);
+      //  manager = new CollisionManager(map);
 
 
     }
@@ -52,10 +53,44 @@ public class MyContactListener extends ContactListener {
 
             }
 
-        }
-        if (two.getId()==2&&one.getId() ==1){
-           one.getModelInstance().transform.trn(0,10000,0);
+        }else  if (two.getId()==1&&one.getId() ==5){
+            BoundingBox aabb1 = new BoundingBox();
+            one.getModelInstance().calculateBoundingBox(aabb1);
+            BoundingBox aabb2 = new BoundingBox();
+            two.getModelInstance().calculateBoundingBox(aabb2);
+            aabb1.mul(one.getModelInstance().transform);
+            aabb2.mul(two.getModelInstance().transform);
 
+            if(aabb2.min.x<=aabb1.min.x && Gdx.input.isKeyPressed(Input.Keys.W)){
+                //bottom
+                float delta = aabb2.max.x - aabb1.min.x;
+                two.getModelInstance().transform.trn(-delta,0,0);
+                aabb1.mul(two.getModelInstance().transform);
+
+            }else if(aabb2.max.x>=aabb1.max.x&&Gdx.input.isKeyPressed(Input.Keys.S)){
+                //top
+                float delta = aabb2.min.x - aabb1.max.x;
+                two.getModelInstance().transform.trn(-delta,0,0);
+
+            }else if(aabb2.min.z<=aabb1.min.z&&Gdx.input.isKeyPressed(Input.Keys.D)){
+                //left
+                float delta = aabb2.max.z - aabb1.min.z;
+                two.getModelInstance().transform.trn(0,0,-delta);
+
+
+            }else if(aabb2.max.z>=aabb1.max.z&&Gdx.input.isKeyPressed(Input.Keys.A)){
+                //right
+                float delta = aabb2.min.z - aabb1.max.z;
+                two.getModelInstance().transform.trn(0,0,-delta);
+
+            }
+
+        } else if (two.getId()==2&&one.getId() ==1){
+           one.getModelInstance().transform.trn(0,10000,0);
+            two.getModelInstance().transform.trn(0,10000,0);
+        } else if (two.getId()==2&&one.getId() ==2){
+            one.getModelInstance().transform.trn(0,10000,0);
+            two.getModelInstance().transform.trn(0,10000,0);
         }
         return true;
     }
