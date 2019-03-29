@@ -19,10 +19,12 @@ import com.badlogic.gdx.physics.bullet.collision.*;
 import com.badlogic.gdx.physics.bullet.linearmath.btIDebugDraw;
 import com.minitanks.game.entities.*;
 import com.minitanks.game.managers.InputManager;
+import com.minitanks.game.managers.SavingManager;
 import com.minitanks.world.GameMap;
 import com.minitanks.world.MyContactListener;
 import com.minitanks.world.TiledGameMap;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class PlayState extends State {
@@ -111,9 +113,10 @@ public class PlayState extends State {
             this.keyInputVector.z += 1;
         }
         if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
-            gsm.push(new SettingsState(gsm));
-            gsm.update(Gdx.graphics.getDeltaTime());
-            gsm.render(((SettingsState) gsm.currentState()).getBatch());
+            //gsm.push(new SettingsState(gsm));
+            //gsm.update(Gdx.graphics.getDeltaTime());
+            //gsm.render(((SettingsState) gsm.currentState()).getBatch());
+            
         }
 
         if (this.keyInputVector.len2() != 0 || mouseInputVector.len2() != 0){
@@ -206,15 +209,17 @@ public class PlayState extends State {
      * FUTURE: add level option and organization
      */
     public void generateMap(){
-        initializeCamera();
-        this.map = new TiledGameMap();
-        initializeCollisionEngine();
+        try {
+            initializeCamera();
+            this.map = new TiledGameMap();
+            initializeCollisionEngine();
+            SavingManager tankVector = new SavingManager();
 
-        // Initializing player
-        this.player = new Tank(new Turret(this.assets.initializeModel("wiiTankTurret.g3db"), this),
-                new TankBase(this.assets.initializeModel("wiiTankBody.g3db"), this), this, Vector3.Zero, false);
+            // Initializing player
+            this.player = new Tank(new Turret(this.assets.initializeModel("wiiTankTurret.g3db"), this),
+                    new TankBase(this.assets.initializeModel("wiiTankBody.g3db"), this), this, tankVector.getTankVector(), false);
 
-        // Add AI Tanks to the Arraylist instance
+            // Add AI Tanks to the Arraylist instance
 //        aiTanks.add(new Bot(new Turret(this.assets.initializeModel("wiiTankTurret.g3db"), this),
 //                new TankBase(this.assets.initializeModel("wiiTankBody.g3db"), this),
 //                this, new Vector3(2360, 0, 1120), true, 1, this.player));
@@ -229,11 +234,15 @@ public class PlayState extends State {
 //            this.addEntity(ai.getTurret());
 //        }
 
-        this.addEntityToCollisionAndMap(new Wall(this.assets.initializeModel("wiiTankWall.g3db"), 1200, 1200, 1f, 1f),true);
+            this.addEntityToCollisionAndMap(new Wall(this.assets.initializeModel("wiiTankWall.g3db"), 1200, 1200, 1f, 1f), true);
 
-        this.addEntityToCollisionAndMap(player.getTankBase(),false);
-        this.map.addEntities(player.getTurret());
-        this.map.addEntities(new Floor(this.assets.createFloorModel(1000,1000, new Material())));
+            this.addEntityToCollisionAndMap(player.getTankBase(), false);
+            this.map.addEntities(player.getTurret());
+            this.map.addEntities(new Floor(this.assets.createFloorModel(1000, 1000, new Material())));
+        }
+        catch(IOException ioe) {
+
+        }
 
     }
 
