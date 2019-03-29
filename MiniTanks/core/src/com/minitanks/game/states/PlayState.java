@@ -12,8 +12,11 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.physics.bullet.Bullet;
+import com.badlogic.gdx.physics.bullet.DebugDrawer;
 import com.badlogic.gdx.physics.bullet.collision.*;
+import com.badlogic.gdx.physics.bullet.linearmath.btIDebugDraw;
 import com.minitanks.game.entities.*;
 import com.minitanks.game.managers.InputManager;
 import com.minitanks.world.GameMap;
@@ -34,6 +37,7 @@ public class PlayState extends State {
     private ModelBatch batch;
     private ModelInstance modelInstance;
     private Tank player;
+    private DebugDrawer debugDraw;
     private Vector3 keyInputVector = new Vector3();
     private Vector3 mouseInputVector = new Vector3();
     private InputManager iptMan;
@@ -62,7 +66,6 @@ public class PlayState extends State {
         setInputProcessor();
         generateMap();
         initializeLighting();
-
     }
 
 
@@ -120,20 +123,23 @@ public class PlayState extends State {
 
     @Override
     public void update(float dt) {
+
         handleInput();
         updateBullets();
         updateAI();
 
-        collisionWorld.performDiscreteCollisionDetection();
 
         this.getPlayer().increaseBulletTime();
         for (Tank ai : this.aiTanks){
             ai.increaseBulletTime();
         }
-
-
-
-    }
+        for (Entity entity: map.getEntities()) {
+            if (entity.hasBody()) {
+                entity.getBody().setWorldTransform(entity.getModelInstance().transform);
+            }
+        }
+        collisionWorld.performDiscreteCollisionDetection();
+        }
 
 
 
@@ -145,10 +151,18 @@ public class PlayState extends State {
 
         this.camera.updateCam();
 
+
         if (this.camera.isPerspective())
             this.assets.render(this.camera.getPersCam(), environment, map.getEntities());
-        else
+        else {
             this.assets.render(this.camera.getOrthoCam(), environment, map.getEntities());
+        }
+
+        debugDraw.begin(this.camera.getOrthoCam());
+        collisionWorld.debugDrawWorld();
+        debugDraw.end();
+
+
     }
 
 
@@ -201,36 +215,54 @@ public class PlayState extends State {
                 this, new Vector3(360, 0, 120), true, 1));
 
         for (Tank ai : aiTanks){
-            this.addEntityToCollisionAndMap(ai.getTankBase());
+            this.addEntityToCollisionAndMap(ai.getTankBase(),false);
             this.addEntity(ai.getTurret());
         }
 
-        this.addEntityToCollisionAndMap(new Wall(this.assets.initializeModel("wiiTankWall.g3db"), 1200, 1200, 2.5f, 0.2f));
+        this.addEntityToCollisionAndMap(new Wall(this.assets.initializeModel("wiiTankWall.g3db"), 1200, 1200, 1f, 1f),true);
 
-        this.addEntityToCollisionAndMap(player.getTankBase());
+        this.addEntityToCollisionAndMap(player.getTankBase(),false);
         this.map.addEntities(player.getTurret());
         this.map.addEntities(new Floor(this.assets.createFloorModel(1000,1000, new Material())));
 
     }
 
-
     /**
      * Sets up all required objects for later use in collision detection
      */
     public void initializeCollisionEngine(){
+
         collisionConfig = new btDefaultCollisionConfiguration();
         dispatcher = new btCollisionDispatcher(collisionConfig);
         broadphase = new btDbvtBroadphase();
         collisionWorld = new btCollisionWorld(dispatcher, broadphase, collisionConfig);
-        contactListener = new MyContactListener();
+        contactListener = new MyContactListener(map);
+        debugDraw = new DebugDrawer();
+
+        collisionWorld.setDebugDrawer(debugDraw);
+        debugDraw.setDebugMode(btIDebugDraw.DebugDrawModes.DBG_MAX_DEBUG_DRAW_MODE);
+
+
     }
 
-    public void addEntityToCollisionAndMap(Entity obj){
+    public void addEntityToCollisionAndMap(Entity obj, boolean wall){
+        obj.setBody(new btCollisionObject());
+        BoundingBox a = new BoundingBox();
+        obj.getModelInstance().calculateBoundingBox(a);
+        obj.getBody().setCollisionShape(new btBoxShape(a.getDimensions(new Vector3()).scl(0.5f)));
         obj.getBody().setWorldTransform(obj.getModelInstance().transform);
+
         obj.getBody().setUserValue(map.getEntities().size());
+        obj.getBody().activate();
         obj.getBody().setCollisionFlags(obj.getBody().getCollisionFlags() | btCollisionObject.CollisionFlags.CF_CUSTOM_MATERIAL_CALLBACK);
         map.addEntities(obj);
-        collisionWorld.addCollisionObject(obj.getBody());
+        if(wall){
+            collisionWorld.addCollisionObject(obj.getBody(),ALL_FLAG,ALL_FLAG);
+        }else{
+            collisionWorld.addCollisionObject(obj.getBody(),ALL_FLAG,ALL_FLAG);
+
+        }
+
 
 
     }

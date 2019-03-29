@@ -27,7 +27,7 @@ public abstract class GameMap {
 
         for (Entity entity : getEntities()) {
             entity.update(delta);
-            entity.getBody().setWorldTransform(entity.getModelInstance().transform);
+                entity.getBody().setWorldTransform(entity.getModelInstance().transform);
         }
         this.entities.removeAll(entitiesToRemove);
         this.entitiesToRemove.clear();

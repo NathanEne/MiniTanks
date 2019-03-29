@@ -139,7 +139,7 @@ public class Tank extends Entity {
         Bullets newBullet = new Bullets(playState.assets.initializeModel("wiiTankBullet.g3db"), getTurret().getCurrDirection(), bulletSpeed);
         newBullet.getModelInstance().transform.set(bulletStart, getTurret().getModelInstance().transform.getRotation(new Quaternion()));
         newBullet.getModelInstance().transform.rotateRad(Vector3.Y, (float)Math.PI/2);
-        playState.addEntity(newBullet);
+        playState.addEntityToCollisionAndMap(newBullet,false);
 
 
     }
