@@ -26,6 +26,7 @@ import com.minitanks.world.TiledGameMap;
 import java.util.ArrayList;
 
 public class PlayState extends State {
+
     private btCollisionConfiguration collisionConfig;
     private btDispatcher dispatcher;
     private MyContactListener contactListener;
@@ -66,6 +67,7 @@ public class PlayState extends State {
         setInputProcessor();
         generateMap();
         initializeLighting();
+
     }
 
 
@@ -73,7 +75,10 @@ public class PlayState extends State {
         this.environment = new Environment();
         this.environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.8f, 0.8f, 0.8f, 1.0f));
         environment.add(new DirectionalLight().set(Color.SLATE,1,0.1f,1));
+
     }
+
+
     /**
      * Get the vector3 world position of the corresponding mouse position
      */
@@ -124,10 +129,10 @@ public class PlayState extends State {
     @Override
     public void update(float dt) {
 
+
         handleInput();
         updateBullets();
         updateAI();
-
 
         this.getPlayer().increaseBulletTime();
         for (Tank ai : this.aiTanks){
@@ -212,7 +217,12 @@ public class PlayState extends State {
         // Add AI Tanks to the Arraylist instance
         aiTanks.add(new Bot(new Turret(this.assets.initializeModel("wiiTankTurret.g3db"), this),
                 new TankBase(this.assets.initializeModel("wiiTankBody.g3db"), this),
-                this, new Vector3(360, 0, 120), true, 1));
+                this, new Vector3(2360, 0, 1120), true, 1, this.player));
+
+        // Add AI Tanks to the Arraylist instance
+        aiTanks.add(new Bot(new Turret(this.assets.initializeModel("wiiTankTurret.g3db"), this),
+                new TankBase(this.assets.initializeModel("wiiTankBody.g3db"), this),
+                this, new Vector3(2360, 0, -1120), true, 2, this.player));
 
         for (Tank ai : aiTanks){
             this.addEntityToCollisionAndMap(ai.getTankBase(),false);
@@ -231,6 +241,7 @@ public class PlayState extends State {
      * Sets up all required objects for later use in collision detection
      */
     public void initializeCollisionEngine(){
+
 
         collisionConfig = new btDefaultCollisionConfiguration();
         dispatcher = new btCollisionDispatcher(collisionConfig);
@@ -262,9 +273,6 @@ public class PlayState extends State {
             collisionWorld.addCollisionObject(obj.getBody(),ALL_FLAG,ALL_FLAG);
 
         }
-
-
-
     }
 
 
