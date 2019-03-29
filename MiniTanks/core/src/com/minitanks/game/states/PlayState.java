@@ -207,27 +207,27 @@ public class PlayState extends State {
      */
     public void generateMap(){
         initializeCamera();
-        initializeCollisionEngine();
         this.map = new TiledGameMap();
+        initializeCollisionEngine();
 
         // Initializing player
         this.player = new Tank(new Turret(this.assets.initializeModel("wiiTankTurret.g3db"), this),
                 new TankBase(this.assets.initializeModel("wiiTankBody.g3db"), this), this, Vector3.Zero, false);
 
         // Add AI Tanks to the Arraylist instance
-        aiTanks.add(new Bot(new Turret(this.assets.initializeModel("wiiTankTurret.g3db"), this),
-                new TankBase(this.assets.initializeModel("wiiTankBody.g3db"), this),
-                this, new Vector3(2360, 0, 1120), true, 1, this.player));
-
-        // Add AI Tanks to the Arraylist instance
-        aiTanks.add(new Bot(new Turret(this.assets.initializeModel("wiiTankTurret.g3db"), this),
-                new TankBase(this.assets.initializeModel("wiiTankBody.g3db"), this),
-                this, new Vector3(2360, 0, -1120), true, 2, this.player));
-
-        for (Tank ai : aiTanks){
-            this.addEntityToCollisionAndMap(ai.getTankBase(),false);
-            this.addEntity(ai.getTurret());
-        }
+//        aiTanks.add(new Bot(new Turret(this.assets.initializeModel("wiiTankTurret.g3db"), this),
+//                new TankBase(this.assets.initializeModel("wiiTankBody.g3db"), this),
+//                this, new Vector3(2360, 0, 1120), true, 1, this.player));
+//
+//        // Add AI Tanks to the Arraylist instance
+//        aiTanks.add(new Bot(new Turret(this.assets.initializeModel("wiiTankTurret.g3db"), this),
+//                new TankBase(this.assets.initializeModel("wiiTankBody.g3db"), this),
+//                this, new Vector3(2360, 0, -1120), true, 2, this.player));
+//
+//        for (Tank ai : aiTanks){
+//            this.addEntityToCollisionAndMap(ai.getTankBase(),false);
+//            this.addEntity(ai.getTurret());
+//        }
 
         this.addEntityToCollisionAndMap(new Wall(this.assets.initializeModel("wiiTankWall.g3db"), 1200, 1200, 1f, 1f),true);
 
