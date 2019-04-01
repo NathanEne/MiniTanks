@@ -11,7 +11,7 @@ public class Tank extends Entity {
     private int bulletsInPlay = 0;
     private int maxNumOfBullets = 5;
     private int numOfRicochets;
-    private PlayState playState;
+    protected PlayState playState;
     private boolean canShoot = true;
     private boolean isDead = false;
 
@@ -101,7 +101,9 @@ public class Tank extends Entity {
         getTurret().getModelInstance().transform.set(tankPos.add(turretOffset), getTurret().getModelInstance().transform.getRotation(new Quaternion()));
     }
 
-
+    public float getBulletSpeed() {
+        return bulletSpeed;
+    }
 
     /**
      * @ Param: Mouse position

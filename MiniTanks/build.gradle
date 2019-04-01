@@ -13,6 +13,7 @@ buildscript {
         
 
     }
+    
 }
 
 allprojects {
@@ -28,7 +29,6 @@ allprojects {
         ashleyVersion = '1.7.0'
         aiVersion = '1.8.0'
     }
-
     repositories {
         mavenLocal()
         mavenCentral()
@@ -58,13 +58,30 @@ project(":desktop") {
 project(":core") {
     apply plugin: "java"
 
-
+    sourceSets.test.java.srcDirs = ["/test"]
+    
     dependencies {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-ai:$aiVersion"
         compile "com.badlogicgames.gdx:gdx-bullet:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-controllers:$gdxVersion"
+        
+        compile "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
+        compile "net.onedaybeard.artemis:artemis-odb-serializer-json-libgdx:2.0.0"
+        testCompile "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
+        testCompile "com.badlogicgames.gdx:gdx:$gdxVersion"
+        testCompile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+        testCompile "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
+        testCompile "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
+        testCompile "junit:junit:4.12"
+        testCompile "org.mockito:mockito-core:2.2.7"
+
+        testCompile "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
+        testCompile "com.badlogicgames.gdx:gdx:$gdxVersion"
+        testCompile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+        testCompile "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
+        testCompile "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
         
     }
 }
