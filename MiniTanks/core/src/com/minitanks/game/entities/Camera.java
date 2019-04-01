@@ -7,6 +7,8 @@ import com.badlogic.gdx.math.Vector3;
 public class Camera extends Entity {
 
     private boolean isPerspective;
+    private boolean isMoving = false;
+    private Vector3 destination;
     private PerspectiveCamera perspectiveCamera;
     private OrthographicCamera orthographicCamera;
 
@@ -19,7 +21,7 @@ public class Camera extends Entity {
 
         }
         else{
-            this.orthographicCamera = new OrthographicCamera(8500, 8500);
+            this.orthographicCamera = new OrthographicCamera(10500*(float)(16.0/9), 10500);
             this.orthographicCamera.far = 8500;
         }
     }
@@ -85,4 +87,37 @@ public class Camera extends Entity {
 
         return new Vector3(worldPos.x, worldPos.y + 5000, worldPos.z);
     }
+
+
+    /**
+     * Check to see if the player is nearing the edge of camera, move if so
+     * @param playerPos the Vector3 position of the tank
+     */
+    public void seePlayer(Vector3 playerPos, Vector3 tankDirection){
+        // todo: Implment this for a rotated camera angle
+
+        float thres = 2000; // Units from the side of the screen that trigger camera movement
+
+        // Size of screen (world units)
+        float w = 18600/2.0f;
+        float h = 10400/2.0f;
+
+        Vector3 camPos = orthographicCamera.position;
+
+        if (isMoving){
+            orthographicCamera.position.lerp(destination, 0.05f);
+            if (this.destination.dst(orthographicCamera.position)  < 100){
+                isMoving = false;
+            }
+        }
+        else{
+            if (playerPos.x > camPos.x + h - thres || playerPos.x < camPos.x - h + thres ||
+                    playerPos.z > camPos.z + w - thres || playerPos.z < camPos.z - w + thres){
+                // Gradually move towards the tank.
+                isMoving = true;
+                this.destination = new Vector3(playerPos.x, orthographicCamera.position.y, playerPos.z).add(tankDirection.scl(70));
+            }
+        }
+    }
+
 }

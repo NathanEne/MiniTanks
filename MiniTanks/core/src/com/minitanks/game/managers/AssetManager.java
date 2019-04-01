@@ -31,7 +31,6 @@ public class AssetManager {
     }
 
     public ModelInstance initializeModel(String path){
-        System.out.println(path);
         Model m = this.modelLoader.loadModel(Gdx.files.getFileHandle(path, Files.FileType.Internal));
         return new ModelInstance(m);
 
@@ -39,8 +38,13 @@ public class AssetManager {
 
     public ModelInstance createFloorModel(final float width, final float height, final Material material) {
         modelBuilder = new ModelBuilder();
-        Model m =modelBuilder.createBox(10000,1,10000,new Material(ColorAttribute.createDiffuse(Color.GRAY)),VertexAttributes.Usage.Position|VertexAttributes.Usage.Normal);
+        Model m = modelBuilder.createBox(1000000,1,1000000,new Material(ColorAttribute.createDiffuse(new Color((float)253/255, (float)227/255, (float)167/255, 1f))),VertexAttributes.Usage.Position|VertexAttributes.Usage.Normal);
         return new ModelInstance(m,0,-1,0);
+    }
+    public ModelInstance createWallModel(final float width, final float height, final Material material) {
+        modelBuilder = new ModelBuilder();
+        Model m = modelBuilder.createBox(width,1000,height-200,new Material(ColorAttribute.createDiffuse(new Color((float)232/255, (float)232/255, (float)232/255, 1f))),VertexAttributes.Usage.Position|VertexAttributes.Usage.Normal);
+        return new ModelInstance(m,0,0,0);
     }
 
 

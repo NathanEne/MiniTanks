@@ -6,13 +6,14 @@ import com.minitanks.game.states.PlayState;
 
 public class Tank extends Entity {
     private boolean isAI;
-    private float movementSpeed = 15f;
-    private float bulletSpeed = 31f;
-    private int numOfBullets = 5;
+    private float movementSpeed = 25f;
+    private float bulletSpeed = 38f;
+    private int bulletsInPlay = 0;
+    private int maxNumOfBullets = 5;
     private int numOfRicochets;
     private PlayState playState;
     private boolean canShoot = true;
-
+    private boolean isDead = false;
 
     // Number of frames past since last shot
     private int timeSinceLastShot = 0;
@@ -39,6 +40,10 @@ public class Tank extends Entity {
         return playState;
     }
 
+    public boolean isDead() {
+        return isDead;
+    }
+
     public Tank(Turret t, TankBase tb, PlayState plst, Vector3 startingPos, boolean isAI) {
         this.turret = t;
         this.tankBase = tb;
@@ -61,9 +66,9 @@ public class Tank extends Entity {
     /**
      * Apply the movement for the tank
      *
-     * @param keyInputVector A normalized direction for the tank to travel on this frame.
+     * @param dirVector A normalized direction for the tank to travel on this frame.
      */
-    public void move(Vector3 keyInputVector, Vector3 mouseInput) {
+    public void move(Vector3 dirVector, Vector3 mouseInput) {
         if (turret == null || tankBase == null)
             return;
 
@@ -72,48 +77,28 @@ public class Tank extends Entity {
         turret.rotateToMouse(mouseInput);
 
 
-        if (!keyInputVector.isZero()){
-            // Linearly interpolate the rotation of the base
-            float endRad = getEndRad(keyInputVector);
-            getTankBase().rotateTowards(getEndRad(keyInputVector));
+        if (!dirVector.isZero()){
+            // Get current position
+            Vector3 currentPos = getTankBase().getModelInstance().transform.getTranslation(new Vector3());
+
+            // Rotate the turret
+            getTankBase().getModelInstance().transform.setToRotation(dirVector, Vector3.X.scl(-1));
+
+            // Bug: Must rotate by 90 degrees if going diagonal.
+            if (dirVector.x != 0 && dirVector.z != 0){
+                getTankBase().getModelInstance().transform.rotateRad(Vector3.Y, (float)Math.PI/2);
+            }
+
+            // Set back to the current position
+            getTankBase().getModelInstance().transform.set(currentPos, getTankBase().getModelInstance().transform.getRotation(new Quaternion()));
         }
-        getTankBase().getModelInstance().transform.trn(keyInputVector.scl(movementSpeed));
+
+        // Actually translate the model
+        getTankBase().getModelInstance().transform.trn(dirVector.nor().scl(movementSpeed));
+
+        // Move the turret along with it
         Vector3 tankPos = getTankBase().getModelInstance().transform.getTranslation(new Vector3());
         getTurret().getModelInstance().transform.set(tankPos.add(turretOffset), getTurret().getModelInstance().transform.getRotation(new Quaternion()));
-    }
-
-
-
-    /**
-     *
-     * @param input the vector 3 of either mouse or keyboard input.
-     * @return the angle the 3D model should attempt to rotate towards.
-     */
-    private float getEndRad(Vector3 input) {
-        // Input vector will never be zero vector
-
-        if (input.z == 0){
-            if (input.x < 0)
-                return (float)Math.PI;
-            return (float)Math.PI * 2;
-        }
-        if (input.x == 0){
-            if (input.z < 0)
-                return (float)Math.PI/2;
-            return (float)Math.PI*3/2;
-        }
-
-        if (input.z < 0){
-            if (input.x < 0)
-                return (float)Math.PI*3 / 4;
-            return (float)Math.PI / 4;
-        }
-        if (input.z > 0){
-            if (input.x > 0)
-                return (float)Math.PI + (float)Math.PI*3 / 4;
-            return (float)Math.PI + (float)Math.PI / 4;
-        }
-        return 0;
     }
 
 
@@ -124,10 +109,10 @@ public class Tank extends Entity {
      */
     public void Shoot(){
         // Ensure that you can shoot
-        if (!canShoot)
+        if (!canShoot || bulletsInPlay >= maxNumOfBullets)
             return;
 
-        this.numOfBullets++;
+        //this.bulletsInPlay++;
         this.timeSinceLastShot = 0;
         this.canShoot = false;
 
@@ -138,8 +123,5 @@ public class Tank extends Entity {
         newBullet.getModelInstance().transform.set(bulletStart.add(0,-200,0), getTurret().getModelInstance().transform.getRotation(new Quaternion()));
         newBullet.getModelInstance().transform.rotateRad(Vector3.Y, (float)Math.PI/2);
         playState.addEntityToCollisionAndMap(newBullet,false);
-
-
     }
-
 }

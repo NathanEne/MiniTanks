@@ -21,6 +21,7 @@ import com.minitanks.game.entities.*;
 import com.minitanks.game.managers.InputManager;
 import com.minitanks.game.managers.SavingManager;
 import com.minitanks.world.GameMap;
+import com.minitanks.world.MapGenerator;
 import com.minitanks.world.MyContactListener;
 import com.minitanks.world.TiledGameMap;
 
@@ -112,6 +113,7 @@ public class PlayState extends State {
         if (Gdx.input.isKeyPressed(Input.Keys.D)) {
             this.keyInputVector.z += 1;
         }
+
         if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
             //gsm.push(new SettingsState(gsm));
             //gsm.update(Gdx.graphics.getDeltaTime());
@@ -124,9 +126,11 @@ public class PlayState extends State {
             }
         }
 
+        // Call the move function.
         if (this.keyInputVector.len2() != 0 || mouseInputVector.len2() != 0){
             this.player.move(this.keyInputVector.nor(), this.mouseInputVector);
         }
+
         this.keyInputVector = new Vector3(0, 0, 0);
 
 
@@ -142,7 +146,9 @@ public class PlayState extends State {
         updateBullets();
         updateAI();
 
+        this.camera.seePlayer(this.player.getTankBase().getModelInstance().transform.getTranslation(new Vector3()), this.getKeyInputVector());
         this.getPlayer().increaseBulletTime();
+
         for (Tank ai : this.aiTanks){
             ai.increaseBulletTime();
         }
@@ -152,7 +158,7 @@ public class PlayState extends State {
             }
         }
         collisionWorld.performDiscreteCollisionDetection();
-        }
+    }
 
 
 
@@ -171,11 +177,10 @@ public class PlayState extends State {
             this.assets.render(this.camera.getOrthoCam(), environment, map.getEntities());
         }
 
+        // DEBUGGING FOR COLLISIONS
         debugDraw.begin(this.camera.getOrthoCam());
         collisionWorld.debugDrawWorld();
         debugDraw.end();
-
-
     }
 
 
@@ -186,9 +191,6 @@ public class PlayState extends State {
     }
     public ModelBatch getBatch() {
         return batch;
-    }
-    public GameMap getTiledMap() {
-        return map;
     }
 
     public void setInputProcessor(){
@@ -224,22 +226,29 @@ public class PlayState extends State {
             this.player = new Tank(new Turret(this.assets.initializeModel("wiiTankTurret.g3db"), this),
                     new TankBase(this.assets.initializeModel("wiiTankBody.g3db"), this), this, tankVector.getTankVector(), false);
 
-            // Add AI Tanks to the Arraylist instance
-//        aiTanks.add(new Bot(new Turret(this.assets.initializeModel("wiiTankTurret.g3db"), this),
-//                new TankBase(this.assets.initializeModel("wiiTankBody.g3db"), this),
-//                this, new Vector3(2360, 0, 1120), true, 1, this.player));
-//
-//        // Add AI Tanks to the Arraylist instance
-//        aiTanks.add(new Bot(new Turret(this.assets.initializeModel("wiiTankTurret.g3db"), this),
-//                new TankBase(this.assets.initializeModel("wiiTankBody.g3db"), this),
-//                this, new Vector3(2360, 0, -1120), true, 2, this.player));
-//
-//        for (Tank ai : aiTanks){
-//            this.addEntityToCollisionAndMap(ai.getTankBase(),false);
-//            this.addEntity(ai.getTurret());
-//        }
+                // Add AI Tanks to the Arraylist instance
+            aiTanks.add(new Bot(new Turret(this.assets.initializeModel("wiiTankTurret.g3db"), this),
+                    new TankBase(this.assets.initializeModel("wiiTankBody.g3db"), this),
+                    this, new Vector3(2360, 0, 1120), true, 1, this.player));
 
-            this.addEntityToCollisionAndMap(new Wall(this.assets.initializeModel("wiiTankWall.g3db"), 1200, 1200, 1f, 1f), true);
+            // Add AI Tanks to the Arraylist instance
+            aiTanks.add(new Bot(new Turret(this.assets.initializeModel("wiiTankTurret.g3db"), this),
+                    new TankBase(this.assets.initializeModel("wiiTankBody.g3db"), this),
+                    this, new Vector3(2360, 0, -1120), true, 2, this.player));
+
+            for (Tank ai : aiTanks){
+                this.addEntityToCollisionAndMap(ai.getTankBase(),false);
+                this.addEntity(ai.getTurret());
+            }
+
+            ArrayList<float[]> Lines = MapGenerator.generateGeometricGraph(1.5f*18600, 1.5f*10400, 8*11, 0.47f*5200, 0.25f*5200, 5);
+            for (int i = 0; i < Lines.size(); i++){
+                ArrayList<float[]> WallsNeeded = MapGenerator.generateWallOnLine(new Vector3(Lines.get(i)[0], 0, Lines.get(i)[1]), new Vector3(Lines.get(i)[2], 0, Lines.get(i)[3]));
+                for (int i2 = 0; i2 < WallsNeeded.size(); i2++){
+                    this.addEntityToCollisionAndMap(new Wall(this.assets.initializeModel("wiiTankWall.g3db"), WallsNeeded.get(i2)[0], WallsNeeded.get(i2)[1], WallsNeeded.get(i2)[2]),true);
+                }
+
+            }
 
             this.addEntityToCollisionAndMap(player.getTankBase(), false);
             this.map.addEntities(player.getTurret());
@@ -250,6 +259,7 @@ public class PlayState extends State {
         }
 
     }
+
 
     /**
      * Sets up all required objects for later use in collision detection
@@ -285,7 +295,6 @@ public class PlayState extends State {
             collisionWorld.addCollisionObject(obj.getBody(),ALL_FLAG,ALL_FLAG);
         }else{
             collisionWorld.addCollisionObject(obj.getBody(),ALL_FLAG,ALL_FLAG);
-
         }
     }
 
@@ -296,7 +305,13 @@ public class PlayState extends State {
      */
     public void initializeCamera(){
         this.camera = new Camera(false);
+
+        // Birds eye
         this.camera.setPosition(new Vector3(0, 2500, 0));
+
+        // Offset view for 3D effect
+        //this.camera.setPosition(new Vector3(0, 2500, 300));
+
         this.camera.lookAt(new Vector3(0, 0, 0));
         this.camera.rotateOnY(-90f);
     }
@@ -309,6 +324,5 @@ public class PlayState extends State {
         for (Bot ai : aiTanks){
             ai.playBehaviour();
         }
-
     }
 }

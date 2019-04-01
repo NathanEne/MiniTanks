@@ -63,18 +63,7 @@ public class MyContactListener extends ContactListener {
 
 
             //todo add restrictions on this condition to remove bugs
-            if(aabb2.min.x<=aabb1.min.x && Gdx.input.isKeyPressed(Input.Keys.W)){
-                //bottom
-                float delta = aabb2.max.x - aabb1.min.x;
-                two.getModelInstance().transform.trn(-delta,0,0);
-                aabb1.mul(two.getModelInstance().transform);
-                //todo add restrictions on this condition
-            }else if(aabb2.max.x>=aabb1.max.x&&Gdx.input.isKeyPressed(Input.Keys.S)){
-                //top
-                float delta = aabb2.min.x - aabb1.max.x;
-                two.getModelInstance().transform.trn(-delta,0,0);
-
-            }else if(aabb2.min.z<=aabb1.min.z&&Gdx.input.isKeyPressed(Input.Keys.D)){
+            if(aabb2.min.z<=aabb1.min.z&&Gdx.input.isKeyPressed(Input.Keys.D)){
                 //left
                 float delta = aabb2.max.z - aabb1.min.z;
                 two.getModelInstance().transform.trn(0,0,-delta);
@@ -86,11 +75,27 @@ public class MyContactListener extends ContactListener {
                 two.getModelInstance().transform.trn(0,0,-delta);
 
             }
+            else if(aabb2.min.x<=aabb1.min.x && Gdx.input.isKeyPressed(Input.Keys.W)){
+                //bottom
+                float delta = aabb2.max.x - aabb1.min.x;
+                two.getModelInstance().transform.trn(-delta,0,0);
+                aabb1.mul(two.getModelInstance().transform);
+                //todo add restrictions on this condition
+            }else if(aabb2.max.x>=aabb1.max.x&&Gdx.input.isKeyPressed(Input.Keys.S)){
+                //top
+                float delta = aabb2.min.x - aabb1.max.x;
+                two.getModelInstance().transform.trn(-delta,0,0);
+
+            }
 
         } else if (two.getId()==2&&one.getId() ==1){
            one.getModelInstance().transform.trn(0,10000,0);
             two.getModelInstance().transform.trn(0,10000,0);
         } else if (two.getId()==2&&one.getId() ==2){
+            one.getModelInstance().transform.trn(0,10000,0);
+            two.getModelInstance().transform.trn(0,10000,0);
+        }
+        else if (two.getId()==1&&one.getId() ==1){
             one.getModelInstance().transform.trn(0,10000,0);
             two.getModelInstance().transform.trn(0,10000,0);
         }
