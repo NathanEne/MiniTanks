@@ -12,7 +12,7 @@ public class Bot extends Tank {
     private Tank player;
     private int[] mapHeightBounds = {1000, -1000};
     private int[] mapWidthBounds = {-3000, 4200};
-
+    private boolean isActive = false;
     private boolean pendingTarget = false;
     private Vector3 moveDirection = new Vector3();
     private Vector3 gotoLoc;
@@ -27,6 +27,9 @@ public class Bot extends Tank {
 
     // Each tank will only display one type of behaviour
     public void playBehaviour(){
+        if (player.isDead() || !isActive)
+            return;
+
         switch (AIType){
             case 1:
                 behaviour1();
@@ -37,25 +40,27 @@ public class Bot extends Tank {
         }
     }
 
+
     public void behaviour1(){
         /*
-        Choose random points on the board and move to there.
-        Will shoot at player in three sucessive shots randomly, increase probability of shooting as time continues.
-        One reaches its desired point, choose a new point within the map.
+            A static tank that only rotates its turret and its shooting is modelled through an exponential distribution.
+           (Increased probability of shooting as time without shooting continues).
          */
+
+
         super.move(new Vector3(0, 0, 0), new Vector3(player.getTankBase().getModelInstance().transform.getTranslation(new Vector3())));
         counter += 0.8f;
         if (MapGenerator.randomNumber(0, 0.015f) > 1/counter){
             super.Shoot();
             counter = 0;
         }
-
     }
 
     public void behaviour2(){
         /*
-            A static tank that only rotates its turret and its shooting is modelled through an exponential distribution.
-           (Increased probability of shooting as time without shooting continues).
+        Choose random points on the board and move to there.
+        Will shoot at player randomly, increase probability of shooting as time continues.
+        One reaches its desired point, choose a new point within the map.
          */
         Vector3 thisPos = super.getTankBase().getModelInstance().transform.getTranslation(new Vector3());
 

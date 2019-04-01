@@ -12,7 +12,7 @@ public class Bullets extends Entity {
         super(modelInstance);
         this.speed = speed;
         this.direction = dir;
-this.id =2;
+        this.id =2;
     }
 
     public float getSpeed() {
