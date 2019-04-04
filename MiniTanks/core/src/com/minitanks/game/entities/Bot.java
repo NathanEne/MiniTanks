@@ -12,7 +12,7 @@ public class Bot extends Tank {
     private Tank player;
     private int[] mapHeightBounds = {1000, -1000};
     private int[] mapWidthBounds = {-3000, 4200};
-    private boolean isActive = false;
+    private boolean isActive = true;
     private boolean pendingTarget = false;
     private Vector3 moveDirection = new Vector3();
     private Vector3 gotoLoc;

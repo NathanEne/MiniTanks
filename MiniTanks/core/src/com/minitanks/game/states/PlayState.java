@@ -178,9 +178,9 @@ public class PlayState extends State {
         }
 
         // DEBUGGING FOR COLLISIONS
-/*        debugDraw.begin(this.camera.getOrthoCam());
+        debugDraw.begin(this.camera.getOrthoCam());
         collisionWorld.debugDrawWorld();
-        debugDraw.end();*/
+        debugDraw.end();
     }
 
 
@@ -231,30 +231,26 @@ public class PlayState extends State {
                     new TankBase(this.assets.initializeModel("wiiTankBody.g3db"), this),
                     this, new Vector3(2360, 0, 1120), true, 1, this.player));
 
-            // Add AI Tanks to the Arraylist instance
-            aiTanks.add(new Bot(new Turret(this.assets.initializeModel("wiiTankTurret.g3db"), this),
-                    new TankBase(this.assets.initializeModel("wiiTankBody.g3db"), this),
-                    this, new Vector3(2360, 0, -1120), true, 2, this.player));
+            // Add AI Tanks to the Arraylist instanced
+            for (int i = 0; i < 100; i++) {
+                aiTanks.add(new Bot(new Turret(this.assets.initializeModel("wiiTankTurret.g3db"), this),
+                        new TankBase(this.assets.initializeModel("wiiTankBody.g3db"), this),
+                        this, new Vector3(2360 + i * 2000, 0, -1120 - i * 3000), true, 2, this.player));
+            }
 
             for (Tank ai : aiTanks){
                 this.addEntityToCollisionAndMap(ai.getTankBase(),false);
                 this.addEntity(ai.getTurret());
             }
 
-
-            ArrayList<float[]> Lines = MapGenerator.generateGeometricGraph(2.5f*18600, 2.5f*10400, 16*12, 0.47f*5200, 0.35f*5200, 4);
+            ArrayList<float[]> Lines = MapGenerator.generateGeometricGraph(18600, 18400, 12, 0.47f*5200, 0.3f*5200, 4);
             for (int i = 0; i < Lines.size(); i++){
-                float[] wallData = MapGenerator.generateWallOnLine(new Vector3(Lines.get(i)[0], 0, Lines.get(i)[1]), new Vector3(Lines.get(i)[2], 0, Lines.get(i)[3]));
-                // Stores the first value of length, second value is the radian angle.
-                Wall wall = new Wall(this.assets.createWallModel(600, wallData[0], Lines.get(i)[2], Lines.get(i)[3]), wallData[1]);
-                wall.getModelInstance().transform.rotateRad(Vector3.Y, wallData[1]);
-                this.map.addEntities(wall);
-                this.addEntityToCollisionAndMap(wall, true);
+                ArrayList<float[]> WallsNeeded = MapGenerator.generateWallOnLine(new Vector3(Lines.get(i)[0], 0, Lines.get(i)[1]), new Vector3(Lines.get(i)[2], 0, Lines.get(i)[3]));
+                for (int i2 = 0; i2 < WallsNeeded.size(); i2++){
+                    this.addEntityToCollisionAndMap(new Wall(this.assets.initializeModel("wiiTankWall.g3db"), WallsNeeded.get(i2)[0], WallsNeeded.get(i2)[1], WallsNeeded.get(i2)[2]),true);
+                }
 
             }
-
-
-
 
             this.addEntityToCollisionAndMap(player.getTankBase(), false);
             this.map.addEntities(player.getTurret());
