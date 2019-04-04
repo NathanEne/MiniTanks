@@ -15,5 +15,6 @@ public class Wall extends Entity{
 
     public Wall(ModelInstance modelInstance){
         super(modelInstance);
+        this.id = 5;
     }
 }

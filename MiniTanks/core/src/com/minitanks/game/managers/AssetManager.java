@@ -43,8 +43,8 @@ public class AssetManager {
     }
     public ModelInstance createWallModel(final float width, final float height, final Material material) {
         modelBuilder = new ModelBuilder();
-        Model m = modelBuilder.createBox(width,1000,height-200,new Material(ColorAttribute.createDiffuse(new Color((float)232/255, (float)232/255, (float)232/255, 1f))),VertexAttributes.Usage.Position|VertexAttributes.Usage.Normal);
-        return new ModelInstance(m,0,0,0);
+        Model m = modelBuilder.createBox(width,4000,height,new Material(ColorAttribute.createDiffuse(new Color((float)232/255, (float)232/255, (float)232/255, 1f))),VertexAttributes.Usage.Position|VertexAttributes.Usage.Normal);
+        return new ModelInstance(m,100,0,100);
     }
 
 

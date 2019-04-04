@@ -206,7 +206,6 @@ public class MapGenerator {
                 do{
                     newPoint = getNewPoint(mina, a, currPoint);
                 } while (new Vector3(newPoint.x - currPoint.x, 0, newPoint.z - currPoint.z).nor().dot(new Vector3(prev).scl(-1).nor()) > 0.4f);
-
             }
             else{
                 currPoint = new Vector3(newPoint);
