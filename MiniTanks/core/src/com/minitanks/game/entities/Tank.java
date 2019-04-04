@@ -6,7 +6,7 @@ import com.minitanks.game.states.PlayState;
 
 public class Tank extends Entity {
     private boolean isAI;
-    private float movementSpeed = 25f;
+    private float movementSpeed = 65f;
     private float bulletSpeed = 38f;
     private int bulletsInPlay = 0;
     private int maxNumOfBullets = 5;

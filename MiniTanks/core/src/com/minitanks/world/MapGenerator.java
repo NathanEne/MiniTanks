@@ -119,25 +119,20 @@ public class MapGenerator {
     /**
      * Create a wall along a line. Line can be angled
      * Assuming p1 and p2 y component zero. Will use z and x plane. +x is up, +z is right
-     * Each item of returned arraylist is a float array specifying: [x, z, rotation starting at +z (rad)]
+     * @return two float values, specifying the length of wall and angle rotated
      */
-    public static ArrayList<float[]> generateWallOnLine(Vector3 p1, Vector3 p2){
-        ArrayList<float[]> points = new ArrayList<float[]>();
-
-        float wallWidth = 390;
+    public static float[] generateWallOnLine(Vector3 p1, Vector3 p2){
+        float[] points = new float[2];
 
         // p1 minus p2
         Vector3 line = new Vector3(p2.x - p1.x, 0, p2.z-p1.z);
-        Vector3 lineNOR = new Vector3(line).nor();
+
         // Angle between vectors
         float theta = (float)Math.atan(line.x / line.z);
-        float slope = line.x/line.z;
+        points[1] = theta;
 
-        float nWalls = Vector2.dst(0, 0, line.x, line.z)/wallWidth;
-        for (int i = 0; i < nWalls; i++){
-            Vector3 point = new Vector3(p1.x + lineNOR.x*i*wallWidth, 0,  p1.z + lineNOR.z*i*wallWidth);
-            points.add(new float[]{point.x, point.z, theta});
-        }
+        float distance = Vector2.dst(0, 0, line.x, line.z);
+        points[0] = distance;
         return points;
     }
 
@@ -182,7 +177,7 @@ public class MapGenerator {
         ArrayList<float[]> Cluster = new ArrayList<float[]>();
         int c = 0;
 
-        float prob = 0.5f;
+        float prob = 0f;
 
         Vector3 currPoint = new Vector3(node1);
         Vector3 newPoint = new Vector3();
@@ -206,7 +201,6 @@ public class MapGenerator {
                 do{
                     newPoint = getNewPoint(mina, a, currPoint);
                 } while (new Vector3(newPoint.x - currPoint.x, 0, newPoint.z - currPoint.z).nor().dot(new Vector3(prev).scl(-1).nor()) > 0.4f);
-
             }
             else{
                 currPoint = new Vector3(newPoint);
