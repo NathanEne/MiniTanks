@@ -3,6 +3,7 @@ package com.minitanks.game.entities;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.math.Vector3;
+import com.minitanks.game.states.PlayState;
 
 public class Camera extends Entity {
 
@@ -11,8 +12,10 @@ public class Camera extends Entity {
     private Vector3 destination;
     private PerspectiveCamera perspectiveCamera;
     private OrthographicCamera orthographicCamera;
+    private Vector3 currFrame = new Vector3(0, 0, 0);
+    private PlayState playState;
 
-    public Camera(boolean isPerspective){
+    public Camera(boolean isPerspective, PlayState plst){
         this.isPerspective = isPerspective;
 
         if (isPerspective){
@@ -21,9 +24,11 @@ public class Camera extends Entity {
 
         }
         else{
-            this.orthographicCamera = new OrthographicCamera(10500*(float)(16.0/9), 10500);
-            this.orthographicCamera.far = 8500;
+            this.orthographicCamera = new OrthographicCamera(105000*(float)(16.0/9), 105000);
+            this.orthographicCamera.far = 18500;
         }
+
+        this.playState = plst;
     }
 
 
@@ -105,8 +110,9 @@ public class Camera extends Entity {
         Vector3 camPos = orthographicCamera.position;
 
         if (isMoving){
-            orthographicCamera.position.lerp(destination, 0.05f);
+            orthographicCamera.position.lerp(destination, 0.07f);
             if (this.destination.dst(orthographicCamera.position)  < 100){
+
                 isMoving = false;
             }
         }
@@ -115,9 +121,9 @@ public class Camera extends Entity {
                     playerPos.z > camPos.z + w - thres || playerPos.z < camPos.z - w + thres){
                 // Gradually move towards the tank.
                 isMoving = true;
-                this.destination = new Vector3(playerPos.x, orthographicCamera.position.y, playerPos.z).add(tankDirection.scl(70));
+                this.destination = new Vector3(playerPos.x, orthographicCamera.position.y, playerPos.z).add(tankDirection.scl(80));
+                this.currFrame = playState.updateCamera(this.currFrame, this.destination);
             }
         }
     }
-
 }

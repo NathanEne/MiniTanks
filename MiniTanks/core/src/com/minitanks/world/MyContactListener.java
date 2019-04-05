@@ -7,21 +7,22 @@ import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.physics.bullet.collision.ContactListener;
 import com.minitanks.game.entities.Bullets;
 import com.minitanks.game.entities.Entity;
+import com.minitanks.game.states.PlayState;
 
 
 public class MyContactListener extends ContactListener {
-    private GameMap map;
+    private PlayState playState;
     //private CollisionManager manager;
-    public MyContactListener(GameMap map){
-        this.map = map;
+    public MyContactListener(PlayState playst){
+        this.playState = playst;
       //  manager = new CollisionManager(map);
 
 
     }
     @Override
     public boolean onContactAdded(int userValue0, int partId0, int index0, int userValue1, int partId1, int index1) {
-        Entity one = map.getEntities().get(userValue0);
-        Entity two = map.getEntities().get(userValue1);
+        Entity one = playState.getEntities().get(userValue0);
+        Entity two = playState.getEntities().get(userValue1);
 
         if (two.getId()==2&&one.getId() ==5){
             BoundingBox aabb1 = new BoundingBox();
