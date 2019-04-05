@@ -64,7 +64,7 @@ public abstract class GameMap {
         this.entitiesToAdd.add(entities);
     }
 
-    public void removeEntitiesLater(Entity entities) {
-        this.entitiesToRemove.add(entities);
+    public void removeEntitiesLater(ArrayList<Entity> entities) {
+        this.entitiesToRemove.addAll(entities);
     }
 }

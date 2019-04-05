@@ -2,17 +2,16 @@ package com.minitanks.game.managers;
 
 import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.PerspectiveCamera;
+import com.badlogic.gdx.graphics.VertexAttributes;
 import com.badlogic.gdx.graphics.g3d.*;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.loader.G3dModelLoader;
-
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.utils.UBJsonReader;
 import com.minitanks.game.entities.Entity;
-
-
 
 import java.util.ArrayList;
 
@@ -38,13 +37,19 @@ public class AssetManager {
 
     public ModelInstance createFloorModel(final float width, final float height, final Material material) {
         modelBuilder = new ModelBuilder();
-        Model m = modelBuilder.createBox(1000000,1,1000000,new Material(ColorAttribute.createDiffuse(new Color((float)253/255, (float)227/255, (float)167/255, 1f))),VertexAttributes.Usage.Position|VertexAttributes.Usage.Normal);
+        Model m = modelBuilder.createBox(1000000,1,1000000,new Material(ColorAttribute.createDiffuse(new Color((float)79/255, (float)102/255, (float)106/255, 1f))),VertexAttributes.Usage.Position|VertexAttributes.Usage.Normal);
         return new ModelInstance(m,0,-1,0);
     }
     public ModelInstance createWallModel(final float width, final float height, float x, float z) {
         modelBuilder = new ModelBuilder();
         Model m = modelBuilder.createBox(width,4000,height,new Material(ColorAttribute.createDiffuse(new Color((float)232/255, (float)232/255, (float)232/255, 1f))),VertexAttributes.Usage.Position|VertexAttributes.Usage.Normal);
         return new ModelInstance(m,x,0,z);
+    }
+    public ModelInstance createBulletModel(float x, float z,float y) {
+        System.out.println("hi");
+        modelBuilder = new ModelBuilder();
+        Model m = modelBuilder.createSphere(100,100,100,20,20,new Material(ColorAttribute.createDiffuse(new Color((float)205/255, (float)127/255, (float)50/255, 1f))),VertexAttributes.Usage.Position|VertexAttributes.Usage.Normal);
+        return new ModelInstance(m,x,y,z);
     }
 
 

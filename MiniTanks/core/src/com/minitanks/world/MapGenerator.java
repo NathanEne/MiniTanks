@@ -13,35 +13,10 @@ import java.util.Random;
 import java.lang.Math;
 
 public class MapGenerator {
-    /*
-     *   3 Random modes of map generation:
-     *          Asymmetric
-     *          Horizontal/Vertically symmetric
-     *          Oblique symmetry
-     *
-     *   Random shapes templates:
-     *          Right angle
-     *          Single Line
-     *          Hexagon Top
-     *          120 degree 'V'
-     *
-     *   1. Choose 5-10 random points within the map (leaving a gap border).
-     *          Instantiate a variant of one of the shape templates
-     *              What we can randomize:
-     *                  Rotation, length of line segments
-     *          After chosen point, block off this radius for next points
-     *
-     *   2. Then take end points and make a connection with only those nearby
-     *   3. Randomly destroy a few line segments
-     *   4. Rotate if symmetry was required
-     *
-     */
-    public static int Width = 30;
-    public static int Height = 30;
-    public static boolean isSymmetric = true;
-    public static boolean isHorizSym = true;
-    // Float to describe how much the shapes should vary from their default state. 0 is no variance, 1 is max variance
-    public static float Variance = 0;
+
+    public static float screenWidth = 18600;
+    public static int screenHeight = 30;
+
 
     /**
      * @param min
@@ -53,11 +28,7 @@ public class MapGenerator {
         float number = min + rn.nextFloat() * (max - min);
         return number;
     }
-    public static int negativepositivezero() {
-        Random rn = new Random();
-        int number = -1 + rn.nextInt(3);
-        return number;
-    }
+
 
 
 
@@ -138,6 +109,7 @@ public class MapGenerator {
 
 
     /**
+     * Will be called to generate a single chunk.
      * @param w width of area
      * @param h height of area
      * @param n number of nodes
@@ -145,20 +117,27 @@ public class MapGenerator {
      * @param mC the max number of connections a node can have
      * @return an ArrayList of float arrays, each float array has: [p1x, p1z, p2x, p2z]
      */
-    public static ArrayList<float[]> generateGeometricGraph(float w, float h, int n, float a, float mina, int mC){
+    public static ArrayList<float[]> generateGeometricGraph(float w, float h, int n, float a, float mina, int mC, Vector3 centre){
         ArrayList<float[]> Lines = new ArrayList<float[]>();
-        int nodesCreated = 0;
+        ArrayList<float[]> thisCluster;
 
-        while (nodesCreated < n){
-            Vector3 ranP = new Vector3(randomNumber(-h, h), 0 ,randomNumber(-w, w));
-            for (int i = 0; i < Lines.size(); i++){
-                if (ranP.dst(Lines.get(i)[0], 0, Lines.get(i)[1]) < a || ranP.dst(Lines.get(i)[2], 0, Lines.get(i)[2]) < a + 50)
-                    continue;
-            }
-            ArrayList<float[]> thisCluster = generateCluster(ranP, a, mina, mC, false);
-            Lines.addAll(thisCluster);
-            nodesCreated += thisCluster.size();
+        Vector3 ranP = new Vector3(centre.x - 0.25f*screenHeight, 0 ,centre.z - 0.75f*screenWidth);
+        for (int i = 0; i < Lines.size(); i++){
+            if (ranP.dst(Lines.get(i)[0], 0, Lines.get(i)[1]) < a || ranP.dst(Lines.get(i)[2], 0, Lines.get(i)[2]) < a + 50)
+                continue;
         }
+        thisCluster = generateCluster(ranP, a, mina, mC, false);
+        Lines.addAll(thisCluster);
+
+        ranP = new Vector3(centre.x + 0.25f*screenHeight, 0 ,centre.z + 0.75f*screenWidth);
+        for (int i = 0; i < Lines.size(); i++){
+            if (ranP.dst(Lines.get(i)[0], 0, Lines.get(i)[1]) < a || ranP.dst(Lines.get(i)[2], 0, Lines.get(i)[2]) < a + 50)
+                continue;
+        }
+        thisCluster = generateCluster(ranP, a, mina, mC, false);
+        Lines.addAll(thisCluster);
+
+
 
         return Lines;
     }
@@ -180,7 +159,7 @@ public class MapGenerator {
         float prob = 0f;
 
         Vector3 currPoint = new Vector3(node1);
-        Vector3 newPoint = new Vector3();
+        Vector3 newPoint;
 
         // Create another valid point
         newPoint = getNewPoint(mina, a, currPoint);
@@ -192,9 +171,6 @@ public class MapGenerator {
             float ran = randomNumber(0, 1);
             float[] lastline = Cluster.get(Cluster.size() - 1);
             Vector3 prev = new Vector3(lastline[2] - lastline[0], 0, lastline[3] - lastline[1]);
-
-            if (ran < 0.2)
-                break;
 
             if (ran < prob){
                 // Get another connection of same node
