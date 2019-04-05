@@ -24,13 +24,22 @@ public class MyContactListener extends ContactListener {
         Entity one = playState.getEntities().get(userValue0);
         Entity two = playState.getEntities().get(userValue1);
 
+
         if (two.getId()==2&&one.getId() ==5){
+          //  ((Bullets) two).setDirection(((Bullets) two).getDirection().setToRandomDirection().scl(1,0,1));
+          //  float a = ((Wall) one).getAngle();
+//            Vector3 aa = new Vector3();
             BoundingBox aabb1 = new BoundingBox();
             one.getModelInstance().calculateBoundingBox(aabb1);
+
             BoundingBox aabb2 = new BoundingBox();
             two.getModelInstance().calculateBoundingBox(aabb2);
             aabb1.mul(one.getModelInstance().transform);
             aabb2.mul(two.getModelInstance().transform);
+
+            //System.out.println("hello");
+
+
 
             if(aabb2.min.x<=aabb1.min.x){
                 if( ((Bullets) two).getDirection().x>0){
@@ -50,9 +59,8 @@ public class MyContactListener extends ContactListener {
             }else if(aabb2.max.z>=aabb1.max.z){
                 if( ((Bullets) two).getDirection().z<0){
                     ((Bullets) two).setDirection(((Bullets) two).getDirection().scl(new Vector3(1,1,-1)));
-                }
-
-            }
+             }
+        }
 
         }else  if (two.getId()==1&&one.getId() ==5){
             BoundingBox aabb1 = new BoundingBox();

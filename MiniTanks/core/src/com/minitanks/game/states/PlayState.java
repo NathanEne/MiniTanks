@@ -23,12 +23,9 @@ import com.minitanks.game.managers.InputManager;
 import com.minitanks.game.managers.SavingManager;
 import com.minitanks.world.MapGenerator;
 import com.minitanks.world.MyContactListener;
-import org.omg.IOP.ENCODING_CDR_ENCAPS;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class PlayState extends State {
 
@@ -197,9 +194,9 @@ public class PlayState extends State {
         }
 
         // DEBUGGING FOR COLLISIONS
-/*        debugDraw.begin(this.camera.getOrthoCam());
+        debugDraw.begin(this.camera.getOrthoCam());
         collisionWorld.debugDrawWorld();
-        debugDraw.end();*/
+        debugDraw.end();
     }
 
 
@@ -311,7 +308,19 @@ public class PlayState extends State {
         obj.setBody(new btCollisionObject());
         BoundingBox a = new BoundingBox();
         obj.getModelInstance().calculateBoundingBox(a);
-        obj.getBody().setCollisionShape(new btBoxShape(a.getDimensions(new Vector3()).scl(0.5f)));
+        if (wall){
+            System.out.println("waa");
+            obj.getBody().setCollisionShape(new btSphereShape(50));
+        }else{
+            obj.getBody().setCollisionShape(new btBoxShape(a.getDimensions(new Vector3()).scl(0.5f)));
+
+        }
+
+
+
+
+
+
         obj.getBody().setWorldTransform(obj.getModelInstance().transform);
 
         obj.getBody().setUserValue(this.getEntities().size());
@@ -439,8 +448,8 @@ public class PlayState extends State {
             // Stores the first value of length, second value is the radian angle.
             Wall wall = new Wall(this.assets.createWallModel(600, wallData[0], Lines.get(i)[2], Lines.get(i)[3]), wallData[1]);
             wall.getModelInstance().transform.rotateRad(Vector3.Y, wallData[1]);
-            this.addEntities(wall);
-            this.addEntityToCollisionAndMap(wall, true);
+            //this.addEntities(wall);
+            this.addEntityToCollisionAndMap(wall, false);
             modelInList.add(wall);
         }
         return modelInList;
