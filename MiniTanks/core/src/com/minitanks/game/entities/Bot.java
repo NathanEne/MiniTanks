@@ -101,6 +101,7 @@ public class Bot extends Tank {
         if (MapGenerator.randomNumber(0, 1) < 0.05f && rayTest2Tank()){
             super.Shoot();
         }
+
     }
 
 

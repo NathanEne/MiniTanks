@@ -56,6 +56,8 @@ public class PlayState extends State {
     // A 2D Array storing all the bots for each chunk.
     private ArrayList<ArrayList<ArrayList<Bot>>> aiEntities = new ArrayList<ArrayList<ArrayList<Bot>>>(5);
 
+    // A 2D array storing all the initial positions of the tanks
+    private ArrayList<ArrayList<ArrayList<Vector3>>> positions = new ArrayList<ArrayList<ArrayList<Vector3>>>(5);
 
     final static short WALL_FLAG = 1 << 8;
     final static short TANK_FLAG = 1 << 9;
@@ -170,11 +172,23 @@ public class PlayState extends State {
 
         }
 
+
+        float maxDistance = 100f; // The maximum amount of units AI tanks can be away from tank before getting activated
+
         for (ArrayList<ArrayList<Bot>> row : aiEntities){
             for (ArrayList<Bot> chunk: row){
                 for (Bot ai : chunk){
-                    ai.playBehaviour();
-                    ai.increaseBulletTime();
+                    Vector3 aiSpot = ai.getTankBase().getModelInstance().transform.getTranslation(new Vector3());
+                    Vector3 playerSpot = this.player.getTankBase().getModelInstance().transform.getTranslation(new Vector3());
+                    Vector3 between = new Vector3(aiSpot).sub(playerSpot).scl(0.001f);
+                    if (between.x*between.x + between.z*between.z < maxDistance){
+                        ai.setActive(true);
+                        ai.playBehaviour();
+                        ai.increaseBulletTime();
+                    }
+                    else{
+                        ai.setActive(false);
+                    }
                 }
             }
         }
@@ -260,7 +274,7 @@ public class PlayState extends State {
                     for (Entity wall : walls){
                         invalidPoints.add(wall.getModelInstance().transform.getTranslation(new Vector3()));
                     }
-                    thisRowAI.add(spawnChunkAI(centre, this.player.getNumberOfKills(), invalidPoints));
+                    thisRowAI.add(spawnChunkAI(centre, this.player.getNumberOfKills(), invalidPoints, x, z));
                 }
                 wallModels.add(thisRowWalls);
                 aiEntities.add(thisRowAI);
@@ -268,8 +282,6 @@ public class PlayState extends State {
 
             this.addEntities(new Floor(this.assets.createFloorModel(1000, 1000, new Material())));
 
-            // Activate the AI in this chunk
-            activateChunk(2, 2);
         }
         catch(IOException ioe) {
 
@@ -345,19 +357,6 @@ public class PlayState extends State {
 
 
     /**
-     * Active all enemy tanks in the specified chunk
-     * @param j the j index of chunk
-     * @param i the i index of chunk
-     */
-    private void activateChunk(int i, int j){
-        for (Bot ai : aiEntities.get(i).get(j)){
-            ai.setActive(true);
-        }
-    }
-
-
-
-    /**
      * Should update the cameras position, also update generation functions as chunks.
      *
      * @param destination the spot at which the camera is moving to.
@@ -375,9 +374,6 @@ public class PlayState extends State {
             ArrayList<ArrayList<Entity>> l = wallModels.remove(4);
             wallModels.add(0, l);
 
-            // Activate Tanks in this chunk
-            activateChunk(1, 2);
-
 
             currFrame.x += screenHeight;
         }
@@ -388,8 +384,6 @@ public class PlayState extends State {
             ArrayList<ArrayList<Entity>> l = wallModels.remove(0);
             wallModels.add(l);
 
-            // Activate Tanks in this chunk
-            activateChunk(3, 2);
 
             currFrame.x -= screenHeight;
         }
@@ -410,8 +404,6 @@ public class PlayState extends State {
                 wallModels.get(i).add(leftMostChunks.get(i));
             }
 
-            // Activate Tanks in this chunk
-            activateChunk(2, 3);
 
             currFrame.z += screenWidth;
         }
@@ -432,9 +424,6 @@ public class PlayState extends State {
             for (int i = 0; i < 5; i++){
                 wallModels.get(i).add(0, rightMostChunks.get(i));
             }
-
-            // Activate Tanks in this chunk
-            activateChunk(2, 1);
 
             currFrame.z -= screenWidth;
         }
@@ -483,6 +472,7 @@ public class PlayState extends State {
         }
     }
 
+
     /**
      *
      * Same as above ^
@@ -500,6 +490,8 @@ public class PlayState extends State {
                 e.getModelInstance().transform.set(currPos, currQuat);
             }
         }
+
+        // Then translate the AIs
     }
 
 
@@ -508,11 +500,13 @@ public class PlayState extends State {
      * Generating AIs as the game goes on. The level of AI depends on how many kills the player has. Higher tank behaviour
      * corresponds to more difficult opponents.
      *
+     * @param x the index of grid currently generating, x vertical
+     * @param z the corresponding z index of the grid generating, z horizonal
      * @param numOfKills the number of kills the tank has
      * @param centre the centre position of the chunk which AIs should be spawned around.
      * @return an arraylist of entities spawned around the centre position
      */
-    private ArrayList<Bot> spawnChunkAI(Vector3 centre, int numOfKills, ArrayList<Vector3> wallPoints){
+    private ArrayList<Bot> spawnChunkAI(Vector3 centre, int numOfKills, ArrayList<Vector3> wallPoints, int x, int z){
         // Number of ai bots per chunk should be random.
         float ran = MapGenerator.randomNumber(2, 5);
 
@@ -551,9 +545,9 @@ public class PlayState extends State {
             Vector3 ranPoint;
             boolean valid = true;
             do {
-                ranPoint = new Vector3(centre.x + MapGenerator.randomNumber(-screenHeight / 2, screenHeight / 2), 0, centre.z + MapGenerator.randomNumber(-screenWidth / 2, screenWidth / 2));
+                ranPoint = new Vector3(centre.x + MapGenerator.randomNumber(-screenHeight / 2, screenHeight / 2)*0.85f, 0, centre.z + MapGenerator.randomNumber(-screenWidth / 2, screenWidth / 2)*0.85f);
                 for (Vector3 p : wallPoints) {
-                    if (ranPoint.dst2(p) < 22800) {
+                    if (ranPoint.dst2(p) < 32800) {
                         valid = false;
                         break;
                     }
@@ -562,6 +556,7 @@ public class PlayState extends State {
             while(!valid);
 
             wallPoints.add(new Vector3(ranPoint));
+            positions.get(x).get(z).add(new Vector3(ranPoint));
 
             Bot newTank = new Bot(new Turret(this.assets.initializeModel(getAiModel.get(aiType)[0])),
                     new TankBase(this.assets.initializeModel(getAiModel.get(aiType)[1])),
