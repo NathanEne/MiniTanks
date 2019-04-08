@@ -41,8 +41,8 @@ public class MenuState extends State {
 
         // Wallpaper
         Drawable wallpaper1 = new TextureRegionDrawable(new TextureRegion(new Texture("MenuScreen.jpg")));
-        Image wallpaper = new Image(wallpaper1, Scaling.fillX, Align.center);
-        wallpaper.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        Image wallpaper = new Image(wallpaper1, Scaling.fillY, Align.center);
+        wallpaper.setWidth(Gdx.graphics.getWidth());
         stage.addActor(wallpaper);
 
 
@@ -52,9 +52,17 @@ public class MenuState extends State {
         lobby_music.play();
 
         // Text
-        Label menuInstructions = new Label("Press P to play\n Press ESC for settings", new Label.LabelStyle(new BitmapFont(), Color.BLACK));
-        menuInstructions.setPosition((float)(0.5 * Gdx.graphics.getWidth()), (float)(0.5 * Gdx.graphics.getHeight()), Align.center);
-        stage.addActor(menuInstructions);
+        Drawable wiitanks = new TextureRegionDrawable(new TextureRegion(new Texture("wiiTanks.png")));
+        Image wiiTanks = new Image(wiitanks);
+        wiiTanks.setSize((float)0.66*Gdx.graphics.getWidth(), (float)0.33*Gdx.graphics.getWidth());
+        wiiTanks.setPosition((float)0.5*Gdx.graphics.getWidth(), (float)0.8*Gdx.graphics.getHeight(), Align.center);
+        stage.addActor(wiiTanks);
+
+        Drawable menutext = new TextureRegionDrawable(new TextureRegion(new Texture("menuText.png")));
+        Image menuText = new Image(menutext);
+        menuText.setSize((float)0.4*Gdx.graphics.getWidth(), (float)0.2*Gdx.graphics.getWidth());
+        menuText.setPosition((float)0.5*Gdx.graphics.getWidth(), (float)0.4*Gdx.graphics.getHeight(), Align.center);
+        stage.addActor(menuText);
     }
 
     @Override

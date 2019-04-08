@@ -4,14 +4,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
@@ -43,15 +40,16 @@ public class SettingsState extends State {
         // Wallpaper
         Drawable wallpaper1 = new TextureRegionDrawable(new TextureRegion(new Texture("MenuScreen.jpg")));
         Image wallpaper = new Image(wallpaper1, Scaling.fillX, Align.center);
+        wallpaper.setWidth(Gdx.graphics.getWidth());
         stage.addActor(wallpaper);
 
 
-        // Save button
-        ImageButton saveButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture("playButton.png"))), new TextureRegionDrawable(new TextureRegion(new Texture("MenuScreen.jpg"))));
-        saveButton.setPosition(0.5f * Gdx.graphics.getWidth(), 0.5f * Gdx.graphics.getHeight(), Align.center);
-        saveButton.setSize(150, 100);
-        stage.addActor(saveButton);
-        Gdx.input.setInputProcessor(stage);
+        // Settings Text
+        Drawable settingstext = new TextureRegionDrawable(new TextureRegion(new Texture("settingsText.png")));
+        Image settingsText = new Image(settingstext);
+        settingsText.setSize((float)0.4*Gdx.graphics.getWidth(), (float)0.2*Gdx.graphics.getWidth());
+        settingsText.setPosition((float)0.5*Gdx.graphics.getWidth(), (float)0.5*Gdx.graphics.getHeight(), Align.center);
+        stage.addActor(settingsText);
 
     }
 
@@ -64,15 +62,16 @@ public class SettingsState extends State {
         // Wallpaper
         Drawable wallpaper1 = new TextureRegionDrawable(new TextureRegion(new Texture("MenuScreen.jpg")));
         Image wallpaper = new Image(wallpaper1, Scaling.fillX, Align.center);
+        wallpaper.setWidth(Gdx.graphics.getWidth());
         stage.addActor(wallpaper);
 
 
         // Save button
-        ImageButton saveButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture("playButton.png"))), new TextureRegionDrawable(new TextureRegion(new Texture("MenuScreen.jpg"))));
-        saveButton.setPosition(0.5f * Gdx.graphics.getWidth(), 0.5f * Gdx.graphics.getHeight(), Align.center);
-        saveButton.setSize(150, 100);
-        stage.addActor(saveButton);
-        Gdx.input.setInputProcessor(stage);
+        Drawable settingstext = new TextureRegionDrawable(new TextureRegion(new Texture("settingsText.png")));
+        Image settingsText = new Image(settingstext);
+        settingsText.setSize((float)0.4*Gdx.graphics.getWidth(), (float)0.2*Gdx.graphics.getWidth());
+        settingsText.setPosition((float)0.5*Gdx.graphics.getWidth(), (float)0.5*Gdx.graphics.getHeight(), Align.center);
+        stage.addActor(settingsText);
 
     }
 
