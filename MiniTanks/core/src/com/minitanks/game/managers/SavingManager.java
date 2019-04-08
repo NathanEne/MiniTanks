@@ -19,6 +19,12 @@ public class SavingManager {
         output.close();
     }
 
+    public static void resetTankPosition() throws IOException {
+        PrintWriter output = new PrintWriter(new File("save.txt"));
+        output.println(new Vector3(0,0,0));
+        output.close();
+    }
+
     public void readTankPosition() throws IOException {
         FileReader freader = new FileReader("save.txt");
         BufferedReader input = new BufferedReader(freader);
