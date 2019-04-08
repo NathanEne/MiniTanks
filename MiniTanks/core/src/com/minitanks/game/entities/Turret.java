@@ -6,13 +6,10 @@ import com.minitanks.game.states.PlayState;
 
 public class Turret extends Entity {
 
-    private PlayState playState;
     private Vector2 currDirection;
-    private float modelScale = 0.5f;
 
-    public Turret(ModelInstance modelInstance, PlayState playst) {
+    public Turret(ModelInstance modelInstance) {
         super(modelInstance);
-        this.playState = playst;
         currDirection = new Vector2(1, 0);
     }
 
