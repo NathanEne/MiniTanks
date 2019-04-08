@@ -25,7 +25,7 @@ import com.minitanks.world.MapGenerator;
 import com.minitanks.world.MyContactListener;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.*;
 
 public class PlayState extends State {
 
@@ -47,18 +47,24 @@ public class PlayState extends State {
     private Vector3 keyInputVector = new Vector3();
     private Vector3 mouseInputVector = new Vector3();
     private InputManager iptMan;
-    private ArrayList<Bot> aiTanks = new ArrayList<Bot>();
-    private float screenHeight = 10400;
-    private float screenWidth = 18600;
+    private final float screenHeight = 10400;
+    private final float screenWidth = 18600;
 
     // The Array modelling each chunk of the map. Always 5x5 containing all wall models.
     private ArrayList<ArrayList<ArrayList<Entity>>> wallModels = new ArrayList<ArrayList<ArrayList<Entity>>>(5);
+
+    // A 2D Array storing all the bots for each chunk.
+    private ArrayList<ArrayList<ArrayList<Bot>>> aiEntities = new ArrayList<ArrayList<ArrayList<Bot>>>(5);
 
 
     final static short WALL_FLAG = 1 << 8;
     final static short TANK_FLAG = 1 << 9;
     final static short BULLET_FLAG = 1 << 7;
     final static short ALL_FLAG = -1;
+
+    public btCollisionWorld getCollisionWorld() {
+        return collisionWorld;
+    }
 
     public Tank getPlayer(){
         return this.player;
@@ -148,22 +154,32 @@ public class PlayState extends State {
     @Override
     public void update(float dt) {
 
-
         handleInput();
-        updateBullets();
-        updateAI();
 
         this.camera.seePlayer(this.player.getTankBase().getModelInstance().transform.getTranslation(new Vector3()), this.getKeyInputVector());
         this.getPlayer().increaseBulletTime();
 
-        for (Tank ai : this.aiTanks){
-            ai.increaseBulletTime();
-        }
         for (Entity entity: this.getEntities()) {
             if (entity.hasBody()) {
                 entity.getBody().setWorldTransform(entity.getModelInstance().transform);
             }
+
+            if (entity instanceof Bullets){
+                entity.getModelInstance().transform.trn(((Bullets) entity).getDirection().scl(((Bullets) entity).getSpeed()) );
+            }
+
         }
+
+        for (ArrayList<ArrayList<Bot>> row : aiEntities){
+            for (ArrayList<Bot> chunk: row){
+                for (Bot ai : chunk){
+                    ai.playBehaviour();
+                    ai.increaseBulletTime();
+                }
+            }
+        }
+
+
         collisionWorld.performDiscreteCollisionDetection();
         this.entities.removeAll(entitiesToRemove);
         this.entitiesToRemove.clear();
@@ -189,9 +205,9 @@ public class PlayState extends State {
         }
 
         // DEBUGGING FOR COLLISIONS
-        debugDraw.begin(this.camera.getOrthoCam());
+/*        debugDraw.begin(this.camera.getOrthoCam());
         collisionWorld.debugDrawWorld();
-        debugDraw.end();
+        debugDraw.end();*/
     }
 
 
@@ -212,14 +228,6 @@ public class PlayState extends State {
         this.addEntities(e);
     }
 
-    public void updateBullets(){
-        for (Entity e : this.getEntities()){
-            if (e instanceof Bullets){
-                e.getModelInstance().transform.trn(((Bullets) e).getDirection().scl(((Bullets) e).getSpeed()) );
-            }
-        }
-    }
-
 
 
     /**
@@ -227,56 +235,45 @@ public class PlayState extends State {
      * FUTURE: add level option and organization
      */
     public void generateMap(){
-        float screenWidth = 18600f;
-        float screenHeight = 10400f;
-
-
         try {
             initializeCamera();
             initializeCollisionEngine();
             SavingManager tankVector = new SavingManager();
 
             // Initializing player
-            this.player = new Tank(new Turret(this.assets.initializeModel("wiiTankTurret.g3db"), this),
-                    new TankBase(this.assets.initializeModel("wiiTankBody.g3db"), this), this, tankVector.getTankVector(), false);
+            this.player = new Tank(new Turret(this.assets.initializeModel("wiiTankTurret.g3db")),
+                    new TankBase(this.assets.initializeModel("wiiTankBody.g3db")), this, tankVector.getTankVector(), false);
+            this.addEntityToCollisionAndMap(player.getTankBase(), false);
+            this.addEntities(player.getTurret());
 
-                // Add AI Tanks to the Arraylist instance
-            aiTanks.add(new Bot(new Turret(this.assets.initializeModel("wiiTankTurret.g3db"), this),
-                    new TankBase(this.assets.initializeModel("wiiTankBody.g3db"), this),
-                    this, new Vector3(2360, 0, 1120), true, 1, this.player));
-
-            // Add AI Tanks to the Arraylist instance
-            aiTanks.add(new Bot(new Turret(this.assets.initializeModel("wiiTankTurret.g3db"), this),
-                    new TankBase(this.assets.initializeModel("wiiTankBody.g3db"), this),
-                    this, new Vector3(2360, 0, -1120), true, 2, this.player));
-
-            for (Tank ai : aiTanks){
-                this.addEntityToCollisionAndMap(ai.getTankBase(),false);
-                this.addEntity(ai.getTurret());
-            }
-
-
-
-            // WALL GENERATION
-            // Spawn a chunk in each array spot of 5x5 array
+            // WALL AND AI GENERATION
+            // Spawn a chunk of walls and ai bots in each array spot of 5x5 array
             for (int x = 0; x < 5; x++){
-                ArrayList<ArrayList<Entity>> thisRow = new ArrayList<ArrayList<Entity>>(5);
+                ArrayList<ArrayList<Entity>> thisRowWalls = new ArrayList<ArrayList<Entity>>(5);
+                ArrayList<ArrayList<Bot>> thisRowAI = new ArrayList<ArrayList<Bot>>(5);
                 for (int z = 0; z < 5; z++){
                     Vector3 centre = new Vector3(screenHeight*2 - x*screenHeight, 0, -screenWidth*2+z*screenWidth);
 
-                    thisRow.add(getCluster(centre));
+                    ArrayList<Entity> walls = getCluster(centre);
+                    thisRowWalls.add(walls);
+                    ArrayList<Vector3> invalidPoints = new ArrayList<Vector3>(); // The places where ais should spawn depend on where the walls are
+                    for (Entity wall : walls){
+                        invalidPoints.add(wall.getModelInstance().transform.getTranslation(new Vector3()));
+                    }
+                    thisRowAI.add(spawnChunkAI(centre, this.player.getNumberOfKills(), invalidPoints));
                 }
-                wallModels.add(thisRow);
+                wallModels.add(thisRowWalls);
+                aiEntities.add(thisRowAI);
             }
 
-            this.addEntityToCollisionAndMap(player.getTankBase(), false);
-            this.addEntities(player.getTurret());
             this.addEntities(new Floor(this.assets.createFloorModel(1000, 1000, new Material())));
+
+            // Activate the AI in this chunk
+            activateChunk(2, 2);
         }
         catch(IOException ioe) {
 
         }
-
     }
 
 
@@ -284,7 +281,6 @@ public class PlayState extends State {
      * Sets up all required objects for later use in collision detection
      */
     public void initializeCollisionEngine(){
-
 
         collisionConfig = new btDefaultCollisionConfiguration();
         dispatcher = new btCollisionDispatcher(collisionConfig);
@@ -295,7 +291,6 @@ public class PlayState extends State {
 
         collisionWorld.setDebugDrawer(debugDraw);
         debugDraw.setDebugMode(btIDebugDraw.DebugDrawModes.DBG_MAX_DEBUG_DRAW_MODE);
-
 
     }
 
@@ -348,14 +343,18 @@ public class PlayState extends State {
     }
 
 
-    /*
-    For each ai Tank, update their movement and shooting
+
+    /**
+     * Active all enemy tanks in the specified chunk
+     * @param j the j index of chunk
+     * @param i the i index of chunk
      */
-    public void updateAI(){
-        for (Bot ai : aiTanks){
-            ai.playBehaviour();
+    private void activateChunk(int i, int j){
+        for (Bot ai : aiEntities.get(i).get(j)){
+            ai.setActive(true);
         }
     }
+
 
 
     /**
@@ -376,6 +375,10 @@ public class PlayState extends State {
             ArrayList<ArrayList<Entity>> l = wallModels.remove(4);
             wallModels.add(0, l);
 
+            // Activate Tanks in this chunk
+            activateChunk(1, 2);
+
+
             currFrame.x += screenHeight;
         }
         if (destination.x < currFrame.x - screenHeight/2){
@@ -384,6 +387,9 @@ public class PlayState extends State {
 
             ArrayList<ArrayList<Entity>> l = wallModels.remove(0);
             wallModels.add(l);
+
+            // Activate Tanks in this chunk
+            activateChunk(3, 2);
 
             currFrame.x -= screenHeight;
         }
@@ -404,6 +410,9 @@ public class PlayState extends State {
                 wallModels.get(i).add(leftMostChunks.get(i));
             }
 
+            // Activate Tanks in this chunk
+            activateChunk(2, 3);
+
             currFrame.z += screenWidth;
         }
 
@@ -423,6 +432,9 @@ public class PlayState extends State {
             for (int i = 0; i < 5; i++){
                 wallModels.get(i).add(0, rightMostChunks.get(i));
             }
+
+            // Activate Tanks in this chunk
+            activateChunk(2, 1);
 
             currFrame.z -= screenWidth;
         }
@@ -491,7 +503,77 @@ public class PlayState extends State {
     }
 
 
+    /**
+     *
+     * Generating AIs as the game goes on. The level of AI depends on how many kills the player has. Higher tank behaviour
+     * corresponds to more difficult opponents.
+     *
+     * @param numOfKills the number of kills the tank has
+     * @param centre the centre position of the chunk which AIs should be spawned around.
+     * @return an arraylist of entities spawned around the centre position
+     */
+    private ArrayList<Bot> spawnChunkAI(Vector3 centre, int numOfKills, ArrayList<Vector3> wallPoints){
+        // Number of ai bots per chunk should be random.
+        float ran = MapGenerator.randomNumber(2, 5);
 
+        // Map the corresponding 3D models to the AI type.
+        HashMap<Integer, String[]> getAiModel = new HashMap<Integer, String[]>();
+        getAiModel.put(1, new String[] {"wiiTankTurretGreen.g3db", "wiiTankBodyGreen.g3db"});
+        getAiModel.put(2, new String[] {"wiiTankTurretBlue.g3db", "wiiTankBodyBlue.g3db"});
+        getAiModel.put(3, new String[] {"wiiTankTurretPurple.g3db", "wiiTankBodyPurple.g3db"});
+        getAiModel.put(4, new String[] {"wiiTankTurretBlack.g3db", "wiiTankBodyBlack.g3db"});
+
+        /* To determine which behaviour of AI will be spawned, using a random number between zero and pi, setting boundaries
+           for each player, these bondaries will grow as the number of kills increases.
+        */
+
+        float min1 = 0;
+        float min2 = Math.max((float)Math.PI/2 - 0.23f*numOfKills, 0);
+        float min3 = Math.max(4*(float)Math.PI/5 - 0.13f*numOfKills, 0);
+        float min4 = Math.max(9*(float)Math.PI /10 - 0.85f*numOfKills, (float)Math.PI/2);
+
+        // After many kills of the player, the probability of tank 3 and 4 should be 50/50%
+
+        ArrayList<Bot> tanks = new ArrayList<Bot>();
+
+        for (int i = 0; i < ran; i++){
+            float ranZeroPI = MapGenerator.randomNumber(0, (float)Math.PI);
+            int aiType = 0;
+            if (ranZeroPI >= min4)
+                aiType = 4;
+            else if (ranZeroPI >= min3)
+                aiType = 3;
+            else if (ranZeroPI >= min2)
+                aiType = 2;
+            else if (ranZeroPI >= min1)
+                aiType = 1;
+
+            Vector3 ranPoint;
+            boolean valid = true;
+            do {
+                ranPoint = new Vector3(centre.x + MapGenerator.randomNumber(-screenHeight / 2, screenHeight / 2), 0, centre.z + MapGenerator.randomNumber(-screenWidth / 2, screenWidth / 2));
+                for (Vector3 p : wallPoints) {
+                    if (ranPoint.dst2(p) < 22800) {
+                        valid = false;
+                        break;
+                    }
+                }
+            }
+            while(!valid);
+
+            wallPoints.add(new Vector3(ranPoint));
+
+            Bot newTank = new Bot(new Turret(this.assets.initializeModel(getAiModel.get(aiType)[0])),
+                    new TankBase(this.assets.initializeModel(getAiModel.get(aiType)[1])),
+                    this, ranPoint, true, 1, this.player);
+
+            tanks.add(newTank);
+            this.addEntityToCollisionAndMap(newTank.getTankBase(),false);
+            this.addEntity(newTank.getTurret());
+        }
+
+        return tanks;
+    }
 
 
     /**
@@ -515,11 +597,6 @@ public class PlayState extends State {
     public void addEntitiesLater(Entity entities) {
         this.entitiesToAdd.add(entities);
     }
-
-    public void removeEntitiesLater(ArrayList<Entity> entities) {
-        this.entitiesToRemove.addAll(entities);
-    }
-
 
 
 }

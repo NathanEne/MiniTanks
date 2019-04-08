@@ -24,6 +24,7 @@ public abstract class Entity {
 //        this.motionState = motionState;
 //    }
 
+
     private MyMotionState motionState;
 
     public btCollisionObject getBody() {
@@ -44,7 +45,7 @@ public abstract class Entity {
     }
 
     public Vector3 getPosition() {
-        return position;
+        return getModelInstance().transform.getTranslation(new Vector3());
     }
 
     public void setPosition(Vector3 position) {

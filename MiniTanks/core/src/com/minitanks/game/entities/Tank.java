@@ -6,14 +6,15 @@ import com.minitanks.game.states.PlayState;
 
 public class Tank extends Entity {
     private boolean isAI;
-    private float movementSpeed = 80f;
-    private float bulletSpeed = 100f;
+    private float movementSpeed = 40f;
+    private float bulletSpeed = 68f;
     private int bulletsInPlay = 0;
     private int maxNumOfBullets = 5;
-    private int numOfRicochets;
-    protected PlayState playState;
+    private int numOfRicochets = 1;
+    private PlayState playState;
     private boolean canShoot = true;
     private boolean isDead = false;
+    private int numberOfKills = 0;
 
     // Number of frames past since last shot
     private int timeSinceLastShot = 0;
@@ -27,6 +28,8 @@ public class Tank extends Entity {
     private TankBase tankBase;
 
     private Turret turret;
+
+    public int getNumberOfKills() {return numberOfKills;    }
 
     public TankBase getTankBase() {
         return tankBase;
@@ -101,9 +104,7 @@ public class Tank extends Entity {
         getTurret().getModelInstance().transform.set(tankPos.add(turretOffset), getTurret().getModelInstance().transform.getRotation(new Quaternion()));
     }
 
-    public float getBulletSpeed() {
-        return bulletSpeed;
-    }
+
 
     /**
      * @ Param: Mouse position
