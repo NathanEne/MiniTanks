@@ -1,19 +1,25 @@
 package com.minitanks.game.states;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
 import com.minitanks.game.managers.InputManager;
+
+import java.awt.*;
 
 
 public class MenuState extends State {
@@ -23,7 +29,6 @@ public class MenuState extends State {
     private InputManager iptMan;
 
     private ImageButton settingsButton, playButton;
-    //private BitmapFont font;
 
     private Music lobby_music;
 
@@ -34,9 +39,10 @@ public class MenuState extends State {
         Gdx.input.setInputProcessor(stage);
 
 
-        // Wallpaper and HUD overlay
+        // Wallpaper
         Drawable wallpaper1 = new TextureRegionDrawable(new TextureRegion(new Texture("MenuScreen.jpg")));
         Image wallpaper = new Image(wallpaper1, Scaling.fillX, Align.center);
+        wallpaper.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         stage.addActor(wallpaper);
 
 
@@ -45,37 +51,21 @@ public class MenuState extends State {
         lobby_music.setLooping(true);
         lobby_music.play();
 
-
-        // Settings button
-        Drawable drawable = new TextureRegionDrawable(new TextureRegion(new Texture("cogWheel.png")));
-        settingsButton = new ImageButton(drawable);
-        settingsButton.setSize(60, 60);
-        settingsButton.setPosition(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), Align.topRight);
-        stage.addActor(settingsButton);
-
-
-        // Play button
-        Drawable drawable1 = new TextureRegionDrawable(new TextureRegion(new Texture("playButton.png")));
-        playButton = new ImageButton(drawable1);
-        playButton.setSize(150, 100);
-        playButton.setPosition(0.5f * Gdx.graphics.getWidth(), 0.5f * Gdx.graphics.getHeight(), Align.center);
-        stage.addActor(playButton);
-
+        // Text
+        Label menuInstructions = new Label("Press P to play\n Press ESC for settings", new Label.LabelStyle(new BitmapFont(), Color.BLACK));
+        menuInstructions.setPosition((float)(0.5 * Gdx.graphics.getWidth()), (float)(0.5 * Gdx.graphics.getHeight()), Align.center);
+        stage.addActor(menuInstructions);
     }
 
     @Override
     protected void handleInput() {
-        if (playButton.isPressed()) {
-            settingsButton.toggle();
+        if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
             gsm.push(new PlayState(gsm));
-            gsm.update(Gdx.graphics.getDeltaTime());
             gsm.render(((PlayState) gsm.currentState()).getBatch());
 
         }
-        if(settingsButton.isPressed()) {
-            settingsButton.toggle();
+        if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             gsm.push(new SettingsState(gsm));
-            gsm.update(Gdx.graphics.getDeltaTime());
             gsm.render(((SettingsState) gsm.currentState()).getBatch());
         }
 

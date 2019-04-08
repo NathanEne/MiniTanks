@@ -126,16 +126,11 @@ public class PlayState extends State {
             this.keyInputVector.z += 1;
         }
 
-        if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
-            //gsm.push(new SettingsState(gsm));
+        if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            gsm.push(new SettingsState(gsm, this.player));
             //gsm.update(Gdx.graphics.getDeltaTime());
-            //gsm.render(((SettingsState) gsm.currentState()).getBatch());
-            try {
-                SavingManager.writeTankPosition(player);
-            }
-            catch(IOException e) {
+            gsm.render(((SettingsState) gsm.currentState()).getBatch());
 
-            }
         }
 
         // Call the move function.
