@@ -15,6 +15,16 @@ public abstract class Entity {
     private Vector3 position;
     private ModelInstance model;
     private boolean hasBody = false;
+    private boolean isAI = false;
+
+
+    public boolean isAI() {
+        return isAI;
+    }
+
+    public void setAI(boolean AI) {
+        isAI = AI;
+    }
 
 //    public MyMotionState getMotionState() {
 //        return motionState;

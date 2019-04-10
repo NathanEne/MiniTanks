@@ -61,11 +61,8 @@ public class Bot extends Tank {
 
 
         super.move(new Vector3(0, 0, 0), new Vector3(player.getTankBase().getModelInstance().transform.getTranslation(new Vector3())));
-        counter += 0.8f;
-        if (MapGenerator.randomNumber(0, 0.015f) > 1/counter){
-            if (rayTest2Tank())
-                //super.Shoot();
-            counter = 0;
+        if (MapGenerator.randomNumber(0, 15) < 0.05f && rayTest2Tank()){
+            super.Shoot();
         }
     }
 
@@ -85,20 +82,21 @@ public class Bot extends Tank {
             do{
                 gotoLoc = new Vector3(MapGenerator.randomNumber(this.mapHeightBounds[0], this.mapHeightBounds[1]), 0, MapGenerator.randomNumber(this.mapWidthBounds[0], this.mapWidthBounds[1]));
 
-            } while (Vector2.dst(gotoLoc.x, gotoLoc.z, thisPos.x, thisPos.z) < 1000);
+            } while (Vector2.dst(gotoLoc.x, gotoLoc.z, thisPos.x, thisPos.z) < 1000 && !rayTest2pos(gotoLoc));
             pendingTarget = true;
         }
         else {
             // Traverse to point
-            moveDirection = new Vector3(gotoLoc).add(new Vector3(-thisPos.x, thisPos.y, -thisPos.z));
+            moveDirection = new Vector3(gotoLoc).sub(new Vector3(thisPos));
             moveDirection = moveDirection.nor();
+            super.move(moveDirection, new Vector3(player.getTankBase().getModelInstance().transform.getTranslation(new Vector3())));
             if (Vector2.dst2(gotoLoc.x, gotoLoc.z, thisPos.x, thisPos.z) < 100){
                 pendingTarget = false;
             }
         }
 
-        super.move(moveDirection, new Vector3(player.getTankBase().getModelInstance().transform.getTranslation(new Vector3())));
-        if (MapGenerator.randomNumber(0, 1) < 0.05f && rayTest2Tank()){
+
+        if (MapGenerator.randomNumber(0, 15) < 0.05f && rayTest2Tank()){
             super.Shoot();
         }
 
@@ -122,10 +120,34 @@ public class Bot extends Tank {
         collisionWorld.rayTest(rayFrom, new Vector3(rayFrom).add(rayTo), rays);
         if (rays.hasHit()){
             Entity e = getPlayState().getEntities().get(rays.getCollisionObject().getUserValue());
-            return e.id != 5;
+
+            return e.id != 5 && !e.isAI();
         }
         return false;
     }
 
+    /**
+     *
+     * @param position the spot to check, (AI wants to travel here)
+     * @return true if there is a clear path to the specified position
+     */
+    private boolean rayTest2pos(Vector3 position){
+        Vector3 rayFrom = this.getTankBase().getModelInstance().transform.getTranslation(new Vector3());
+        Vector3 rayTo = new Vector3(position).sub(rayFrom);
+
+        rays.setCollisionObject(null);
+        rays.setClosestHitFraction(1f);
+        rays.setRayFromWorld(rayFrom);
+        rays.setRayToWorld(rayTo);
+
+        btCollisionWorld collisionWorld = super.getPlayState().getCollisionWorld();
+        collisionWorld.rayTest(rayFrom, new Vector3(rayFrom).add(rayTo), rays);
+        if (rays.hasHit()){
+            Entity e = getPlayState().getEntities().get(rays.getCollisionObject().getUserValue());
+
+            return e.id != 5 && !e.isAI();
+        }
+        return true;
+    }
 
 }
