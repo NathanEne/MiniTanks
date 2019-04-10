@@ -33,7 +33,8 @@ public class SavingManager {
         vector = vector.replace(")", "");
         String[] vectorArray = vector.split(",");
         this.tankVector = new Vector3(Float.parseFloat(vectorArray[0]), Float.parseFloat(vectorArray[1]), Float.parseFloat(vectorArray[2]));
-
+        input.close();
+        freader.close();
     }
 
     public Vector3 getTankVector() {

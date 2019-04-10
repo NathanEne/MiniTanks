@@ -6,6 +6,15 @@ import com.minitanks.game.states.PlayState;
 
 public class Tank extends Entity {
     private boolean isAI;
+
+    public float getMovementSpeed() {
+        return movementSpeed;
+    }
+
+    public void setMovementSpeed(float movementSpeed) {
+        this.movementSpeed = movementSpeed;
+    }
+
     private float movementSpeed = 40f;
     private float bulletSpeed = 68f;
     private int bulletsInPlay = 0;
@@ -14,6 +23,11 @@ public class Tank extends Entity {
     private PlayState playState;
     private boolean canShoot = true;
     private boolean isDead = false;
+
+    public void setNumberOfKills(int numberOfKills) {
+        this.numberOfKills = numberOfKills;
+    }
+
     private int numberOfKills = 0;
 
     // Number of frames past since last shot
@@ -41,6 +55,10 @@ public class Tank extends Entity {
 
     public PlayState getPlayState() {
         return playState;
+    }
+
+    public void setDead(){
+        this.isDead = !isDead;
     }
 
     public boolean isDead() {
@@ -72,6 +90,9 @@ public class Tank extends Entity {
      * @param dirVector A normalized direction for the tank to travel on this frame.
      */
     public void move(Vector3 dirVector, Vector3 mouseInput) {
+
+
+
         if (turret == null || tankBase == null)
             return;
 
@@ -81,6 +102,9 @@ public class Tank extends Entity {
 
 
         if (!dirVector.isZero()){
+
+            getTankBase().setDirection(dirVector);
+
             // Get current position
             Vector3 currentPos = getTankBase().getModelInstance().transform.getTranslation(new Vector3());
 
@@ -95,9 +119,10 @@ public class Tank extends Entity {
             // Set back to the current position
             getTankBase().getModelInstance().transform.set(currentPos, getTankBase().getModelInstance().transform.getRotation(new Quaternion()));
         }
-
         // Actually translate the model
         getTankBase().getModelInstance().transform.trn(dirVector.nor().scl(movementSpeed));
+
+
 
         // Move the turret along with it
         Vector3 tankPos = getTankBase().getModelInstance().transform.getTranslation(new Vector3());
@@ -122,7 +147,7 @@ public class Tank extends Entity {
         // Instantiate a bullet at tip of turret
         Vector3 turretPos = getTurret().getModelInstance().transform.getTranslation(new Vector3());
         Vector3 bulletStart = turretPos.add(new Vector3(getTurret().getCurrDirection()).scl(630));
-        Bullets newBullet = new Bullets(playState.assets.createBulletModel(0,0,0), getTurret().getCurrDirection(), bulletSpeed);
+        Bullets newBullet = new Bullets(playState.assets.createBulletModel(0,0,0), getTurret().getCurrDirection(), bulletSpeed,this.playState);
         newBullet.getModelInstance().transform.set(bulletStart.add(0,-200,0), getTurret().getModelInstance().transform.getRotation(new Quaternion()));
 
         playState.addEntityToCollisionAndMap(newBullet,true);

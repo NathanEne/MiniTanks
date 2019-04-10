@@ -32,7 +32,7 @@ public class PlayState extends State {
     private ArrayList<Entity> entities;
     private ArrayList<Entity> entitiesToAdd;
     private ArrayList<Entity> entitiesToRemove;
-
+    private long score=0;
     private btCollisionConfiguration collisionConfig;
     private btDispatcher dispatcher;
     private MyContactListener contactListener;
@@ -155,20 +155,23 @@ public class PlayState extends State {
 
     @Override
     public void update(float dt) {
-
         handleInput();
 
         this.camera.seePlayer(this.player.getTankBase().getModelInstance().transform.getTranslation(new Vector3()), this.getKeyInputVector());
         this.getPlayer().increaseBulletTime();
 
         for (Entity entity: this.getEntities()) {
-            if (entity.hasBody()) {
-                entity.getBody().setWorldTransform(entity.getModelInstance().transform);
-            }
+
 
             if (entity instanceof Bullets){
                 entity.getModelInstance().transform.trn(((Bullets) entity).getDirection().scl(((Bullets) entity).getSpeed()) );
             }
+
+            if (entity.hasBody()) {
+                entity.getBody().setWorldTransform(entity.getModelInstance().transform);
+            }
+
+
 
         }
 
@@ -199,6 +202,12 @@ public class PlayState extends State {
         this.entitiesToRemove.clear();
         this.entities.addAll(entitiesToAdd);
         this.entitiesToAdd.clear();
+        if(this.player.getTankBase().getModelInstance().transform.getTranslation(new Vector3()).y>=500){
+            System.out.println("game Over");
+
+        }
+        this.player.setNumberOfKills((int)this.getScore());
+
     }
 
 
@@ -217,11 +226,10 @@ public class PlayState extends State {
         else {
             this.assets.render(this.camera.getOrthoCam(), environment, this.getEntities());
         }
-
         // DEBUGGING FOR COLLISIONS
-/*        debugDraw.begin(this.camera.getOrthoCam());
+        debugDraw.begin(this.camera.getOrthoCam());
         collisionWorld.debugDrawWorld();
-        debugDraw.end();*/
+        debugDraw.end();
     }
 
 
@@ -249,17 +257,24 @@ public class PlayState extends State {
      * FUTURE: add level option and organization
      */
     public void generateMap(){
-        try {
             initializeCamera();
             initializeCollisionEngine();
-            SavingManager tankVector = new SavingManager();
+        SavingManager tankVector;
+            try{
+             tankVector = new SavingManager();
+
+
+
+
 
             // Initializing player
             this.player = new Tank(new Turret(this.assets.initializeModel("wiiTankTurret.g3db")),
-                    new TankBase(this.assets.initializeModel("wiiTankBody.g3db")), this, tankVector.getTankVector(), false);
+                    new TankBase(this.assets.initializeModel("wiiTankBody.g3db"),this.player), this, tankVector.getTankVector(), false);
             this.addEntityToCollisionAndMap(player.getTankBase(), false);
             this.addEntities(player.getTurret());
+            }catch(Exception e){
 
+            }
             // WALL AND AI GENERATION
             // Spawn a chunk of walls and ai bots in each array spot of 5x5 array
             for (int x = 0; x < 5; x++){
@@ -283,10 +298,8 @@ public class PlayState extends State {
             this.addEntities(new Floor(this.assets.createFloorModel(1000, 1000, new Material())));
 
         }
-        catch(IOException ioe) {
 
-        }
-    }
+
 
 
     /**
@@ -311,7 +324,6 @@ public class PlayState extends State {
         BoundingBox a = new BoundingBox();
         obj.getModelInstance().calculateBoundingBox(a);
         if (wall){
-            System.out.println("waa");
             obj.getBody().setCollisionShape(new btSphereShape(50));
         }else{
             obj.getBody().setCollisionShape(new btBoxShape(a.getDimensions(new Vector3()).scl(0.5f)));
@@ -556,10 +568,10 @@ public class PlayState extends State {
             while(!valid);
 
             wallPoints.add(new Vector3(ranPoint));
-            positions.get(x).get(z).add(new Vector3(ranPoint));
-
-            Bot newTank = new Bot(new Turret(this.assets.initializeModel(getAiModel.get(aiType)[0])),
-                    new TankBase(this.assets.initializeModel(getAiModel.get(aiType)[1])),
+//            positions.get(x).get(z).add(new Vector3(ranPoint));
+            Bot newTank = null;
+             newTank = new Bot(new Turret(this.assets.initializeModel(getAiModel.get(aiType)[0])),
+                    new TankBase(this.assets.initializeModel(getAiModel.get(aiType)[1]),newTank),
                     this, ranPoint, true, 1, this.player);
 
             tanks.add(newTank);
@@ -593,5 +605,12 @@ public class PlayState extends State {
         this.entitiesToAdd.add(entities);
     }
 
+    public long getScore() {
+        return score;
+    }
+
+    public void scored() {
+        this.score++;
+    }
 
 }
