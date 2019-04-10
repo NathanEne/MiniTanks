@@ -146,7 +146,7 @@ public class Tank extends Entity {
         // Instantiate a bullet at tip of turret
         Vector3 turretPos = getTurret().getModelInstance().transform.getTranslation(new Vector3());
         Vector3 bulletStart = turretPos.add(new Vector3(getTurret().getCurrDirection()).scl(630));
-        Bullets newBullet = new Bullets(playState.assets.createBulletModel(0,0,0), getTurret().getCurrDirection(), bulletSpeed);
+        Bullets newBullet = new Bullets(playState.assets.createBulletModel(0,0,0), getTurret().getCurrDirection(), bulletSpeed,playState);
         newBullet.getModelInstance().transform.set(bulletStart.add(0,-200,0), getTurret().getModelInstance().transform.getRotation(new Quaternion()));
 
         playState.addEntityToCollisionAndMap(newBullet,true);

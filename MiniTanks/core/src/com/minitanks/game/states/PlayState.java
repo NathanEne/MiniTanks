@@ -268,7 +268,7 @@ public class PlayState extends State {
 
             // Initializing player
             this.player = new Tank(new Turret(this.assets.initializeModel("wiiTankTurret.g3db")),
-                    new TankBase(this.assets.initializeModel("wiiTankBody.g3db")), this, tankVector.getTankVector(), false);
+                    new TankBase(this.assets.initializeModel("wiiTankBody.g3db"),this.player), this, tankVector.getTankVector(), false);
             this.addEntityToCollisionAndMap(player.getTankBase(), false);
             this.addEntities(player.getTurret());
 
