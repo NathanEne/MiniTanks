@@ -57,10 +57,6 @@ public class Tank extends Entity {
         return playState;
     }
 
-    public void setDead(){
-        this.isDead = !isDead;
-    }
-
     public boolean isDead() {
         return isDead;
     }
@@ -70,6 +66,8 @@ public class Tank extends Entity {
         this.tankBase = tb;
         this.playState = plst;
         this.isAI = isAI;
+        if (isAI)
+            super.setAI(true);
         // Set the position
         getTankBase().getModelInstance().transform.set(startingPos, new Quaternion());
         getTurret().getModelInstance().transform.set(startingPos.add(turretOffset), new Quaternion());
@@ -119,6 +117,7 @@ public class Tank extends Entity {
             // Set back to the current position
             getTankBase().getModelInstance().transform.set(currentPos, getTankBase().getModelInstance().transform.getRotation(new Quaternion()));
         }
+
         // Actually translate the model
         getTankBase().getModelInstance().transform.trn(dirVector.nor().scl(movementSpeed));
 
@@ -147,7 +146,7 @@ public class Tank extends Entity {
         // Instantiate a bullet at tip of turret
         Vector3 turretPos = getTurret().getModelInstance().transform.getTranslation(new Vector3());
         Vector3 bulletStart = turretPos.add(new Vector3(getTurret().getCurrDirection()).scl(630));
-        Bullets newBullet = new Bullets(playState.assets.createBulletModel(0,0,0), getTurret().getCurrDirection(), bulletSpeed,this.playState);
+        Bullets newBullet = new Bullets(playState.assets.createBulletModel(0,0,0), getTurret().getCurrDirection(), bulletSpeed);
         newBullet.getModelInstance().transform.set(bulletStart.add(0,-200,0), getTurret().getModelInstance().transform.getRotation(new Quaternion()));
 
         playState.addEntityToCollisionAndMap(newBullet,true);

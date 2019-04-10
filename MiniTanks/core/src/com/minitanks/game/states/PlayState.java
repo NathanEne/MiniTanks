@@ -87,6 +87,7 @@ public class PlayState extends State {
         this.entitiesToRemove = new ArrayList<Entity>();
         Bullet.init();
         this.iptMan = new InputManager(this);
+
         setInputProcessor();
         generateMap();
         initializeLighting();
@@ -141,6 +142,7 @@ public class PlayState extends State {
 
         }
 
+
         // Call the move function.
         if (this.keyInputVector.len2() != 0 || mouseInputVector.len2() != 0){
             this.player.move(this.keyInputVector.nor(), this.mouseInputVector);
@@ -155,6 +157,7 @@ public class PlayState extends State {
 
     @Override
     public void update(float dt) {
+
         handleInput();
 
         this.camera.seePlayer(this.player.getTankBase().getModelInstance().transform.getTranslation(new Vector3()), this.getKeyInputVector());
@@ -176,7 +179,7 @@ public class PlayState extends State {
         }
 
 
-        float maxDistance = 100f; // The maximum amount of units AI tanks can be away from tank before getting activated
+        float maxDistance = 65f; // The maximum amount of units AI tanks can be away from tank before getting activated
 
         for (ArrayList<ArrayList<Bot>> row : aiEntities){
             for (ArrayList<Bot> chunk: row){
@@ -226,10 +229,11 @@ public class PlayState extends State {
         else {
             this.assets.render(this.camera.getOrthoCam(), environment, this.getEntities());
         }
+
         // DEBUGGING FOR COLLISIONS
-        debugDraw.begin(this.camera.getOrthoCam());
+/*        debugDraw.begin(this.camera.getOrthoCam());
         collisionWorld.debugDrawWorld();
-        debugDraw.end();
+        debugDraw.end();*/
     }
 
 
@@ -257,24 +261,28 @@ public class PlayState extends State {
      * FUTURE: add level option and organization
      */
     public void generateMap(){
+        try {
             initializeCamera();
             initializeCollisionEngine();
-        SavingManager tankVector;
-            try{
-             tankVector = new SavingManager();
-
-
-
-
+            SavingManager tankVector = new SavingManager();
 
             // Initializing player
             this.player = new Tank(new Turret(this.assets.initializeModel("wiiTankTurret.g3db")),
-                    new TankBase(this.assets.initializeModel("wiiTankBody.g3db"),this.player), this, tankVector.getTankVector(), false);
+                    new TankBase(this.assets.initializeModel("wiiTankBody.g3db")), this, tankVector.getTankVector(), false);
             this.addEntityToCollisionAndMap(player.getTankBase(), false);
             this.addEntities(player.getTurret());
-            }catch(Exception e){
 
+
+            // Initialize Arraylist
+            for (int i = 0; i < 5; i++){
+                ArrayList<ArrayList<Vector3>> row = new ArrayList<ArrayList<Vector3>>(5);
+                for (int j = 0; j < 5; j++){
+                    row.add(new ArrayList<Vector3>());
+                }
+                positions.add(row);
             }
+
+
             // WALL AND AI GENERATION
             // Spawn a chunk of walls and ai bots in each array spot of 5x5 array
             for (int x = 0; x < 5; x++){
@@ -298,8 +306,10 @@ public class PlayState extends State {
             this.addEntities(new Floor(this.assets.createFloorModel(1000, 1000, new Material())));
 
         }
+        catch(IOException ioe) {
 
-
+        }
+    }
 
 
     /**
@@ -319,6 +329,7 @@ public class PlayState extends State {
 
     }
 
+
     public void addEntityToCollisionAndMap(Entity obj, boolean wall){
         obj.setBody(new btCollisionObject());
         BoundingBox a = new BoundingBox();
@@ -329,11 +340,6 @@ public class PlayState extends State {
             obj.getBody().setCollisionShape(new btBoxShape(a.getDimensions(new Vector3()).scl(0.5f)));
 
         }
-
-
-
-
-
 
         obj.getBody().setWorldTransform(obj.getModelInstance().transform);
 
@@ -357,10 +363,10 @@ public class PlayState extends State {
         this.camera = new Camera(false, this);
 
         // Birds eye
-        //this.camera.setPosition(new Vector3(0, 2500, 0));
+        this.camera.setPosition(new Vector3(0, 2500, 0));
 
         // Offset view for 3D effect
-        this.camera.setPosition(new Vector3(0, 2500, 300));
+        //this.camera.setPosition(new Vector3(0, 2500, 300));
 
         this.camera.lookAt(new Vector3(0, 0, 0));
         this.camera.rotateOnY(-90f);
@@ -482,6 +488,42 @@ public class PlayState extends State {
                 e.getModelInstance().transform.set(currPos, currQuat);
             }
         }
+
+        Vector3 vectToAdd = new Vector3(screenHeight*5, 0, 0);
+        int rowI = 4;
+        if (!isUp){
+            vectToAdd.scl(-1f);
+            rowI = 0;
+        }
+
+
+        // Then respawn the AIs
+        int index = 0;
+        for (ArrayList<Bot> chunk : aiEntities.get(rowI)){
+            int index2 = 0;
+            for (Bot ai : chunk){
+                Vector3 pos = positions.get(rowI).get(index).get(index2).add(vectToAdd);
+                ai.getTankBase().getModelInstance().transform.set(pos, new Quaternion());
+                ai.getTurret().getModelInstance().transform.set(pos, new Quaternion());
+                index2++;
+            }
+            index++;
+        }
+
+        // Move the elements in the list
+        if (isUp){
+            ArrayList<ArrayList<Vector3>> endRow = positions.remove(4);
+            positions.add(0, endRow);
+            ArrayList<ArrayList<Bot>> endRowTanks = aiEntities.remove(4);
+            aiEntities.add(0, endRowTanks);
+        }
+        else{
+            ArrayList<ArrayList<Vector3>> topRow = positions.remove(0);
+            positions.add(topRow);
+            ArrayList<ArrayList<Bot>> topRowTanks = aiEntities.remove(0);
+            aiEntities.add(topRowTanks);
+        }
+
     }
 
 
@@ -504,6 +546,49 @@ public class PlayState extends State {
         }
 
         // Then translate the AIs
+        Vector3 vectToAdd = new Vector3(0, 0, screenWidth*5);
+        int colI = 0;
+        if (!isRight){
+            vectToAdd.scl(-1f);
+            colI = 4;
+        }
+
+
+        // Then respawn the AIs
+        int index = 0;
+        for (ArrayList<ArrayList<Bot>> row :aiEntities){
+            int index2 = 0;
+            for (Bot ai : row.get(colI)){
+                Vector3 pos = positions.get(index).get(colI).get(index2).add(vectToAdd);
+                ai.getTankBase().getModelInstance().transform.set(pos, new Quaternion());
+                ai.getTurret().getModelInstance().transform.set(pos, new Quaternion());
+                index2++;
+            }
+            index++;
+        }
+
+        // Move the elements in the list
+        if (isRight){
+            for (ArrayList<ArrayList<Bot>> row :aiEntities){
+                ArrayList<Bot> firstChunk = row.remove(0);
+                row.add(firstChunk);
+            }
+            for (ArrayList<ArrayList<Vector3>> row :positions){
+                ArrayList<Vector3> firstChunk = row.remove(0);
+                row.add(firstChunk);
+            }
+        }
+        else{
+            for (ArrayList<ArrayList<Bot>> row :aiEntities){
+                ArrayList<Bot> lastChunk = row.remove(4);
+                row.add(0, lastChunk);
+            }
+            for (ArrayList<ArrayList<Vector3>> row :positions){
+                ArrayList<Vector3> lastChunk = row.remove(4);
+                row.add(0, lastChunk);
+            }
+        }
+
     }
 
 
@@ -572,7 +657,7 @@ public class PlayState extends State {
             Bot newTank = null;
              newTank = new Bot(new Turret(this.assets.initializeModel(getAiModel.get(aiType)[0])),
                     new TankBase(this.assets.initializeModel(getAiModel.get(aiType)[1]),newTank),
-                    this, ranPoint, true, 1, this.player);
+                    this, ranPoint, true, 2, this.player);
 
             tanks.add(newTank);
             this.addEntityToCollisionAndMap(newTank.getTankBase(),false);
