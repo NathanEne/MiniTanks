@@ -24,8 +24,8 @@ public class Camera extends Entity {
 
         }
         else{
-            this.orthographicCamera = new OrthographicCamera(8500*(float)(16.0/9), 8500);
-            //this.orthographicCamera = new OrthographicCamera(2*38000*(float)(16.0/9), 2*38000);
+            //this.orthographicCamera = new OrthographicCamera(8500*(float)(16.0/9), 8500);
+            this.orthographicCamera = new OrthographicCamera(2*38000*(float)(16.0/9), 2*38000);
             this.orthographicCamera.far = 18500;
         }
 
@@ -100,9 +100,8 @@ public class Camera extends Entity {
      * @param playerPos the Vector3 position of the tank
      */
     public void seePlayer(Vector3 playerPos, Vector3 tankDirection){
-        // todo: Implment this for a rotated camera angle
 
-        float thres = 2000; // Units from the side of the screen that trigger camera movement
+        float thres = 2700; // Units from the side of the screen that trigger camera movement
 
         // Size of screen (world units)
         float w = 18600/2.0f;
@@ -112,7 +111,7 @@ public class Camera extends Entity {
 
         if (isMoving){
             orthographicCamera.position.lerp(destination, 0.07f);
-            if (this.destination.dst(orthographicCamera.position)  < 100){
+            if (this.destination.dst(orthographicCamera.position)  < 50){
 
                 isMoving = false;
             }
