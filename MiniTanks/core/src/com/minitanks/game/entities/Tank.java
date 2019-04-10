@@ -6,8 +6,8 @@ import com.minitanks.game.states.PlayState;
 
 public class Tank extends Entity {
     private boolean isAI;
-    private float movementSpeed = 40f;
-    private float bulletSpeed = 68f;
+    private float movementSpeed = 20f;
+    private float bulletSpeed = 28f;
     private int bulletsInPlay = 0;
     private int maxNumOfBullets = 5;
     private int numOfRicochets = 1;
@@ -52,6 +52,8 @@ public class Tank extends Entity {
         this.tankBase = tb;
         this.playState = plst;
         this.isAI = isAI;
+        if (isAI)
+            super.setAI(true);
         // Set the position
         getTankBase().getModelInstance().transform.set(startingPos, new Quaternion());
         getTurret().getModelInstance().transform.set(startingPos.add(turretOffset), new Quaternion());
@@ -84,11 +86,10 @@ public class Tank extends Entity {
             // Get current position
             Vector3 currentPos = getTankBase().getModelInstance().transform.getTranslation(new Vector3());
 
-            // Rotate the turret
             getTankBase().getModelInstance().transform.setToRotation(dirVector, Vector3.X.scl(-1));
 
             // Bug: Must rotate by 90 degrees if going diagonal.
-            if (dirVector.x != 0 && dirVector.z != 0){
+            if (dirVector.x != 0 && dirVector.z != 0 && !isAI){
                 getTankBase().getModelInstance().transform.rotateRad(Vector3.Y, (float)Math.PI/2);
             }
 
