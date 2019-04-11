@@ -13,10 +13,8 @@ import com.minitanks.game.states.PlayState;
 
 public class MyContactListener extends ContactListener {
     private PlayState playState;
-    //private CollisionManager manager;
     public MyContactListener(PlayState playst){
         this.playState = playst;
-      //  manager = new CollisionManager(map);
 
 
     }
@@ -54,20 +52,15 @@ public class MyContactListener extends ContactListener {
                 two.getModelInstance().transform.trn(0,10000,0);
             }
         }else  if (two.getId()==1&&one.getId() ==5){
-            BoundingBox aabb1 = new BoundingBox();
-            one.getModelInstance().calculateBoundingBox(aabb1);
-            BoundingBox aabb2 = new BoundingBox();
-            two.getModelInstance().calculateBoundingBox(aabb2);
-            aabb1.mul(one.getModelInstance().transform);
-            aabb2.mul(two.getModelInstance().transform);
-            //if(two.equals(playState.getPlayer().getTankBase())){
-                System.out.println("yo");
-            //}
+
+
+
+
 
 
             if(((TankBase) two).getDirection()!= null) {
                 two.getModelInstance().transform.setTranslation(two.getModelInstance().transform.getTranslation(new Vector3()).add(((TankBase) two).getDirection().scl(-400)));
-                System.out.println(((TankBase) two).getDirection().scl(-400));
+                System.out.println(((TankBase) two).getDirection().scl(-2));
             }else{
                 two.getModelInstance().transform.trn(100,0,100);
             }

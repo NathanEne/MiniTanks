@@ -15,8 +15,8 @@ public class Tank extends Entity {
         this.movementSpeed = movementSpeed;
     }
 
-    private float movementSpeed = 40f;
-    private float bulletSpeed = 68f;
+    private float movementSpeed = 20f;
+    private float bulletSpeed = 40f;
     private int bulletsInPlay = 0;
     private int maxNumOfBullets = 5;
     private int numOfRicochets = 1;

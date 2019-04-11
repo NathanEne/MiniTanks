@@ -206,7 +206,8 @@ public class PlayState extends State {
         this.entities.addAll(entitiesToAdd);
         this.entitiesToAdd.clear();
         if(this.player.getTankBase().getModelInstance().transform.getTranslation(new Vector3()).y>=500){
-            System.out.println("game Over");
+            gsm.push(new LoseState(gsm,(int)this.score));
+            gsm.render(((LoseState) gsm.currentState()).getBatch());
 
         }
         this.player.setNumberOfKills((int)this.getScore());
