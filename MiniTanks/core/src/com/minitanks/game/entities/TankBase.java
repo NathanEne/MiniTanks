@@ -2,14 +2,40 @@ package com.minitanks.game.entities;
 
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.math.Vector3;
-import com.minitanks.game.states.PlayState;
 
 public class TankBase extends Entity {
-
-
-    public TankBase(ModelInstance modelInstance) {
+    private Vector3 direction;
+    //private Tank owner;
+   // private Vector3 previousPosition;
+    public TankBase(ModelInstance modelInstance,Tank t) {
         super(modelInstance);
+       // previousPosition = new Vector3();
+       // this.owner = t;
         this.id =1;
     }
 
+    public Vector3 getDirection() {
+        return direction;
+    }
+
+
+    public void setDirection(Vector3 direction) {
+        this.direction = direction.nor();
+    }
+
+//    public Vector3 getPreviousPosition() {
+//        return new Vector3(previousPosition);
+//    }
+//
+//    public void setPreviousPosition(Vector3 previousPosition) {
+//        this.previousPosition = new Vector3(previousPosition);
+//    }
+
+//    public Tank getOwner() {
+//        return owner;
+//    }
+//
+//    public void setOwner(Tank owner) {
+//        this.owner = owner;
+//    }
 }

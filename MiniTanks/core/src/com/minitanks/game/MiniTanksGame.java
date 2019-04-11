@@ -3,10 +3,7 @@ package com.minitanks.game;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
-import com.minitanks.game.states.GameStateManager;
-import com.minitanks.game.states.MenuState;
-import com.minitanks.game.states.PlayState;
-import com.minitanks.game.states.SettingsState;
+import com.minitanks.game.states.*;
 
 
 public class MiniTanksGame extends ApplicationAdapter {
@@ -39,6 +36,9 @@ public class MiniTanksGame extends ApplicationAdapter {
 		}
 		if(gsm.currentState() instanceof SettingsState) {
 			gsm.render(((SettingsState) gsm.currentState()).getBatch());
+		}
+		if(gsm.currentState() instanceof LoseState) {
+			gsm.render(((LoseState) gsm.currentState()).getBatch());
 		}
 
 	}

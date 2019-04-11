@@ -7,15 +7,14 @@ import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.physics.bullet.collision.ContactListener;
 import com.minitanks.game.entities.Bullets;
 import com.minitanks.game.entities.Entity;
+import com.minitanks.game.entities.TankBase;
 import com.minitanks.game.states.PlayState;
 
 
 public class MyContactListener extends ContactListener {
     private PlayState playState;
-    //private CollisionManager manager;
     public MyContactListener(PlayState playst){
         this.playState = playst;
-      //  manager = new CollisionManager(map);
 
 
     }
@@ -26,88 +25,62 @@ public class MyContactListener extends ContactListener {
 
 
         if (two.getId()==2&&one.getId() ==5){
-          //  ((Bullets) two).setDirection(((Bullets) two).getDirection().setToRandomDirection().scl(1,0,1));
-          //  float a = ((Wall) one).getAngle();
-//            Vector3 aa = new Vector3();
-            BoundingBox aabb1 = new BoundingBox();
-            one.getModelInstance().calculateBoundingBox(aabb1);
-
-            BoundingBox aabb2 = new BoundingBox();
-            two.getModelInstance().calculateBoundingBox(aabb2);
-            aabb1.mul(one.getModelInstance().transform);
-            aabb2.mul(two.getModelInstance().transform);
-
-            //System.out.println("hello");
+            if(((Bullets) two).getRicoche()>0) {
+                BoundingBox aabb1 = new BoundingBox();
+                one.getModelInstance().calculateBoundingBox(aabb1);
+                BoundingBox aabb2 = new BoundingBox();
+                two.getModelInstance().calculateBoundingBox(aabb2);
+                aabb1.mul(one.getModelInstance().transform);
+                aabb2.mul(two.getModelInstance().transform);
+                Vector3 a = ((Bullets) two).getDirection();
+                a.nor();
+                Vector3 b = new Vector3(a);
 
 
-
-            if(aabb2.min.x<=aabb1.min.x){
-                if( ((Bullets) two).getDirection().x>0){
-                    ((Bullets) two).setDirection(((Bullets) two).getDirection().scl(new Vector3(-1,1,1)));
+                b.rotate(new Vector3(0, 1, 0), 90);
+                b.sub(0, b.y, 0);
+                two.getModelInstance().transform.trn(((Bullets) two).getDirection().scl(((Bullets) two).getSpeed() * -1.0f));
+                if(((Bullets) two).rayTest2Wall(b)) {
+                    ((Bullets) two).setDirection(a.rotate(new Vector3(0, 1, 0), -90));
+                }else{
+                    a.rotate(new Vector3(0, 1, 0), 90);
+                    a.sub(0, a.y, 0);
+                    ((Bullets) two).setDirection(a);
                 }
-
-            }else if(aabb2.max.x>=aabb1.max.x){
-                if( ((Bullets) two).getDirection().x<0){
-                    ((Bullets) two).setDirection(((Bullets) two).getDirection().scl(new Vector3(-1,1,1)));
-                }
-
-            }else if(aabb2.min.z<=aabb1.min.z){
-                if( ((Bullets) two).getDirection().z>0){
-                    ((Bullets) two).setDirection(((Bullets) two).getDirection().scl(new Vector3(1,1,-1)));
-                }
-
-            }else if(aabb2.max.z>=aabb1.max.z){
-                if( ((Bullets) two).getDirection().z<0){
-                    ((Bullets) two).setDirection(((Bullets) two).getDirection().scl(new Vector3(1,1,-1)));
-             }
-        }
-
+                ((Bullets) two).ricoched();
+            }else{
+                two.getModelInstance().transform.trn(0,10000,0);
+            }
         }else  if (two.getId()==1&&one.getId() ==5){
-            BoundingBox aabb1 = new BoundingBox();
-            one.getModelInstance().calculateBoundingBox(aabb1);
-            BoundingBox aabb2 = new BoundingBox();
-            two.getModelInstance().calculateBoundingBox(aabb2);
-            aabb1.mul(one.getModelInstance().transform);
-            aabb2.mul(two.getModelInstance().transform);
 
 
-            //todo add restrictions on this condition to remove bugs
-            if(aabb2.min.z<=aabb1.min.z&&Gdx.input.isKeyPressed(Input.Keys.D)){
-                //left
-                float delta = aabb2.max.z - aabb1.min.z;
-                two.getModelInstance().transform.trn(0,0,-delta);
 
 
-            }else if(aabb2.max.z>=aabb1.max.z&&Gdx.input.isKeyPressed(Input.Keys.A)){
-                //right
-                float delta = aabb2.min.z - aabb1.max.z;
-                two.getModelInstance().transform.trn(0,0,-delta);
 
-            }
-            else if(aabb2.min.x<=aabb1.min.x && Gdx.input.isKeyPressed(Input.Keys.W)){
-                //bottom
-                float delta = aabb2.max.x - aabb1.min.x;
-                two.getModelInstance().transform.trn(-delta,0,0);
-                aabb1.mul(two.getModelInstance().transform);
-                //todo add restrictions on this condition
-            }else if(aabb2.max.x>=aabb1.max.x&&Gdx.input.isKeyPressed(Input.Keys.S)){
-                //top
-                float delta = aabb2.min.x - aabb1.max.x;
-                two.getModelInstance().transform.trn(-delta,0,0);
 
+            if(((TankBase) two).getDirection()!= null) {
+                two.getModelInstance().transform.setTranslation(two.getModelInstance().transform.getTranslation(new Vector3()).add(((TankBase) two).getDirection().nor().scl(-21)));
+                System.out.println(((TankBase) two).getDirection().scl(-200));
+            }else{
+                two.getModelInstance().transform.trn(100,0,100);
             }
 
-        } else if (two.getId()==2&&one.getId() ==1){
-           one.getModelInstance().transform.trn(0,10000,0);
+
+            } else if (two.getId()==2&&one.getId() ==1){
+//            ((TankBase) one).getOwner().setDead();
+            one.getModelInstance().transform.trn(0,10000,0);
             two.getModelInstance().transform.trn(0,10000,0);
+            playState.scored();
         } else if (two.getId()==2&&one.getId() ==2){
             one.getModelInstance().transform.trn(0,10000,0);
             two.getModelInstance().transform.trn(0,10000,0);
         }
-        else if (two.getId()==1&&one.getId() ==1){
-            one.getModelInstance().transform.trn(0,10000,0);
-            two.getModelInstance().transform.trn(0,10000,0);
-        }
+//        else if (two.getId()==1&&one.getId() ==1){
+////            ((TankBase) one).getOwner().setDead();
+////            ((TankBase) two).getOwner().setDead();
+//            one.getModelInstance().transform.trn(0,10000,0);
+//            two.getModelInstance().transform.trn(0,10000,0);
+//        }
         return true;
     }
 }
