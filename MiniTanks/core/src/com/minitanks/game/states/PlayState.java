@@ -266,7 +266,7 @@ public class PlayState extends State {
             initializeCamera();
             initializeCollisionEngine();
             SavingManager tankVector = new SavingManager();
-
+            this.score = tankVector.getScore();
             // Initializing player
             this.player = new Tank(new Turret(this.assets.initializeModel("wiiTankTurret.g3db")),
                     new TankBase(this.assets.initializeModel("wiiTankBody.g3db"),this.player), this, tankVector.getTankVector(), false);
@@ -654,7 +654,7 @@ public class PlayState extends State {
             while(!valid);
 
             wallPoints.add(new Vector3(ranPoint));
-//            positions.get(x).get(z).add(new Vector3(ranPoint));
+            positions.get(x).get(z).add(new Vector3(ranPoint));
             Bot newTank = null;
              newTank = new Bot(new Turret(this.assets.initializeModel(getAiModel.get(aiType)[0])),
                     new TankBase(this.assets.initializeModel(getAiModel.get(aiType)[1]),newTank),
