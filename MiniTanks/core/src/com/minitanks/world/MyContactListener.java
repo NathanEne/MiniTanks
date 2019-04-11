@@ -59,11 +59,12 @@ public class MyContactListener extends ContactListener {
 
 
             if(((TankBase) two).getDirection()!= null) {
-                two.getModelInstance().transform.setTranslation(two.getModelInstance().transform.getTranslation(new Vector3()).add(((TankBase) two).getDirection().scl(-400)));
-                System.out.println(((TankBase) two).getDirection().scl(-2));
+                two.getModelInstance().transform.setTranslation(two.getModelInstance().transform.getTranslation(new Vector3()).add(((TankBase) two).getDirection().nor().scl(-21)));
+                System.out.println(((TankBase) two).getDirection().scl(-200));
             }else{
                 two.getModelInstance().transform.trn(100,0,100);
             }
+
 
             } else if (two.getId()==2&&one.getId() ==1){
 //            ((TankBase) one).getOwner().setDead();

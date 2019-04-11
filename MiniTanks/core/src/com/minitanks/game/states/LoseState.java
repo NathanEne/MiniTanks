@@ -26,7 +26,7 @@ import java.io.IOException;
 
 public class LoseState extends State {
     private Stage stage;
-
+    private SpriteBatch sb = new SpriteBatch();
     private ModelBatch batch;
     private InputManager iptMan;
 
@@ -77,19 +77,13 @@ public class LoseState extends State {
     @Override
     public void update(float dt) {
         handleInput();
+
     }
 
     @Override
     public void render(ModelBatch s) {
         Gdx.gl.glClearColor(174/255f, 174/255f, 174/255f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-//        BitmapFont font = new BitmapFont();
-//        font.setColor(Color.WHITE);
-//        sb.begin();
-//        font.draw(sb, "Score: " + this.score, 500, 500);
-//        font.draw(sb, "Game Over press escape to exit or enter to retry", 1920/2, 700);
-//
-//        sb.end();
         stage.draw();
     }
 
