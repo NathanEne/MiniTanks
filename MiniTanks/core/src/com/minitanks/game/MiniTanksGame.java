@@ -17,6 +17,7 @@ public class MiniTanksGame extends ApplicationAdapter {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		gsm = new GameStateManager();
 		//gsm.push(new MenuState(gsm));
+		System.out.print("hi");
 		gsm.push(new PlayState(gsm));
 
 	}
@@ -24,7 +25,6 @@ public class MiniTanksGame extends ApplicationAdapter {
 	@Override
 	public void render() {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
 		gsm.update(Gdx.graphics.getDeltaTime());
 
 		if(gsm.currentState() instanceof MenuState){
@@ -40,6 +40,7 @@ public class MiniTanksGame extends ApplicationAdapter {
 		if(gsm.currentState() instanceof LoseState) {
 			gsm.render(((LoseState) gsm.currentState()).getBatch());
 		}
+
 
 	}
 

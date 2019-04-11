@@ -11,6 +11,9 @@ import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
+import com.badlogic.gdx.graphics.g3d.utils.RenderContext;
+import com.badlogic.gdx.graphics.g3d.utils.RenderableSorter;
+import com.badlogic.gdx.graphics.g3d.utils.ShaderProvider;
 import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
@@ -25,7 +28,8 @@ import com.minitanks.world.MapGenerator;
 import com.minitanks.world.MyContactListener;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class PlayState extends State {
 
@@ -93,6 +97,19 @@ public class PlayState extends State {
         initializeLighting();
 
       }
+    public PlayState(GameStateManager gsm, final RenderContext context, final ShaderProvider shaderProvider, final RenderableSorter sorter) {
+        super(gsm, context, shaderProvider, sorter);
+        this.entities = new ArrayList<Entity>();
+        this.entitiesToAdd = new ArrayList<Entity>();
+        this.entitiesToRemove = new ArrayList<Entity>();
+        Bullet.init();
+        this.iptMan = new InputManager(this);
+        setInputProcessor();
+        generateMap();
+        initializeLighting();
+
+    }
+
 
 
     public void initializeLighting(){
@@ -255,6 +272,18 @@ public class PlayState extends State {
         this.addEntities(e);
     }
 
+    public void displayScore(){
+        //Array<Decal> decals = new Array<Decal>();
+        //DecalBatch decalBatch = new DecalBatch(new CameraGroupStrategy(camera.getOrthoCam()));
+        //TextureRegion textureRegion = new TextureRegion(new Texture("Score.png"));
+        //Decal ScoreText = new Decal.newDecal(textureRegion, true);
+        //decals.add(ScoreText);
+        //decals.add
+        //Texture texture = new Texture()
+
+        //decalBatch.add(ScoreText);
+    }
+
 
 
     /**
@@ -264,9 +293,10 @@ public class PlayState extends State {
     public void generateMap(){
         try {
             initializeCamera();
+
             initializeCollisionEngine();
+
             SavingManager tankVector = new SavingManager();
-            this.score = tankVector.getScore();
             // Initializing player
             this.player = new Tank(new Turret(this.assets.initializeModel("wiiTankTurret.g3db")),
                     new TankBase(this.assets.initializeModel("wiiTankBody.g3db"),this.player), this, tankVector.getTankVector(), false);
@@ -305,6 +335,8 @@ public class PlayState extends State {
             }
 
             this.addEntities(new Floor(this.assets.createFloorModel(1000, 1000, new Material())));
+
+
 
         }
         catch(IOException ioe) {
@@ -654,7 +686,7 @@ public class PlayState extends State {
             while(!valid);
 
             wallPoints.add(new Vector3(ranPoint));
-            positions.get(x).get(z).add(new Vector3(ranPoint));
+//            positions.get(x).get(z).add(new Vector3(ranPoint));
             Bot newTank = null;
              newTank = new Bot(new Turret(this.assets.initializeModel(getAiModel.get(aiType)[0])),
                     new TankBase(this.assets.initializeModel(getAiModel.get(aiType)[1]),newTank),

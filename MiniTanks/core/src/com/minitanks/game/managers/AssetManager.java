@@ -10,6 +10,9 @@ import com.badlogic.gdx.graphics.g3d.*;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.loader.G3dModelLoader;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
+import com.badlogic.gdx.graphics.g3d.utils.RenderContext;
+import com.badlogic.gdx.graphics.g3d.utils.RenderableSorter;
+import com.badlogic.gdx.graphics.g3d.utils.ShaderProvider;
 import com.badlogic.gdx.utils.UBJsonReader;
 import com.minitanks.game.entities.Entity;
 
@@ -28,6 +31,12 @@ public class AssetManager {
         this.batch = new ModelBatch();
 
     }
+    public AssetManager(final RenderContext context, final ShaderProvider shaderProvider, final RenderableSorter sorter){
+        this.jsonReader = new UBJsonReader();
+        this.modelLoader = new G3dModelLoader(jsonReader);
+        this.batch = new ModelBatch(context, shaderProvider, sorter);
+    }
+
 
     public ModelInstance initializeModel(String path){
         Model m = this.modelLoader.loadModel(Gdx.files.getFileHandle(path, Files.FileType.Internal));

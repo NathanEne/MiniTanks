@@ -2,9 +2,7 @@ package com.minitanks.game.entities;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.physics.bullet.collision.ClosestNotMeRayResultCallback;
-import com.badlogic.gdx.physics.bullet.collision.btCollisionObject;
 import com.badlogic.gdx.physics.bullet.collision.btCollisionWorld;
 import com.minitanks.game.states.PlayState;
 import com.minitanks.world.MapGenerator;
@@ -21,6 +19,7 @@ public class Bot extends Tank {
     private Vector3 moveDirection = new Vector3();
     private Vector3 gotoLoc;
     private ClosestNotMeRayResultCallback rays;
+
 
     public Bot(Turret t, TankBase tb, PlayState plst, Vector3 startingPos, boolean isAI, int aiType, Tank player){
         super(t, tb, plst, startingPos, true);

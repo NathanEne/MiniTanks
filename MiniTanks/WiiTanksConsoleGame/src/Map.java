@@ -74,7 +74,7 @@ public class Map{
      * random float generator which takes in a min and max
      * used to randomize map generation of walls, mines and targets
      */
-    private static float randomNumber(float min, float max) {
+    public static float randomNumber(float min, float max) {
         Random rn = new Random();
         float number = min + rn.nextFloat() * (max - min);
         return number;

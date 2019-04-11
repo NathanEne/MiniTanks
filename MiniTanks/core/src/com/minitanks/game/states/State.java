@@ -2,6 +2,9 @@ package com.minitanks.game.states;
 
 
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
+import com.badlogic.gdx.graphics.g3d.utils.RenderContext;
+import com.badlogic.gdx.graphics.g3d.utils.RenderableSorter;
+import com.badlogic.gdx.graphics.g3d.utils.ShaderProvider;
 import com.minitanks.game.entities.Camera;
 import com.minitanks.game.managers.AssetManager;
 
@@ -14,6 +17,10 @@ public abstract class State {
 
     protected State(GameStateManager gsm) {
         this.assets = new AssetManager();
+        this.gsm = gsm;
+    }
+    protected State(GameStateManager gsm, final RenderContext context, final ShaderProvider shaderProvider, final RenderableSorter sorter) {
+        this.assets = new AssetManager(context, shaderProvider, sorter);
         this.gsm = gsm;
     }
 

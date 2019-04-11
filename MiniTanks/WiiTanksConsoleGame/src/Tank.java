@@ -9,8 +9,8 @@ public class Tank extends Map{
     /*
     starting position of 'T' char (0,0)
      */
-    int pos_x;
-    int pos_y;
+    private int pos_x;
+    private int pos_y;
 
     /**
      *
@@ -210,4 +210,11 @@ public class Tank extends Map{
         }
     }
 
+    public int getPos_x() {
+        return pos_x;
+    }
+
+    public int getPos_y() {
+        return pos_y;
+    }
 }

@@ -31,9 +31,23 @@ public class Camera extends Entity {
 
         this.playState = plst;
     }
+    public Camera(boolean isPerspective) {
+        this.isPerspective = isPerspective;
+
+        if (isPerspective) {
+            this.perspectiveCamera = new PerspectiveCamera(60, 5000, 5000);
+            this.perspectiveCamera.far = 8500;
+
+        } else {
+            this.orthographicCamera = new OrthographicCamera(10500 * (float) (16.0 / 9), 10500);
+            this.orthographicCamera.far = 18500;
+        }
+    }
 
 
     public OrthographicCamera getOrthoCam(){
+
+
         return this.orthographicCamera;
     }
     public PerspectiveCamera getPersCam(){
@@ -62,9 +76,12 @@ public class Camera extends Entity {
 
 
     public Vector3 getDirection(){
-        if (isPerspective)
-            return this.perspectiveCamera.direction;
-        return this.orthographicCamera.direction;
+        if (isPerspective) {
+            Vector3 direction = this.perspectiveCamera.direction;
+            return new Vector3(direction.x,direction.y,direction.z);
+        }
+        Vector3 direction = this.orthographicCamera.direction;
+        return new Vector3(direction.x,direction.y,direction.z);
     }
 
     public void rotateOnY(float degrees){

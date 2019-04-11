@@ -29,7 +29,9 @@ public class SavingManager {
     }
 
     public void readTankPosition() throws IOException {
+
         FileReader freader = new FileReader("save.txt");
+
         BufferedReader input = new BufferedReader(freader);
         String vector = input.readLine();
         vector = vector.replace("(", "");
