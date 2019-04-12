@@ -278,18 +278,6 @@ public class PlayState extends State {
         this.addEntities(e);
     }
 
-    public void displayScore(){
-        //Array<Decal> decals = new Array<Decal>();
-        //DecalBatch decalBatch = new DecalBatch(new CameraGroupStrategy(camera.getOrthoCam()));
-        //TextureRegion textureRegion = new TextureRegion(new Texture("Score.png"));
-        //Decal ScoreText = new Decal.newDecal(textureRegion, true);
-        //decals.add(ScoreText);
-        //decals.add
-        //Texture texture = new Texture()
-
-        //decalBatch.add(ScoreText);
-    }
-
 
 
     /**

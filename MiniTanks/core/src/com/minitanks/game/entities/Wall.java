@@ -17,6 +17,14 @@ public class Wall extends Entity{
         this.angle = radRotation;
     }
 
+    /**
+     *
+     * @param modelInstance
+     * @param radRotation
+     * Initializes a wall as a rectangle rotated on the given angle
+     *
+     */
+
     public Wall(ModelInstance modelInstance, float radRotation){
         super(modelInstance);
         this.id = 5;

@@ -10,6 +10,11 @@ public class MiniTanksGame extends ApplicationAdapter {
 
 	private GameStateManager gsm;
 
+	/**
+	 * Methods from ApplicationAdapter are overridden to create and render the game
+	 *
+	 */
+
 	@Override
 	public void create() {
 
@@ -17,7 +22,6 @@ public class MiniTanksGame extends ApplicationAdapter {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		gsm = new GameStateManager();
 		//gsm.push(new MenuState(gsm));
-		System.out.print("hi");
 		gsm.push(new PlayState(gsm));
 
 	}

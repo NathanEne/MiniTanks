@@ -14,12 +14,23 @@ public class SavingManager {
         this.readTankPosition();
     }
 
+    /**
+     *
+     * @param player
+     * @throws IOException
+     * Saves the coordinates of the player tank into the save.txt file
+     *
+     */
+
     public static void writeTankPosition(Tank player) throws IOException {
         PrintWriter output = new PrintWriter(new File("save.txt"));
         output.print(player.getTankBase().getModelInstance().transform.getTranslation(new Vector3()));
         output.println(","+player.getPlayState().getScore());
         output.close();
     }
+    /*
+    Resets tank position to (0, 0, 0)
+     */
 
     public static void resetTankPosition() throws IOException {
         PrintWriter output = new PrintWriter(new File("save.txt"));
@@ -27,6 +38,14 @@ public class SavingManager {
         output.println(","+0);
         output.close();
     }
+
+    /**
+     *
+     * @throws IOException
+     * BufferedReader reads tank position from save.text
+     * Then initializes the tank vector or its starting coordinates from the BufferedReaders input
+     *
+     */
 
     public void readTankPosition() throws IOException {
 

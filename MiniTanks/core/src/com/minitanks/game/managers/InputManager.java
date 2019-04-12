@@ -11,6 +11,11 @@ public class InputManager implements InputProcessor {
         this.curr_playState = state;
     }
 
+    /**
+     *
+     * Key booleans which are triggered when the key is pressed
+     */
+
     public boolean keyDown(int k){
         return false;
     }

@@ -6,6 +6,13 @@ import static org.junit.Assert.assertEquals;
 public class TestConsoleGame {
     Tank tank;
 
+    /**
+     *
+     * Test classes for console game
+     * Ensure proper functionality of tank moverment
+     *
+     */
+
     @Before
     public void createTank(){
         tank = new Tank(7, 7);

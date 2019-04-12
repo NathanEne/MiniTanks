@@ -15,6 +15,14 @@ public class Camera extends Entity {
     private Vector3 currFrame = new Vector3(0, 0, 0);
     private PlayState playState;
 
+    /**
+     *
+     * @param isPerspective
+     * @param plst
+     * Constructor for camera initializes its distance from board and its dimensions
+     *
+     */
+
     public Camera(boolean isPerspective, PlayState plst){
         this.isPerspective = isPerspective;
 
@@ -31,6 +39,13 @@ public class Camera extends Entity {
 
         this.playState = plst;
     }
+
+    /**
+     *
+     * @param isPerspective
+     * Constructor for test class usage strictly
+     *
+     */
     public Camera(boolean isPerspective) {
         this.isPerspective = isPerspective;
 
@@ -44,6 +59,10 @@ public class Camera extends Entity {
         }
     }
 
+    /**
+     * Getter for camera
+     *
+     */
 
     public OrthographicCamera getOrthoCam(){
 
@@ -58,6 +77,11 @@ public class Camera extends Entity {
         return isPerspective;
     }
 
+    /**
+     *
+     * Sets the postion of the camera at a three-dimensional point
+     *
+     */
     @Override
     public void setPosition(Vector3 position){
         if (isPerspective)
@@ -66,7 +90,7 @@ public class Camera extends Entity {
             this.orthographicCamera.position.set(position);
     }
 
-
+    // Focuses camera on three dimensional point
     public void lookAt(Vector3 position){
         if (isPerspective)
             this.perspectiveCamera.lookAt(position);
@@ -74,7 +98,10 @@ public class Camera extends Entity {
             this.orthographicCamera.lookAt(position);
     }
 
-
+    /*
+    Gets direction at which Camera is aimed
+    For example, if camera is aimed directly down at the board its direction will (0, -1, 0)
+     */
     public Vector3 getDirection(){
         if (isPerspective) {
             Vector3 direction = this.perspectiveCamera.direction;

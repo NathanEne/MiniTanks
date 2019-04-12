@@ -24,7 +24,11 @@ public class AssetManager {
     private G3dModelLoader modelLoader;
     private ModelBuilder modelBuilder;
 
-
+    /**
+     * Constructors for AssetManager
+     *
+     *
+     */
     public AssetManager(){
         this.jsonReader = new UBJsonReader();
         this.modelLoader = new G3dModelLoader(jsonReader);
@@ -37,12 +41,31 @@ public class AssetManager {
         this.batch = new ModelBatch(context, shaderProvider, sorter);
     }
 
+    /**
+     *
+     * @param path
+     * @return
+     * Initializes the model of a given entity: Tank, Bullets, Wall
+     *
+     *
+     */
+
 
     public ModelInstance initializeModel(String path){
         Model m = this.modelLoader.loadModel(Gdx.files.getFileHandle(path, Files.FileType.Internal));
         return new ModelInstance(m);
 
     }
+
+    /**
+     *
+     * @param width
+     * @param height
+     * @param material
+     * @return Models of all non-Tank entities are created
+     *
+     *
+     */
 
     public ModelInstance createFloorModel(final float width, final float height, final Material material) {
         modelBuilder = new ModelBuilder();
@@ -59,6 +82,15 @@ public class AssetManager {
         Model m = modelBuilder.createSphere(100,100,100,20,20,new Material(ColorAttribute.createDiffuse(new Color((float)205/255, (float)127/255, (float)50/255, 1f))),VertexAttributes.Usage.Position|VertexAttributes.Usage.Normal);
         return new ModelInstance(m,x,y,z);
     }
+
+    /**
+     *
+     * @param cam
+     * @param environment
+     * @param a
+     * Renders the model of entities onto the games display
+     *
+     */
 
 
     public void render(PerspectiveCamera cam, Environment environment, ArrayList<Entity> a){

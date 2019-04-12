@@ -28,6 +28,7 @@ public class Tank extends Entity {
         this.numberOfKills = numberOfKills;
     }
 
+    // Essentially, the games score: how many AI tanks the player has killed
     private int numberOfKills = 0;
 
     // Number of frames past since last shot
@@ -42,6 +43,10 @@ public class Tank extends Entity {
     private TankBase tankBase;
 
     private Turret turret;
+
+    /*
+    Getters
+     */
 
     public int getNumberOfKills() {return numberOfKills;    }
 
@@ -60,6 +65,22 @@ public class Tank extends Entity {
     public boolean isDead() {
         return isDead;
     }
+
+    /**
+     *
+     * @param t
+     * @param tb
+     * @param plst
+     * @param startingPos
+     * @param isAI
+     * Constructor for tank:
+     * Initializes:
+     * it's turret and base
+     * PlayState
+     * Starting Pos (0,0,0) for user tank
+     * If AI tank is controlled by AI algorithm
+     *
+     */
 
     public Tank(Turret t, TankBase tb, PlayState plst, Vector3 startingPos, boolean isAI) {
         this.turret = t;

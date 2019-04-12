@@ -23,6 +23,10 @@ public class Bullets extends Entity {
         rays = new ClosestNotMeRayResultCallback(this.getBody());
     }
 
+    /**
+     * Setters and Getters
+     *
+     */
     public float getSpeed() {
         return speed;
     }
@@ -41,6 +45,7 @@ public class Bullets extends Entity {
     }
 
 
+
     public short getRicoche() {
         return this.ricoche;
     }
@@ -50,6 +55,7 @@ public class Bullets extends Entity {
     }
 
     /**
+     *Ray Test shoots out a ray from the bullet to detect if it will collide with a wall
      *
      *
      */
