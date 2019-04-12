@@ -55,7 +55,6 @@ public class AssetManager {
         return new ModelInstance(m,x,0,z);
     }
     public ModelInstance createBulletModel(float x, float z,float y) {
-        System.out.println("hi");
         modelBuilder = new ModelBuilder();
         Model m = modelBuilder.createSphere(100,100,100,20,20,new Material(ColorAttribute.createDiffuse(new Color((float)205/255, (float)127/255, (float)50/255, 1f))),VertexAttributes.Usage.Position|VertexAttributes.Usage.Normal);
         return new ModelInstance(m,x,y,z);

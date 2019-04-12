@@ -49,7 +49,7 @@ public class MyContactListener extends ContactListener {
                 }
                 ((Bullets) two).ricoched();
             }else{
-                two.getModelInstance().transform.trn(0,10000,0);
+                two.getModelInstance().transform.trn(0,1000000,0);
             }
         }else  if (two.getId()==1&&one.getId() ==5){
 
@@ -60,27 +60,20 @@ public class MyContactListener extends ContactListener {
 
             if(((TankBase) two).getDirection()!= null) {
                 two.getModelInstance().transform.setTranslation(two.getModelInstance().transform.getTranslation(new Vector3()).add(((TankBase) two).getDirection().nor().scl(-21)));
-                System.out.println(((TankBase) two).getDirection().scl(-200));
             }else{
                 two.getModelInstance().transform.trn(100,0,100);
             }
 
 
             } else if (two.getId()==2&&one.getId() ==1){
-//            ((TankBase) one).getOwner().setDead();
-            one.getModelInstance().transform.trn(0,10000,0);
-            two.getModelInstance().transform.trn(0,10000,0);
+
+            one.getModelInstance().transform.trn(-1000000,10000,-1000000);
+            two.getModelInstance().transform.trn(0,2000000,0);
             playState.scored();
         } else if (two.getId()==2&&one.getId() ==2){
-            one.getModelInstance().transform.trn(0,10000,0);
-            two.getModelInstance().transform.trn(0,10000,0);
+            one.getModelInstance().transform.trn(0,1000500,0);
+            two.getModelInstance().transform.trn(0,1000000,0);
         }
-//        else if (two.getId()==1&&one.getId() ==1){
-////            ((TankBase) one).getOwner().setDead();
-////            ((TankBase) two).getOwner().setDead();
-//            one.getModelInstance().transform.trn(0,10000,0);
-//            two.getModelInstance().transform.trn(0,10000,0);
-//        }
         return true;
     }
 }

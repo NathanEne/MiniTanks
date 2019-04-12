@@ -190,7 +190,10 @@ public class PlayState extends State {
             if (entity.hasBody()) {
                 entity.getBody().setWorldTransform(entity.getModelInstance().transform);
             }
-
+//            if(entity instanceof TankBase && entity.getModelInstance().transform.getTranslation(new Vector3()).y>9000){
+//                ((TankBase)entity).getOwner().getTurret().getModelInstance().transform.trn(0,10000,0);
+//
+//            }
 
 
         }
@@ -211,6 +214,9 @@ public class PlayState extends State {
                     }
                     else{
                         ai.setActive(false);
+                    }
+                    if(ai.getTankBase().getModelInstance().transform.getTranslation(new Vector3()).y > 9000){
+                        ai.getTurret().getModelInstance().transform.trn(0,10000,0);
                     }
                 }
             }
