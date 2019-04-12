@@ -51,18 +51,25 @@ public class MyContactListener extends ContactListener {
             }else{
                 two.getModelInstance().transform.trn(0,1000000,0);
             }
-        }else  if (two.getId()==1&&one.getId() ==5){
+        } else if(one.getId()==1&&two.getId() ==5){
+           // System.out.println( one.getModelInstance().transform.getTranslation(new Vector3()));
 
+            if(((TankBase) one).getDirection()!= null) {
+                one.getModelInstance().transform.trn(((TankBase) one).getDirection().scl(-1));
+                //one.getModelInstance().transform.trn(0,1000000,0);
+            }else{
+                one.getModelInstance().transform.trn(100,0,100);
+            }
 
-
-
-
-
+        } else if(two.getId()==1&&one.getId() ==5){
             if(((TankBase) two).getDirection()!= null) {
-                two.getModelInstance().transform.setTranslation(two.getModelInstance().transform.getTranslation(new Vector3()).add(((TankBase) two).getDirection().nor().scl(-21)));
+                two.getModelInstance().transform.trn(((TankBase) two).getDirection().scl(-1));
+
             }else{
                 two.getModelInstance().transform.trn(100,0,100);
             }
+
+
 
 
             } else if (two.getId()==2&&one.getId() ==1){
