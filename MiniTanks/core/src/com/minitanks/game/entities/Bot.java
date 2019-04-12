@@ -10,10 +10,7 @@ import com.minitanks.world.MapGenerator;
 public class Bot extends Tank {
 
     private int AIType;
-    private float counter = 0;
     private Tank player;
-    private int[] mapHeightBounds = {1000, -1000};
-    private int[] mapWidthBounds = {-3000, 4200};
     private boolean isActive = true;
     private boolean pendingTarget = false;
     private Vector3 moveDirection = new Vector3();
@@ -79,9 +76,9 @@ public class Bot extends Tank {
         if (!pendingTarget){
             // Pick a random location
             do{
-                gotoLoc = new Vector3(MapGenerator.randomNumber(this.mapHeightBounds[0], this.mapHeightBounds[1]), 0, MapGenerator.randomNumber(this.mapWidthBounds[0], this.mapWidthBounds[1]));
+                gotoLoc = new Vector3(MapGenerator.randomNumber(-5000, 5000) + thisPos.x, 0, MapGenerator.randomNumber(-10000, 10000) + thisPos.z);
 
-            } while (Vector2.dst(gotoLoc.x, gotoLoc.z, thisPos.x, thisPos.z) < 1000 && !rayTest2pos(gotoLoc));
+            } while (Vector2.dst2(gotoLoc.x, gotoLoc.z, thisPos.x, thisPos.z) < 10000 && !rayTest2pos(gotoLoc));
             pendingTarget = true;
         }
         else {
@@ -95,10 +92,10 @@ public class Bot extends Tank {
         }
 
 
+        // Shoot at random
         if (MapGenerator.randomNumber(0, 15) < 0.05f && rayTest2Tank()){
             super.Shoot();
         }
-
     }
 
 
@@ -144,7 +141,7 @@ public class Bot extends Tank {
         if (rays.hasHit()){
             Entity e = getPlayState().getEntities().get(rays.getCollisionObject().getUserValue());
 
-            return e.id != 5 && !e.isAI();
+            return e.id != 5;
         }
         return true;
     }

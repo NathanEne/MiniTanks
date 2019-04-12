@@ -111,7 +111,7 @@ public class PlayState extends State {
         this.environment = new Environment();
         this.environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.8f, 0.8f, 0.8f, 1.0f));
         environment.add(new DirectionalLight().set(Color.SLATE,1,0.1f,1));
-
+        font.getData().setScale(5,5);
     }
 
 
@@ -123,9 +123,6 @@ public class PlayState extends State {
         Vector3 worldPos = this.camera.unProject(screenInput);
         worldPos.y = 0;
         this.mouseInputVector = worldPos;
-
-        // Move tank to mouse for debugging purposes
-        //this.getPlayer().getTankBase().getModelInstance().transform.set(worldPos, this.getPlayer().getTankBase().getModelInstance().transform.getRotation(new Quaternion()));
     }
 
 

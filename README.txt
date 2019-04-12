@@ -43,4 +43,5 @@ HOW TO LAUNCH
 
 To launch WiiTanks, first navigate to the folder MiniTanks. From there navigate through the folders:
 desktop > src > com > minitanks > game > desktop. In desktop there is a .java files named DesktopLauncher.java.
-Run this file to launch the WiiTanks game as it contains the main method for the game.
+Run this file to launch the WiiTanks game as it contains the main method for the game. Sometimes when launching this
+main() it will take long to display anything, if that happens just rerun the game.

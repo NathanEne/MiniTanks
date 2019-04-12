@@ -31,7 +31,6 @@ public class MapGenerator {
 
 
 
-
     /**
      * Function generates wall points with various radii that are NOT overlapping
      * @param width
@@ -83,7 +82,6 @@ public class MapGenerator {
         }
         return WallStartingPoints;
     }
-
 
 
 

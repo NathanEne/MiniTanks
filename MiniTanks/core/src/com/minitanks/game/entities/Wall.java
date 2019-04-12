@@ -8,14 +8,6 @@ public class Wall extends Entity{
 
     private float angle;
 
-    public Wall(ModelInstance modelInstance, float posX, float posZ, float radRotation){
-        super(modelInstance);
-        getModelInstance().transform.set(new Vector3(posX, 0, posZ), getModelInstance().transform.getRotation(new Quaternion()));
-        getModelInstance().transform.scl(0.5f, 5f, 0.5f);
-        getModelInstance().transform.rotateRad(Vector3.Y, radRotation);
-        this.id = 5;
-        this.angle = radRotation;
-    }
 
     /**
      *
@@ -24,6 +16,15 @@ public class Wall extends Entity{
      * Initializes a wall as a rectangle rotated on the given angle
      *
      */
+
+    public Wall(ModelInstance modelInstance, float posX, float posZ, float radRotation){
+        super(modelInstance);
+        getModelInstance().transform.set(new Vector3(posX, 0, posZ), getModelInstance().transform.getRotation(new Quaternion()));
+        getModelInstance().transform.scl(0.5f, 5f, 0.5f);
+        getModelInstance().transform.rotateRad(Vector3.Y, radRotation);
+        this.id = 5;
+        this.angle = radRotation;
+    }
 
     public Wall(ModelInstance modelInstance, float radRotation){
         super(modelInstance);

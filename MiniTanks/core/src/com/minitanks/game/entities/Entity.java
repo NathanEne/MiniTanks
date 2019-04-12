@@ -26,14 +26,6 @@ public abstract class Entity {
         isAI = AI;
     }
 
-//    public MyMotionState getMotionState() {
-//        return motionState;
-//    }
-//
-//    public void setMotionState(MyMotionState motionState) {
-//        this.motionState = motionState;
-//    }
-
 
     private MyMotionState motionState;
 
@@ -54,10 +46,6 @@ public abstract class Entity {
         this.model = model;
     }
 
-    public Vector3 getPosition() {
-        return getModelInstance().transform.getTranslation(new Vector3());
-    }
-
     public void setPosition(Vector3 position) {
         this.position = position;
     }
@@ -65,11 +53,7 @@ public abstract class Entity {
 
 
     public Entity(ModelInstance modelInstance){
-
         this.model = modelInstance;
-//        this.motionState = new MyMotionState();
-//        motionState.transform = modelInstance.transform;
-
     }
 
     public Entity(){}

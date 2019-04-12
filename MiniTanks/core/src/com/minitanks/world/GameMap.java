@@ -16,12 +16,6 @@ public abstract class GameMap {
 
     }
 
-//    public void render(OrthographicCamera camera, ModelBatch batch) {
-//
-//        for (Entity entity : getEntities()) {
-//            entity.render(batch);
-//        }
-//    }
 
     public void update(float delta) {
 

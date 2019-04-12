@@ -71,8 +71,7 @@ public class MyContactListener extends ContactListener {
 
 
 
-
-            } else if (two.getId()==2&&one.getId() ==1){
+        } else if (two.getId()==2&&one.getId() ==1){
 
             one.getModelInstance().transform.trn(-1000000,10000,-1000000);
             two.getModelInstance().transform.trn(0,2000000,0);
