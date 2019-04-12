@@ -5,12 +5,12 @@ import com.badlogic.gdx.math.Vector3;
 
 public class TankBase extends Entity {
     private Vector3 direction;
-    //private Tank owner;
+    private Tank owner;
    // private Vector3 previousPosition;
     public TankBase(ModelInstance modelInstance,Tank t) {
         super(modelInstance);
        // previousPosition = new Vector3();
-       // this.owner = t;
+        this.owner = t;
         this.id =1;
     }
 
@@ -31,11 +31,8 @@ public class TankBase extends Entity {
 //        this.previousPosition = new Vector3(previousPosition);
 //    }
 
-//    public Tank getOwner() {
-//        return owner;
-//    }
-//
-//    public void setOwner(Tank owner) {
-//        this.owner = owner;
-//    }
+    public Tank getOwner() {
+        return owner;
+    }
+
 }
