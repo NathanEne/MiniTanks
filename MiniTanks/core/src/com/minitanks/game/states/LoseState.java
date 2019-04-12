@@ -57,7 +57,11 @@ public class LoseState extends State {
         wallpaper.setWidth(Gdx.graphics.getWidth());
         stage.addActor(wallpaper);
 
-
+        Drawable menutext = new TextureRegionDrawable(new TextureRegion(new Texture("loseText.png")));
+        Image menuText = new Image(menutext);
+        menuText.setSize((float)0.4*Gdx.graphics.getWidth(), (float)0.2*Gdx.graphics.getWidth());
+        menuText.setPosition((float)0.5*Gdx.graphics.getWidth(), (float)0.4*Gdx.graphics.getHeight(), Align.center);
+        stage.addActor(menuText);
     }
 
     @Override
@@ -66,7 +70,7 @@ public class LoseState extends State {
 
             System.exit(1);
         }
-        if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
+        if(Gdx.input.isKeyJustPressed(Input.Keys.R)) {
             gsm.push(new PlayState(gsm));
             gsm.render(((PlayState) gsm.currentState()).getBatch());
         }

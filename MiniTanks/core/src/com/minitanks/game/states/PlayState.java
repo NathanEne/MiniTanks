@@ -5,12 +5,21 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL30;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
+import com.badlogic.gdx.graphics.g3d.decals.CameraGroupStrategy;
+import com.badlogic.gdx.graphics.g3d.decals.Decal;
+import com.badlogic.gdx.graphics.g3d.decals.DecalBatch;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
+import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
@@ -18,11 +27,14 @@ import com.badlogic.gdx.physics.bullet.Bullet;
 import com.badlogic.gdx.physics.bullet.DebugDrawer;
 import com.badlogic.gdx.physics.bullet.collision.*;
 import com.badlogic.gdx.physics.bullet.linearmath.btIDebugDraw;
+import com.badlogic.gdx.utils.ScreenUtils;
 import com.minitanks.game.entities.*;
+import com.minitanks.game.managers.DecalHelper;
 import com.minitanks.game.managers.InputManager;
 import com.minitanks.game.managers.SavingManager;
 import com.minitanks.world.MapGenerator;
 import com.minitanks.world.MyContactListener;
+
 
 import java.io.IOException;
 import java.util.*;
@@ -39,10 +51,13 @@ public class PlayState extends State {
     private btBroadphaseInterface broadphase;
     private btCollisionWorld collisionWorld;
     private boolean isPerspectiveCam = true;
+    private  SpriteBatch sba = new SpriteBatch();
     private Environment environment;
     private ModelBatch batch;
-    private ModelInstance modelInstance;
+    private BitmapFont font = new BitmapFont(Gdx.files.internal("default.fnt"),
+               Gdx.files.internal("default.png"), false);
     private Tank player;
+
     private DebugDrawer debugDraw;
     private Vector3 keyInputVector = new Vector3();
     private Vector3 mouseInputVector = new Vector3();
@@ -59,9 +74,6 @@ public class PlayState extends State {
     // A 2D array storing all the initial positions of the tanks
     private ArrayList<ArrayList<ArrayList<Vector3>>> positions = new ArrayList<ArrayList<ArrayList<Vector3>>>(5);
 
-    final static short WALL_FLAG = 1 << 8;
-    final static short TANK_FLAG = 1 << 9;
-    final static short BULLET_FLAG = 1 << 7;
     final static short ALL_FLAG = -1;
 
     public btCollisionWorld getCollisionWorld() {
@@ -173,10 +185,6 @@ public class PlayState extends State {
             if (entity.hasBody()) {
                 entity.getBody().setWorldTransform(entity.getModelInstance().transform);
             }
-//            if(entity instanceof TankBase && entity.getModelInstance().transform.getTranslation(new Vector3()).y>9000){
-//                ((TankBase)entity).getOwner().getTurret().getModelInstance().transform.trn(0,10000,0);
-//
-//            }
 
 
         }
@@ -224,6 +232,9 @@ public class PlayState extends State {
 
     @Override
     public void render(ModelBatch sb) {
+        //SpriteBatch spriteBatch = new SpriteBatch();
+       // FrameBuffer m_fbo = new FrameBuffer(Pixmap.Format.RGB565, Gdx.graphics.getWidth(),  Gdx.graphics.getHeight(), false);
+       // m_fbo.begin();
         Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         Gdx.gl.glClearColor(0.5f, 0.5f, 0.5f, 1);
         Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT | GL30.GL_DEPTH_BUFFER_BIT);
@@ -237,10 +248,35 @@ public class PlayState extends State {
             this.assets.render(this.camera.getOrthoCam(), environment, this.getEntities());
         }
 
+
+        sba = new SpriteBatch();
+        sba.begin();
+        font.draw(sba, "Score: " + this.getScore(),10,Gdx.graphics.getHeight()-10);
+        sba.end();
+
         // DEBUGGING FOR COLLISIONS
 /*        debugDraw.begin(this.camera.getOrthoCam());
         collisionWorld.debugDrawWorld();
         debugDraw.end();*/
+//        spriteBatch.setProjectionMatrix(camera.getPersCam().combined);
+//        spriteBatch.begin();
+//        font.draw(spriteBatch, "Score: "+ this.getScore() ,  100, 100);
+//        spriteBatch.end();//finish write to buffer
+//        Pixmap pm = ScreenUtils.getFrameBufferPixmap(0, 0, (int) Gdx.graphics.getWidth(), (int) Gdx.graphics.getHeight());//write frame buffer to Pixmap
+//        m_fbo.end();
+//        m_fbo.dispose();
+//        m_fbo = null;
+//        spriteBatch.dispose();
+//       Texture texture = new Texture(pm);
+//        TextureRegion tr = new TextureRegion(texture);
+//        Decal d = Decal.newDecal(tr);
+//        d.lookAt(camera.getPersCam().position, camera.getPersCam().up);
+//        d.setDimensions(1000,1000);
+//       DecalBatch db = new DecalBatch(new CameraGroupStrategy(this.camera.getPersCam()));
+//
+//       db.add(d);
+//       db.flush();
+
     }
 
 

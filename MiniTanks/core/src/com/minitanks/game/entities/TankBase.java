@@ -15,9 +15,12 @@ public class TankBase extends Entity {
     }
 
     public Vector3 getDirection() {
-        return direction;
+        if (direction != null) {
+            return new Vector3(direction);
+        }else{
+            return null;
+        }
     }
-
 
     public void setDirection(Vector3 direction) {
         this.direction = direction.nor();
